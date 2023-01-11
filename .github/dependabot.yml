@@ -1,0 +1,20 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: "daily"
+      timezone: "Europe/Berlin"
+    assignees:
+      - "stnokott"
+    reviewers:
+      - "stnokott"
+  - directory: "/"
+    package-ecosystem: gomod
+    schedule:
+      interval: "daily"
+      timezone: "Europe/Berlin"
+    assignees:
+      - "stnokott"
+    reviewers:
+      - "stnokott"

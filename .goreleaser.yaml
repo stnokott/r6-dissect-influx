@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+
+project_name: r6-dissect-influx
+
+before:
+  hooks:
+    - go mod tidy
+    - go mod verify
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+    binary: app
+    ldflags:
+      - -s # -s and -w reduce binary size, but prevent debugging (not necessary for production build)
+      - -w
+      - -X github.com/stnokott/{{ .ProjectName }}/constants.LOG_LEVEL=1 # set log level to INFO
+changelog:
+  sort: asc
+  abbrev: -1
+  use: github
+  filters:
+    exclude:
+      - "^style"
+      - "^test"
+      - "^Merge branch"
+      - "^bump: version"
+
+  groups:
+    - title: Features
+      regexp: "^feat"
+      order: 0
+    - title: Bug Fixes
+      regexp: "^fix"
+    - title: Documentation
+      regexp: "^docs"
+    - title: Code refactor
+      regexp: "^refactor"
+    - title: Performance Optimization
+      regexp: "^perf"
+    - title: Dependencies
+      regexp: "^build(deps)"
+    - title: Pipeline
+      regexp: "^ci"
+    - title: Others
+      order: 999
+release:
+  target_commitish: "{{ .Commit }}"
+  github:
+    owner: stnokott
+    name: "{{ .ProjectName }}"
+  name_template: "v{{ .Version }}"
+  footer: |
+    ### Installation
+    `go get github.com/stnokott/{{ .ProjectName }}`
+    `go get github.com/stnokott/{{ .ProjectName }}@v{{ .Version }}`

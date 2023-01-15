@@ -2,7 +2,7 @@ package config
 
 import (
 	"errors"
-	"log"
+	"fmt"
 	"os"
 	"regexp"
 	"strconv"
@@ -23,14 +23,31 @@ const (
 	hintInfluxBucket   string = "InfluxDB bucket where the data should be pushed"
 )
 
+var (
+	inputMatchReplayDir = &widget.Entry{Validator: validateMatchReplayDir}
+	inputInfluxHost     = &widget.Entry{Validator: validateInfluxHost}
+	inputInfluxPort     = &widget.Entry{Validator: validateInfluxPort}
+	inputInfluxBucket   = &widget.Entry{Validator: validateInfluxBucket}
+)
+
 func ShowDialog(parent fyne.Window) {
-	inputMatchReplayDir := &widget.Entry{Validator: validateMatchReplayDir}
+	config, err := readConfig()
+	if err != nil {
+		// defer to only show *after* the config dialog is shown
+		defer utils.ShowErrDialog(err, parent)
+	} else {
+		inputMatchReplayDir.SetText(config.MatchReplyFolder)
+		inputInfluxHost.SetText(config.InfluxDBHost)
+		inputInfluxPort.SetText(strconv.Itoa(config.InfluxDBPort))
+		inputInfluxBucket.SetText(config.InfluxDBBucket)
+	}
+
 	buttonAutodetectMatchReplayDir := widget.NewButton("Autodetect", func() {
 		folder, err := matchReplayFolderFromRegistry()
 		if err == nil {
 			inputMatchReplayDir.SetText(folder)
 		} else {
-			dialog.NewInformation("Autodetection failed", utils.TitleErr(err, true), parent).Show()
+			utils.ShowErrDialog(err, parent)
 		}
 	})
 	dialogMatchReplayDir := dialog.NewFolderOpen(
@@ -42,9 +59,6 @@ func ShowDialog(parent fyne.Window) {
 		parent,
 	)
 	buttonSelectMatchReplayDir := widget.NewButtonWithIcon("Open", theme.FolderIcon(), dialogMatchReplayDir.Show)
-	inputInfluxHost := &widget.Entry{Validator: validateInfluxHost}
-	inputInfluxPort := &widget.Entry{Text: "8086", Validator: validateInfluxPort}
-	inputInfluxBucket := &widget.Entry{Validator: validateInfluxBucket}
 
 	formItems := []*widget.FormItem{
 		{Text: "Match replay directory", Widget: inputMatchReplayDir, HintText: hintMatchReplayDir},
@@ -56,16 +70,41 @@ func ShowDialog(parent fyne.Window) {
 
 	d := dialog.NewForm(
 		WINDOW_TITLE,
-		"Confirm",
+		"Save",
 		"Cancel",
 		formItems,
-		func(ok bool) {
-			log.Println("TODO: handle")
+		func(confirmed bool) {
+			if confirmed {
+				handleDialogConfirm(parent)
+			}
 		},
 		parent,
 	)
-	d.Resize(d.MinSize().Add(fyne.NewDelta(200, 0)))
+	d.Resize(d.MinSize().Add(fyne.NewDelta(100, 0)))
 	d.Show()
+}
+
+func handleDialogConfirm(parent fyne.Window) {
+	var err error
+	defer func() {
+		if err != nil {
+			utils.ShowErrDialog(fmt.Errorf("could not write config: %w", err), parent)
+		}
+	}()
+
+	var port int
+	port, err = strconv.Atoi(inputInfluxPort.Text)
+	if err != nil {
+		err = errors.New("InfluxDB port is not a valid integer")
+		return
+	}
+	c := Config{
+		MatchReplyFolder: inputMatchReplayDir.Text,
+		InfluxDBHost:     inputInfluxHost.Text,
+		InfluxDBPort:     port,
+		InfluxDBBucket:   inputInfluxBucket.Text,
+	}
+	err = writeConfig(c)
 }
 
 // TODO: warn if no matches found or none could be parsed

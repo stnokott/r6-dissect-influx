@@ -4,19 +4,16 @@ package config
 
 import (
 	"fmt"
-	"io/fs"
-	"os"
-	"path/filepath"
+	"log"
 
 	"github.com/spf13/viper"
-	"github.com/stnokott/r6-dissect-influx/constants"
-	"golang.org/x/sys/windows/registry"
 )
 
 const (
 	CONFIG_KEY_MATCH_REPLAY_FOLDER string = "game.replay_folder"
 	CONFIG_KEY_INFLUX_DB_HOST      string = "influx.host"
 	CONFIG_KEY_INFLUX_DB_PORT      string = "influx.port"
+	CONFIG_KEY_INFLUX_DB_BUCKET    string = "influx.bucket"
 
 	CONFIG_DEFAULT_INFLUX_DB_PORT int = 8086
 )
@@ -28,66 +25,54 @@ type Config struct {
 	InfluxDBBucket   string
 }
 
-func Load(configFilePath string) (*Config, error) {
+const configFilePath string = "."
+
+func configureViper() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(configFilePath)
 
 	viper.SetDefault(CONFIG_KEY_INFLUX_DB_PORT, CONFIG_DEFAULT_INFLUX_DB_PORT)
-
-	if err := viper.ReadInConfig(); err != nil { // Handle errors reading the config file
-		return nil, fmt.Errorf("could not read config: %w", err)
-	}
-	return &Config{
-		MatchReplyFolder: viper.GetString(CONFIG_KEY_MATCH_REPLAY_FOLDER),
-		InfluxDBHost:     viper.GetString(CONFIG_KEY_INFLUX_DB_HOST),
-		InfluxDBPort:     viper.GetInt(CONFIG_KEY_INFLUX_DB_PORT),
-	}, nil
 }
 
-const gameFolderRegistryKey string = `SOFTWARE\WOW6432Node\Ubisoft\Launcher\Installs\635`
+func readConfig() (c Config, err error) {
+	configureViper()
 
-func matchReplayFolderFromRegistry() (result string, err error) {
-	var key registry.Key
-	key, err = registry.OpenKey(registry.LOCAL_MACHINE, gameFolderRegistryKey, registry.QUERY_VALUE)
-	if err != nil {
-		return
-	}
-	defer func() {
-		errInner := key.Close()
-		if errInner != nil && err == nil {
-			err = errInner
-		}
-	}()
-	var gameDir string
-	gameDir, _, err = key.GetStringValue("InstallDir")
-	if err != nil {
-		return
-	}
-
-	_, err = os.Stat(gameDir)
-	if err != nil {
-		if os.IsNotExist(err) {
-			err = fmt.Errorf(`game directory "%s" found in Registry, but does not exist`, gameDir)
+	if err = viper.ReadInConfig(); err != nil {
+		if _, isNotFound := err.(viper.ConfigFileNotFoundError); isNotFound {
+			// config file not found, write default config
+			if errWrite := viper.SafeWriteConfig(); errWrite != nil {
+				err = fmt.Errorf("could not write default config: %w", errWrite)
+				return
+			} else {
+				log.Println("no config file found, wrote default config")
+				// we successfully wrote a default config, so no need to return an error
+				err = nil
+			}
 		} else {
-			err = fmt.Errorf(`game directory "%s" found in Registry, but could not read folder: %w`, gameDir, err)
+			err = fmt.Errorf("could not read config: %w", err)
+			return
 		}
-		return
 	}
+	log.Println("config successfully read")
+	c.MatchReplyFolder = viper.GetString(CONFIG_KEY_MATCH_REPLAY_FOLDER)
+	c.InfluxDBHost = viper.GetString(CONFIG_KEY_INFLUX_DB_HOST)
+	c.InfluxDBPort = viper.GetInt(CONFIG_KEY_INFLUX_DB_PORT)
+	c.InfluxDBBucket = viper.GetString(CONFIG_KEY_INFLUX_DB_BUCKET)
+	return c, nil
+}
 
-	result = filepath.Join(gameDir, constants.DEFAULT_MATCH_REPLAY_FOLDER_NAME)
-	var folderInfo fs.FileInfo
-	folderInfo, err = os.Stat(result)
-	if err != nil {
-		if os.IsNotExist(err) {
-			err = fmt.Errorf(`folder "%s" in game directory "%s" not found`, constants.DEFAULT_MATCH_REPLAY_FOLDER_NAME, gameDir)
-		} else {
-			err = fmt.Errorf(`could not read folder "%s"`, result)
-		}
-		return
-	} else if !folderInfo.IsDir() {
-		err = fmt.Errorf(`"%s" is not a folder`, result)
+func writeConfig(c Config) (err error) {
+	configureViper()
+
+	viper.Set(CONFIG_KEY_MATCH_REPLAY_FOLDER, c.MatchReplyFolder)
+	viper.Set(CONFIG_KEY_INFLUX_DB_HOST, c.InfluxDBHost)
+	viper.Set(CONFIG_KEY_INFLUX_DB_PORT, c.InfluxDBPort)
+	viper.Set(CONFIG_KEY_INFLUX_DB_BUCKET, c.InfluxDBBucket)
+
+	err = viper.WriteConfig()
+	if err == nil {
+		log.Println("config written")
 	}
-
 	return
 }

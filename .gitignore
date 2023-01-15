@@ -1,3 +1,8 @@
+config.yaml
+
+# VSCode
+.vscode/**
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

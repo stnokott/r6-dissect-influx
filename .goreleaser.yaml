@@ -13,11 +13,13 @@ builds:
       - windows
     goarch:
       - amd64
+      - arm64
+      - "386"
     binary: app
     ldflags:
       - -s # -s and -w reduce binary size, but prevent debugging (not necessary for production build)
       - -w
-      - -X github.com/stnokott/{{ .ProjectName }}/constants.LOG_LEVEL=1 # set log level to INFO
+      - -H=windowsgui
 changelog:
   sort: asc
   abbrev: -1

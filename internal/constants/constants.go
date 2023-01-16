@@ -1,5 +1,12 @@
 package constants
 
-const VERSION string = "v0.0.1"
+var (
+	Version     = "dev"
+	Commit      = "unknown"
+	CompileTime = "unknown"
+	ProjectName = "unknown"
+)
 
-const DEFAULT_MATCH_REPLAY_FOLDER_NAME = "MatchReplay"
+const (
+	DEFAULT_MATCH_REPLAY_FOLDER_NAME string = "MatchReplay"
+)

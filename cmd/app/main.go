@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -8,6 +10,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 
 	"github.com/stnokott/r6-dissect-influx/internal/config"
+	"github.com/stnokott/r6-dissect-influx/internal/constants"
 )
 
 const windowTitle string = "R6 Match InfluxDB Exporter"
@@ -17,6 +20,9 @@ func openSettings(parent fyne.Window) {
 }
 
 func main() {
+	// TODO: display in UI
+	log.Printf("%s - v%s - %s - compiled %s", constants.ProjectName, constants.Version, constants.Commit, constants.CompileTime)
+
 	a := app.New()
 	w := a.NewWindow(windowTitle)
 	w.Resize(fyne.NewSize(800, 600))

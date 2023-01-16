@@ -12,7 +12,7 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	"github.com/stnokott/r6-dissect-influx/utils"
+	"github.com/stnokott/r6-dissect-influx/internal/utils"
 )
 
 const (

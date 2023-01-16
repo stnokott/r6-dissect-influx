@@ -7,7 +7,7 @@ import (
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
-	"github.com/stnokott/r6-dissect-influx/config"
+	"github.com/stnokott/r6-dissect-influx/internal/config"
 )
 
 const windowTitle string = "R6 Match InfluxDB Exporter"

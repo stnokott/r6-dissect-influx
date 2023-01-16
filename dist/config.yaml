@@ -22,6 +22,8 @@ builds:
       - windows
     goarch:
       - amd64
+      - arm64
+      - "386"
     goarm:
       - "6"
     gomips:
@@ -30,8 +32,10 @@ builds:
       - v1
     targets:
       - windows_amd64_v1
+      - windows_arm64
+      - windows_386
     dir: .
-    main: .
+    main: cmd/app/main.go
     binary: app
     builder: go
     gobinary: go
@@ -39,9 +43,9 @@ builds:
     ldflags:
       - -s
       - -w
-      - -X github.com/stnokott/{{ .ProjectName }}/constants.LOG_LEVEL=1
+      - -H=windowsgui
     env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
 archives:
   - id: default
     name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}_{{ . }}{{ end }}{{ if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}'

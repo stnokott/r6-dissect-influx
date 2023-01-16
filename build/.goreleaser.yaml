@@ -7,19 +7,29 @@ before:
     - go mod tidy
     - go mod verify
 builds:
-  - env:
-      - CGO_ENABLED=0
+  - main: ./cmd/app/main.go
+    env:
+      - CGO_ENABLED=1
     goos:
       - windows
     goarch:
       - amd64
-      - arm64
       - "386"
+      - arm64
     binary: app
     ldflags:
       - -s # -s and -w reduce binary size, but prevent debugging (not necessary for production build)
       - -w
       - -H=windowsgui
+archives:
+  - name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    replacements:
+      windows: Windows
+      386: i386
+      amd64: x86_64
+    format_overrides:
+      - goos: windows
+        format: zip
 changelog:
   sort: asc
   abbrev: -1

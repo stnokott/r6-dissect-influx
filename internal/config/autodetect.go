@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/stnokott/r6-dissect-influx/constants"
+	"github.com/stnokott/r6-dissect-influx/internal/constants"
 	"golang.org/x/sys/windows/registry"
 )
 

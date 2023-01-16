@@ -7,17 +7,33 @@ before:
     - go mod tidy
     - go mod verify
 builds:
-  - env:
-      - CGO_ENABLED=0
+  - main: ./cmd/app/main.go
+    env:
+      - CGO_ENABLED=1
     goos:
       - windows
     goarch:
       - amd64
+      - "386"
+      - arm64
     binary: app
     ldflags:
       - -s # -s and -w reduce binary size, but prevent debugging (not necessary for production build)
       - -w
-      - -X github.com/stnokott/{{ .ProjectName }}/constants.LOG_LEVEL=1 # set log level to INFO
+      - -X github.com/stnokott/r6-dissect-influx/internal/constants.Version={{ .Version }}
+      - -X github.com/stnokott/r6-dissect-influx/internal/constants.Commit={{ .ShortCommit }}
+      - -X github.com/stnokott/r6-dissect-influx/internal/constants.CompileTime={{ .Date }}
+      - -X github.com/stnokott/r6-dissect-influx/internal/constants.ProjectName={{ .ProjectName }}
+      - -H=windowsgui
+archives:
+  - name_template: >
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "386" }}i386
+      {{- else if eq .Arch "amd64" }}x86_64
+      {{- else }}{{ .Arch }}{{ end }}
+    format: binary
 changelog:
   sort: asc
   abbrev: -1

@@ -25,6 +25,8 @@ type Config struct {
 	InfluxDBBucket   string
 }
 
+var CurrentConfig *Config = nil
+
 const configFilePath string = "."
 
 func configureViper() {
@@ -35,7 +37,7 @@ func configureViper() {
 	viper.SetDefault(CONFIG_KEY_INFLUX_DB_PORT, CONFIG_DEFAULT_INFLUX_DB_PORT)
 }
 
-func readConfig() (c Config, err error) {
+func Init() (err error) {
 	configureViper()
 
 	if err = viper.ReadInConfig(); err != nil {
@@ -54,21 +56,21 @@ func readConfig() (c Config, err error) {
 			return
 		}
 	}
-	log.Println("config successfully read")
-	c.MatchReplyFolder = viper.GetString(CONFIG_KEY_MATCH_REPLAY_FOLDER)
-	c.InfluxDBHost = viper.GetString(CONFIG_KEY_INFLUX_DB_HOST)
-	c.InfluxDBPort = viper.GetInt(CONFIG_KEY_INFLUX_DB_PORT)
-	c.InfluxDBBucket = viper.GetString(CONFIG_KEY_INFLUX_DB_BUCKET)
-	return c, nil
+	log.Println("config read")
+	CurrentConfig = &Config{
+		MatchReplyFolder: viper.GetString(CONFIG_KEY_MATCH_REPLAY_FOLDER),
+		InfluxDBHost:     viper.GetString(CONFIG_KEY_INFLUX_DB_HOST),
+		InfluxDBPort:     viper.GetInt(CONFIG_KEY_INFLUX_DB_PORT),
+		InfluxDBBucket:   viper.GetString(CONFIG_KEY_INFLUX_DB_BUCKET),
+	}
+	return
 }
 
-func writeConfig(c Config) (err error) {
-	configureViper()
-
-	viper.Set(CONFIG_KEY_MATCH_REPLAY_FOLDER, c.MatchReplyFolder)
-	viper.Set(CONFIG_KEY_INFLUX_DB_HOST, c.InfluxDBHost)
-	viper.Set(CONFIG_KEY_INFLUX_DB_PORT, c.InfluxDBPort)
-	viper.Set(CONFIG_KEY_INFLUX_DB_BUCKET, c.InfluxDBBucket)
+func Write() (err error) {
+	viper.Set(CONFIG_KEY_MATCH_REPLAY_FOLDER, CurrentConfig.MatchReplyFolder)
+	viper.Set(CONFIG_KEY_INFLUX_DB_HOST, CurrentConfig.InfluxDBHost)
+	viper.Set(CONFIG_KEY_INFLUX_DB_PORT, CurrentConfig.InfluxDBPort)
+	viper.Set(CONFIG_KEY_INFLUX_DB_BUCKET, CurrentConfig.InfluxDBBucket)
 
 	err = viper.WriteConfig()
 	if err == nil {

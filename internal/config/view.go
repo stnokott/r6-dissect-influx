@@ -31,16 +31,10 @@ var (
 )
 
 func ShowDialog(parent fyne.Window) {
-	config, err := readConfig()
-	if err != nil {
-		// defer to only show *after* the config dialog is shown
-		defer utils.ShowErrDialog(err, parent)
-	} else {
-		inputMatchReplayDir.SetText(config.MatchReplyFolder)
-		inputInfluxHost.SetText(config.InfluxDBHost)
-		inputInfluxPort.SetText(strconv.Itoa(config.InfluxDBPort))
-		inputInfluxBucket.SetText(config.InfluxDBBucket)
-	}
+	inputMatchReplayDir.SetText(CurrentConfig.MatchReplyFolder)
+	inputInfluxHost.SetText(CurrentConfig.InfluxDBHost)
+	inputInfluxPort.SetText(strconv.Itoa(CurrentConfig.InfluxDBPort))
+	inputInfluxBucket.SetText(CurrentConfig.InfluxDBBucket)
 
 	buttonAutodetectMatchReplayDir := widget.NewButton("Autodetect", func() {
 		folder, err := matchReplayFolderFromRegistry()
@@ -98,13 +92,11 @@ func handleDialogConfirm(parent fyne.Window) {
 		err = errors.New("InfluxDB port is not a valid integer")
 		return
 	}
-	c := Config{
-		MatchReplyFolder: inputMatchReplayDir.Text,
-		InfluxDBHost:     inputInfluxHost.Text,
-		InfluxDBPort:     port,
-		InfluxDBBucket:   inputInfluxBucket.Text,
-	}
-	err = writeConfig(c)
+	CurrentConfig.MatchReplyFolder = inputMatchReplayDir.Text
+	CurrentConfig.InfluxDBHost = inputInfluxHost.Text
+	CurrentConfig.InfluxDBPort = port
+	CurrentConfig.InfluxDBBucket = inputInfluxBucket.Text
+	err = Write()
 }
 
 // TODO: warn if no matches found or none could be parsed

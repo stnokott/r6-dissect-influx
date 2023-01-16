@@ -31,7 +31,7 @@ archives:
       {{- if eq .Arch "386" }}i386
       {{- else if eq .Arch "amd64" }}x86_64
       {{- else }}{{ .Arch }}{{ end }}
-    format: binary
+    format: zip
 changelog:
   sort: asc
   abbrev: -1

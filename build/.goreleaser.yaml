@@ -14,7 +14,6 @@ builds:
       - windows
     goarch:
       - amd64
-      - "386"
       - arm64
     binary: app
     ldflags:
@@ -69,7 +68,3 @@ release:
     owner: stnokott
     name: "{{ .ProjectName }}"
   name_template: "v{{ .Version }}"
-  footer: |
-    ### Installation
-    `go get github.com/stnokott/{{ .ProjectName }}`
-    `go get github.com/stnokott/{{ .ProjectName }}@v{{ .Version }}`

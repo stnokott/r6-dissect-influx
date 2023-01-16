@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"regexp"
 	"strconv"
@@ -70,19 +69,13 @@ func ShowDialog(parent fyne.Window) {
 		formItems,
 		func(confirmed bool) {
 			if confirmed {
-				handleDialogConfirm(parent)
+				Write()
 			}
 		},
 		parent,
 	)
 	d.Resize(d.MinSize().Add(fyne.NewDelta(100, 0)))
 	d.Show()
-}
-
-func handleDialogConfirm(parent fyne.Window) {
-	if err := Write(); err != nil {
-		utils.ShowErrDialog(fmt.Errorf("could not write config: %w", err), parent)
-	}
 }
 
 // TODO: warn if no matches found or none could be parsed

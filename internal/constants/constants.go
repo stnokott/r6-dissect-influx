@@ -8,5 +8,6 @@ var (
 )
 
 const (
+	APP_ID                           string = "org.stnokott.r6.dissect-influx"
 	DEFAULT_MATCH_REPLAY_FOLDER_NAME string = "MatchReplay"
 )

@@ -1,13 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
@@ -25,16 +23,12 @@ func main() {
 	// TODO: display in UI
 	log.Printf("%s - v%s - %s - compiled %s", constants.ProjectName, constants.Version, constants.Commit, constants.CompileTime)
 
-	a := app.New()
+	a := app.NewWithID(constants.APP_ID)
 
 	w := a.NewWindow(windowTitle)
 	w.Resize(fyne.NewSize(800, 600))
 
-	if err := config.Init(); err != nil {
-		dErr := dialog.NewError(fmt.Errorf("error initializing config: %w", err), w)
-		dErr.SetOnClosed(a.Quit)
-		dErr.Show()
-	}
+	config.Init(a)
 
 	toolbar := widget.NewToolbar(
 		widget.NewToolbarSpacer(),

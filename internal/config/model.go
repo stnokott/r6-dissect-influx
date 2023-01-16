@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 
+	"fyne.io/fyne/v2/data/binding"
 	"github.com/spf13/viper"
 )
 
@@ -25,7 +26,14 @@ type Config struct {
 	InfluxDBBucket   string
 }
 
-var CurrentConfig *Config = nil
+var (
+	Current            = new(Config)
+	bindMatchReplayDir = binding.BindString(&Current.MatchReplyFolder)
+	bindInfluxHost     = binding.BindString(&Current.InfluxDBHost)
+	bindInfluxPort     = binding.BindInt(&Current.InfluxDBPort)
+	bindInfluxPortStr  = binding.IntToString(bindInfluxPort)
+	bindInfluxBucket   = binding.BindString(&Current.InfluxDBBucket)
+)
 
 const configFilePath string = "."
 
@@ -57,20 +65,18 @@ func Init() (err error) {
 		}
 	}
 	log.Println("config read")
-	CurrentConfig = &Config{
-		MatchReplyFolder: viper.GetString(CONFIG_KEY_MATCH_REPLAY_FOLDER),
-		InfluxDBHost:     viper.GetString(CONFIG_KEY_INFLUX_DB_HOST),
-		InfluxDBPort:     viper.GetInt(CONFIG_KEY_INFLUX_DB_PORT),
-		InfluxDBBucket:   viper.GetString(CONFIG_KEY_INFLUX_DB_BUCKET),
-	}
+	Current.MatchReplyFolder = viper.GetString(CONFIG_KEY_MATCH_REPLAY_FOLDER)
+	Current.InfluxDBHost = viper.GetString(CONFIG_KEY_INFLUX_DB_HOST)
+	Current.InfluxDBPort = viper.GetInt(CONFIG_KEY_INFLUX_DB_PORT)
+	Current.InfluxDBBucket = viper.GetString(CONFIG_KEY_INFLUX_DB_BUCKET)
 	return
 }
 
 func Write() (err error) {
-	viper.Set(CONFIG_KEY_MATCH_REPLAY_FOLDER, CurrentConfig.MatchReplyFolder)
-	viper.Set(CONFIG_KEY_INFLUX_DB_HOST, CurrentConfig.InfluxDBHost)
-	viper.Set(CONFIG_KEY_INFLUX_DB_PORT, CurrentConfig.InfluxDBPort)
-	viper.Set(CONFIG_KEY_INFLUX_DB_BUCKET, CurrentConfig.InfluxDBBucket)
+	viper.Set(CONFIG_KEY_MATCH_REPLAY_FOLDER, Current.MatchReplyFolder)
+	viper.Set(CONFIG_KEY_INFLUX_DB_HOST, Current.InfluxDBHost)
+	viper.Set(CONFIG_KEY_INFLUX_DB_PORT, Current.InfluxDBPort)
+	viper.Set(CONFIG_KEY_INFLUX_DB_BUCKET, Current.InfluxDBBucket)
 
 	err = viper.WriteConfig()
 	if err == nil {

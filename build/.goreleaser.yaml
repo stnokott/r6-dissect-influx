@@ -14,8 +14,6 @@ builds:
       - windows
     goarch:
       - amd64
-      - "386"
-      - arm64
     binary: app
     ldflags:
       - -s # -s and -w reduce binary size, but prevent debugging (not necessary for production build)
@@ -69,7 +67,3 @@ release:
     owner: stnokott
     name: "{{ .ProjectName }}"
   name_template: "v{{ .Version }}"
-  footer: |
-    ### Installation
-    `go get github.com/stnokott/{{ .ProjectName }}`
-    `go get github.com/stnokott/{{ .ProjectName }}@v{{ .Version }}`

@@ -14,7 +14,6 @@ builds:
       - windows
     goarch:
       - amd64
-      - arm64
     binary: app
     ldflags:
       - -s # -s and -w reduce binary size, but prevent debugging (not necessary for production build)

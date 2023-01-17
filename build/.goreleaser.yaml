@@ -32,6 +32,8 @@ archives:
       {{- else if eq .Arch "amd64" }}x86_64
       {{- else }}{{ .Arch }}{{ end }}
     format: zip
+    files:
+      - CHANGELOG.md
 changelog:
   sort: asc
   abbrev: -1

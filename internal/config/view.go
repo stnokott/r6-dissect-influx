@@ -20,13 +20,15 @@ const (
 	hintInfluxHost     string = `Host of your InfluxDB instance (IP or hostname, no "http(s)" required)`
 	hintInfluxPort     string = "Port of your InfluxDB instance"
 	hintInfluxBucket   string = "InfluxDB bucket where the data should be pushed"
+	hintInfluxToken    string = "InfluxDB token for the bucket"
 )
 
 var (
 	inputMatchReplayDir = &widget.Entry{Validator: validateMatchReplayDir}
 	inputInfluxHost     = &widget.Entry{Validator: validateInfluxHost}
 	inputInfluxPort     = &widget.Entry{Validator: validateInfluxPort}
-	inputInfluxBucket   = &widget.Entry{Validator: validateInfluxBucket}
+	inputInfluxBucket   = &widget.Entry{Validator: validateNotEmpty}
+	inputInfluxToken    = &widget.Entry{Validator: validateNotEmpty, Password: true}
 )
 
 func ShowDialog(parent fyne.Window) {
@@ -35,6 +37,7 @@ func ShowDialog(parent fyne.Window) {
 	inputInfluxHost.Bind(bindInfluxHost)
 	inputInfluxPort.Bind(bindInfluxPortStr)
 	inputInfluxBucket.Bind(bindInfluxBucket)
+	inputInfluxToken.Bind(bindInfluxToken)
 
 	buttonAutodetectMatchReplayDir := widget.NewButton("Autodetect", func() {
 		folder, err := matchReplayFolderFromRegistry()
@@ -60,6 +63,7 @@ func ShowDialog(parent fyne.Window) {
 		{Text: "InfluxDB host", Widget: inputInfluxHost, HintText: hintInfluxHost},
 		{Text: "InfluxDB port", Widget: inputInfluxPort, HintText: hintInfluxPort},
 		{Text: "InfluxDB bucket", Widget: inputInfluxBucket, HintText: hintInfluxBucket},
+		{Text: "InfluxDB token", Widget: inputInfluxToken, HintText: hintInfluxToken},
 	}
 
 	d := dialog.NewForm(
@@ -130,7 +134,7 @@ func validateInfluxPort(s string) (err error) {
 	return
 }
 
-func validateInfluxBucket(s string) (err error) {
+func validateNotEmpty(s string) (err error) {
 	if s == "" {
 		err = errors.New("Cannot be empty") //lint:ignore ST1005 will be displayed in UI
 	}

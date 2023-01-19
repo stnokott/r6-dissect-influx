@@ -39,7 +39,7 @@ func ShowDialog(parent fyne.Window, onConfirm func()) {
 	inputInfluxBucket.Bind(bindInfluxBucket)
 	inputInfluxToken.Bind(bindInfluxToken)
 
-	inputMatchReplayDir.Validator = validation.NewAllStrings(requiredValidator, directoryValidator)
+	inputMatchReplayDir.Validator = validation.NewAllStrings(requiredValidator, gameDirectoryValidator)
 	inputInfluxHost.Validator = validation.NewAllStrings(requiredValidator, hostAddressValidator)
 	inputInfluxPort.Validator = validation.NewAllStrings(requiredValidator, integerValidator)
 	inputInfluxOrg.Validator = requiredValidator
@@ -65,7 +65,7 @@ func ShowDialog(parent fyne.Window, onConfirm func()) {
 	buttonSelectMatchReplayDir := widget.NewButtonWithIcon("Open", theme.FolderIcon(), dialogMatchReplayDir.Show)
 
 	formItems := []*widget.FormItem{
-		{Text: "Match replay directory", Widget: inputMatchReplayDir, HintText: hintMatchReplayDir},
+		{Text: "Game directory", Widget: inputMatchReplayDir, HintText: hintMatchReplayDir},
 		{Text: "", Widget: container.NewGridWithColumns(2, buttonAutodetectMatchReplayDir, buttonSelectMatchReplayDir)},
 		{Text: "InfluxDB host", Widget: inputInfluxHost, HintText: hintInfluxHost},
 		{Text: "InfluxDB port", Widget: inputInfluxPort, HintText: hintInfluxPort},

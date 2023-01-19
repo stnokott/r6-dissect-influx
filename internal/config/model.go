@@ -4,7 +4,9 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"os"
+	"path"
 	"regexp"
 	"strconv"
 
@@ -14,23 +16,23 @@ import (
 )
 
 const (
-	CONFIG_KEY_MATCH_REPLAY_FOLDER string = "game.replay_folder"
-	CONFIG_KEY_INFLUX_DB_HOST      string = "influx.host"
-	CONFIG_KEY_INFLUX_DB_PORT      string = "influx.port"
-	CONFIG_KEY_INFLUX_DB_ORG       string = "influx.org"
-	CONFIG_KEY_INFLUX_DB_BUCKET    string = "influx.bucket"
-	CONFIG_KEY_INFLUX_DB_TOKEN     string = "influx.token"
+	CONFIG_KEY_MATCH_GAME_DIR   string = "game.install_dir"
+	CONFIG_KEY_INFLUX_DB_HOST   string = "influx.host"
+	CONFIG_KEY_INFLUX_DB_PORT   string = "influx.port"
+	CONFIG_KEY_INFLUX_DB_ORG    string = "influx.org"
+	CONFIG_KEY_INFLUX_DB_BUCKET string = "influx.bucket"
+	CONFIG_KEY_INFLUX_DB_TOKEN  string = "influx.token"
 
 	CONFIG_DEFAULT_INFLUX_DB_PORT int = 8086
 )
 
 type Config struct {
-	MatchReplyFolder string
-	InfluxDBHost     string
-	InfluxDBPort     int
-	InfluxDBOrg      string
-	InfluxDBBucket   string
-	InfluxDBToken    string
+	GameFolder     string
+	InfluxDBHost   string
+	InfluxDBPort   int
+	InfluxDBOrg    string
+	InfluxDBBucket string
+	InfluxDBToken  string
 }
 
 func (c *Config) InfluxURL() string {
@@ -49,7 +51,7 @@ func (c *Config) NewInfluxClient() *db.InfluxClient {
 var (
 	prefs              fyne.Preferences
 	Current            = new(Config)
-	bindMatchReplayDir = binding.BindString(&Current.MatchReplyFolder)
+	bindMatchReplayDir = binding.BindString(&Current.GameFolder)
 	bindInfluxHost     = binding.BindString(&Current.InfluxDBHost)
 	bindInfluxPort     = binding.BindInt(&Current.InfluxDBPort)
 	bindInfluxPortStr  = binding.IntToString(bindInfluxPort)
@@ -60,7 +62,7 @@ var (
 
 func Init(app fyne.App) {
 	prefs = app.Preferences()
-	Current.MatchReplyFolder = prefs.String(CONFIG_KEY_MATCH_REPLAY_FOLDER)
+	Current.GameFolder = prefs.String(CONFIG_KEY_MATCH_GAME_DIR)
 	Current.InfluxDBHost = prefs.String(CONFIG_KEY_INFLUX_DB_HOST)
 	Current.InfluxDBPort = prefs.IntWithFallback(CONFIG_KEY_INFLUX_DB_PORT, CONFIG_DEFAULT_INFLUX_DB_PORT)
 	Current.InfluxDBOrg = prefs.String(CONFIG_KEY_INFLUX_DB_ORG)
@@ -69,7 +71,7 @@ func Init(app fyne.App) {
 }
 
 func IsComplete() bool {
-	return Current.MatchReplyFolder != "" &&
+	return Current.GameFolder != "" &&
 		Current.InfluxDBHost != "" &&
 		Current.InfluxDBOrg != "" &&
 		Current.InfluxDBBucket != "" &&
@@ -77,7 +79,7 @@ func IsComplete() bool {
 }
 
 func write() {
-	prefs.SetString(CONFIG_KEY_MATCH_REPLAY_FOLDER, Current.MatchReplyFolder)
+	prefs.SetString(CONFIG_KEY_MATCH_GAME_DIR, Current.GameFolder)
 	prefs.SetString(CONFIG_KEY_INFLUX_DB_HOST, Current.InfluxDBHost)
 	prefs.SetInt(CONFIG_KEY_INFLUX_DB_PORT, Current.InfluxDBPort)
 	prefs.SetString(CONFIG_KEY_INFLUX_DB_ORG, Current.InfluxDBOrg)
@@ -85,17 +87,30 @@ func write() {
 	prefs.SetString(CONFIG_KEY_INFLUX_DB_TOKEN, Current.InfluxDBToken)
 }
 
-// TODO: warn if no matches found or none could be parsed
-func directoryValidator(s string) (err error) {
-	stats, statErr := os.Stat(s)
+const gameExeName string = "RainbowSix.exe"
+
+func gameDirectoryValidator(gameDir string) (err error) {
+	stats, statErr := os.Stat(gameDir)
 	if statErr != nil {
 		if os.IsNotExist(statErr) {
-			err = errors.New("Does not exist") //lint:ignore ST1005 will be displayed in UI
+			err = errors.New("directory does not exist")
 		} else {
 			err = statErr
 		}
+		return
 	} else if !stats.IsDir() {
-		err = errors.New("Not a directory") //lint:ignore ST1005 will be displayed in UI
+		err = errors.New("not a directory")
+		return
+	}
+
+	pathToExe := path.Join(gameDir, gameExeName)
+	if _, statErr = os.Stat(pathToExe); statErr != nil {
+		if os.IsNotExist(statErr) {
+			err = fmt.Errorf("no %s found in directory", gameExeName)
+		} else {
+			err = fmt.Errorf("could not find %s in directory: %w", gameExeName, statErr)
+		}
+		return
 	}
 	return
 }

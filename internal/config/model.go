@@ -10,6 +10,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/data/binding"
+	"github.com/stnokott/r6-dissect-influx/internal/db"
 )
 
 const (
@@ -32,6 +33,19 @@ type Config struct {
 	InfluxDBToken    string
 }
 
+func (c *Config) InfluxURL() string {
+	return "http://" + c.InfluxDBHost + ":" + strconv.Itoa(c.InfluxDBPort)
+}
+
+func (c *Config) NewInfluxClient() *db.InfluxClient {
+	return db.NewInfluxClient(db.ConnectOpts{
+		URL:    c.InfluxURL(),
+		Token:  c.InfluxDBToken,
+		Org:    c.InfluxDBOrg,
+		Bucket: c.InfluxDBBucket,
+	})
+}
+
 var (
 	prefs              fyne.Preferences
 	Current            = new(Config)
@@ -46,12 +60,20 @@ var (
 
 func Init(app fyne.App) {
 	prefs = app.Preferences()
-	Current.MatchReplyFolder = prefs.StringWithFallback(CONFIG_KEY_MATCH_REPLAY_FOLDER, "")
-	Current.InfluxDBHost = prefs.StringWithFallback(CONFIG_KEY_INFLUX_DB_HOST, "")
+	Current.MatchReplyFolder = prefs.String(CONFIG_KEY_MATCH_REPLAY_FOLDER)
+	Current.InfluxDBHost = prefs.String(CONFIG_KEY_INFLUX_DB_HOST)
 	Current.InfluxDBPort = prefs.IntWithFallback(CONFIG_KEY_INFLUX_DB_PORT, CONFIG_DEFAULT_INFLUX_DB_PORT)
-	Current.InfluxDBOrg = prefs.StringWithFallback(CONFIG_KEY_INFLUX_DB_ORG, "")
-	Current.InfluxDBBucket = prefs.StringWithFallback(CONFIG_KEY_INFLUX_DB_BUCKET, "")
-	Current.InfluxDBToken = prefs.StringWithFallback(CONFIG_KEY_INFLUX_DB_TOKEN, "")
+	Current.InfluxDBOrg = prefs.String(CONFIG_KEY_INFLUX_DB_ORG)
+	Current.InfluxDBBucket = prefs.String(CONFIG_KEY_INFLUX_DB_BUCKET)
+	Current.InfluxDBToken = prefs.String(CONFIG_KEY_INFLUX_DB_TOKEN)
+}
+
+func IsComplete() bool {
+	return Current.MatchReplyFolder != "" &&
+		Current.InfluxDBHost != "" &&
+		Current.InfluxDBOrg != "" &&
+		Current.InfluxDBBucket != "" &&
+		Current.InfluxDBToken != ""
 }
 
 func write() {

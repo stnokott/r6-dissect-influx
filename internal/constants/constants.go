@@ -1,7 +1,5 @@
 package constants
 
-import "time"
-
 var (
 	Version     = "dev"
 	Commit      = "unknown"
@@ -20,8 +18,4 @@ const (
 
 	STATUS_DISCONNECTED = "Disconnected"
 	STATUS_CONNECTED    = "Connected"
-)
-
-var (
-	INFLUX_PING_INTERVAL = 1 * time.Minute
 )

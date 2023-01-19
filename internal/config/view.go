@@ -51,7 +51,7 @@ func ShowDialog(parent fyne.Window, onConfirm func()) {
 		if err == nil {
 			inputMatchReplayDir.SetText(folder)
 		} else {
-			utils.ShowErrDialog(err, parent)
+			utils.ShowErrDialog(err, nil, parent)
 		}
 	})
 	dialogMatchReplayDir := dialog.NewFolderOpen(

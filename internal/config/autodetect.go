@@ -12,6 +12,8 @@ import (
 	"golang.org/x/sys/windows/registry"
 )
 
+// TODO: only configure *game* directory, since no MatchReplay folder exists on fresh install / new season
+
 const gameFolderRegistryKey string = `SOFTWARE\WOW6432Node\Ubisoft\Launcher\Installs\635`
 
 func matchReplayFolderFromRegistry() (result string, err error) {

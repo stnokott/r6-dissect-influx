@@ -1,11 +1,6 @@
 package config
 
 import (
-	"errors"
-	"os"
-	"regexp"
-	"strconv"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/validation"
@@ -17,7 +12,7 @@ import (
 
 const (
 	WINDOW_TITLE       string = "Settings"
-	hintMatchReplayDir string = "Directory where your match replays are stored. Usually in your game folder named 'MatchReplays'"
+	hintMatchReplayDir string = "Directory where your match replays are stored. Usually a subfolder game folder named 'MatchReplays'"
 	hintInfluxHost     string = `Host of your InfluxDB instance (IP or hostname, no "http(s)" required)`
 	hintInfluxPort     string = "Port of your InfluxDB instance"
 	hintInfluxOrg      string = "InfluxDB organization to connect to"
@@ -34,7 +29,7 @@ var (
 	inputInfluxToken    = &widget.Entry{Password: true}
 )
 
-func ShowDialog(parent fyne.Window) {
+func ShowDialog(parent fyne.Window, onConfirm func()) {
 	// 1. can't use NewEntryWithData on global level
 	// 2. calling .Bind() removes validators, so we need to set them here (instead of when constructing the entry, see https://github.com/fyne-io/fyne/issues/2542)
 	inputMatchReplayDir.Bind(bindMatchReplayDir)
@@ -86,60 +81,11 @@ func ShowDialog(parent fyne.Window) {
 		formItems,
 		func(confirmed bool) {
 			if confirmed {
-				Write()
+				write()
+				onConfirm()
 			}
 		},
 		parent,
 	)
-	d.Resize(d.MinSize().Add(fyne.NewDelta(100, 0)))
 	d.Show()
-}
-
-// TODO: warn if no matches found or none could be parsed
-func directoryValidator(s string) (err error) {
-	stats, statErr := os.Stat(s)
-	if statErr != nil {
-		if os.IsNotExist(statErr) {
-			err = errors.New("Does not exist") //lint:ignore ST1005 will be displayed in UI
-		} else {
-			err = statErr
-		}
-	} else if !stats.IsDir() {
-		err = errors.New("Not a directory") //lint:ignore ST1005 will be displayed in UI
-	}
-	return
-}
-
-var (
-	regexIPv4     = regexp.MustCompile(`^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$`)
-	regexHostname = regexp.MustCompile(`^(?:[0-9a-zA-Z]+\.)+[0-9a-zA-Z]{2,4}$`)
-)
-
-func hostAddressValidator(s string) (err error) {
-	if regexIPv4.MatchString(s) {
-		return
-	} else if regexHostname.MatchString(s) {
-		return
-	} else {
-		err = errors.New("Not a valid IPv4 address or URL") //lint:ignore ST1005 will be displayed in UI
-	}
-	return
-}
-
-func integerValidator(s string) (err error) {
-	var port int
-	port, err = strconv.Atoi(s)
-	if err != nil {
-		err = errors.New("Not a valid integer") //lint:ignore ST1005 will be displayed in UI
-	} else if port <= 0 {
-		err = errors.New("Must be greater than zero") //lint:ignore ST1005 will be displayed in UI
-	}
-	return
-}
-
-func requiredValidator(s string) (err error) {
-	if s == "" {
-		err = errors.New("Cannot be empty") //lint:ignore ST1005 will be displayed in UI
-	}
-	return
 }

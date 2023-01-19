@@ -18,5 +18,5 @@ func main() {
 
 	config.Init(a)
 
-	root.ShowAndRun(a)
+	root.NewView(a).ShowAndRun()
 }

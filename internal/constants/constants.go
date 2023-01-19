@@ -1,14 +1,13 @@
 package constants
 
 var (
-	Version     = "dev"
-	Commit      = "unknown"
-	CompileTime = "unknown"
-	ProjectName = "unknown"
+	Version = "dev"
+	Commit  = "unknown"
 )
 
 const (
-	APP_ID string = "org.stnokott.r6.dissect-influx"
+	APP_ID       string = "org.stnokott.r6.dissect-influx"
+	WINDOW_TITLE string = "R6 Match Parser"
 
 	INFLUX_BATCH_SIZE = 500
 

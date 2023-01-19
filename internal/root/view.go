@@ -10,11 +10,10 @@ import (
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/stnokott/r6-dissect-influx/internal/config"
+	"github.com/stnokott/r6-dissect-influx/internal/constants"
 	"github.com/stnokott/r6-dissect-influx/internal/db"
 	"github.com/stnokott/r6-dissect-influx/internal/utils"
 )
-
-const windowTitle string = "R6 Match InfluxDB Exporter"
 
 type View struct {
 	fyne.Window
@@ -26,7 +25,7 @@ type View struct {
 }
 
 func NewView(a fyne.App) *View {
-	w := a.NewWindow(windowTitle)
+	w := a.NewWindow(constants.WINDOW_TITLE)
 	w.Resize(fyne.NewSize(800, 600))
 
 	v := &View{
@@ -42,10 +41,10 @@ func NewView(a fyne.App) *View {
 				v.openSettings,
 			),
 		),
+		newFooter(),
 		nil,
 		nil,
-		nil,
-		layout.NewSpacer(),
+		layout.NewSpacer(), // placeholder
 	)
 	v.SetContent(v.borderContainer)
 

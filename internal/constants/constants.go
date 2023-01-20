@@ -11,7 +11,8 @@ const (
 
 	INFLUX_BATCH_SIZE = 500
 
-	DEFAULT_MATCH_REPLAY_FOLDER_NAME string = "MatchReplay"
+	MATCH_REPLAY_FOLDER_NAME string = "MatchReplay"
+	MATCH_REPLAY_SUFFIX      string = ".rec"
 
 	INFO_CONNECTED = "Successfully connected"
 

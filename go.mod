@@ -4,7 +4,10 @@ go 1.19
 
 require (
 	fyne.io/fyne/v2 v2.3.0
+	github.com/fsnotify/fsnotify v1.6.0
 	github.com/influxdata/influxdb-client-go/v2 v2.12.1
+	github.com/redraskal/r6-dissect v0.6.1
+	github.com/rs/zerolog v1.28.0
 	golang.org/x/sys v0.4.0
 	golang.org/x/text v0.6.0
 )
@@ -15,7 +18,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/deepmap/oapi-codegen v1.8.2 // indirect
 	github.com/fredbi/uri v0.1.0 // indirect
-	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/fyne-io/gl-js v0.0.0-20220119005834-d2da28d9ccfe // indirect
 	github.com/fyne-io/glfw-js v0.0.0-20220120001248-ee7290d23504 // indirect
 	github.com/fyne-io/image v0.0.0-20220602074514-4956b0afb3d2 // indirect
@@ -27,7 +29,10 @@ require (
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839 // indirect
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
+	github.com/klauspost/compress v1.15.14 // indirect
 	github.com/kr/text v0.2.0 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/srwiley/oksvg v0.0.0-20220731023508-a61f04f16b76 // indirect

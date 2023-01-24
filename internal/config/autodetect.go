@@ -1,14 +1,12 @@
+// go:build windows
+
 package config
 
 import (
 	"errors"
 	"fmt"
-	"io/fs"
 	"log"
-	"os"
-	"path/filepath"
 
-	"github.com/stnokott/r6-dissect-influx/internal/constants"
 	"golang.org/x/sys/windows/registry"
 )
 
@@ -35,28 +33,10 @@ func matchReplayFolderFromRegistry() (result string, err error) {
 		return
 	}
 
-	_, err = os.Stat(gameDir)
-	if err != nil {
-		if os.IsNotExist(err) {
-			err = fmt.Errorf(`game directory "%s" found in Registry, but does not exist`, gameDir)
-		} else {
-			err = fmt.Errorf(`game directory "%s" found in Registry, but could not read folder: %w`, gameDir, err)
-		}
-		return
-	}
-
-	result = filepath.Join(gameDir, constants.DEFAULT_MATCH_REPLAY_FOLDER_NAME)
-	var folderInfo fs.FileInfo
-	folderInfo, err = os.Stat(result)
-	if err != nil {
-		if os.IsNotExist(err) {
-			err = fmt.Errorf(`folder "%s" in game directory "%s" not found`, constants.DEFAULT_MATCH_REPLAY_FOLDER_NAME, gameDir)
-		} else {
-			err = fmt.Errorf(`could not read folder "%s"`, result)
-		}
-		return
-	} else if !folderInfo.IsDir() {
-		err = fmt.Errorf(`"%s" is not a folder`, result)
+	if err = gameDirectoryValidator(gameDir); err != nil {
+		err = fmt.Errorf(`game directory "%s" found, but: %w`, gameDir, err)
+	} else {
+		result = gameDir
 	}
 
 	return

@@ -5,7 +5,9 @@ go 1.19
 require (
 	fyne.io/fyne/v2 v2.3.0
 	github.com/fsnotify/fsnotify v1.6.0
+	github.com/hashicorp/go-version v1.6.0
 	github.com/influxdata/influxdb-client-go/v2 v2.12.1
+	github.com/minio/selfupdate v0.6.0
 	github.com/redraskal/r6-dissect v0.6.1
 	github.com/rs/zerolog v1.28.0
 	golang.org/x/sys v0.4.0
@@ -13,6 +15,7 @@ require (
 )
 
 require (
+	aead.dev/minisign v0.2.0 // indirect
 	fyne.io/systray v1.10.1-0.20221115204952-d16a6177e6f1 // indirect
 	github.com/benoitkugler/textlayout v0.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -40,6 +43,7 @@ require (
 	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/tevino/abool v1.2.0 // indirect
 	github.com/yuin/goldmark v1.4.0 // indirect
+	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b // indirect
 	golang.org/x/image v0.0.0-20220601225756-64ec528b34cd // indirect
 	golang.org/x/mobile v0.0.0-20211207041440-4e6c2922fdee // indirect
 	golang.org/x/net v0.0.0-20221014081412-f15817d10f9b // indirect

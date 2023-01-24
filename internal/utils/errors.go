@@ -47,3 +47,11 @@ func ShowErrDialog(err error, onClose func(), parent fyne.Window) {
 	}
 	d.Show()
 }
+
+func Must[P any, T any](fn func(P) (T, error), param P) T {
+	v, err := fn(param)
+	if err != nil {
+		panic(err)
+	}
+	return v
+}

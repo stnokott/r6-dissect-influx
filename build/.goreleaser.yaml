@@ -30,6 +30,7 @@ changelog:
       - "^style"
       - "^test"
       - "^Merge branch"
+      - "^Merge pull"
       - "^bump: version"
 
   groups:

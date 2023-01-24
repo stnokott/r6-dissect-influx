@@ -156,11 +156,15 @@ func (d *aboutDialog) performUpdate() {
 			utils.ShowErrDialog(err, d.Hide, d.parent)
 		} else {
 			progress.Hide()
-			dialog.NewInformation(
+			info := dialog.NewInformation(
 				"Update applied",
-				"Update successfully applied.\nPlease restart the application to see the changes.",
+				"Update successfully applied.\n"+
+					"Please restart the application to see the changes.\n\n"+
+					"The application will close now.",
 				d.parent,
-			).Show()
+			)
+			info.SetOnClosed(d.parent.Close)
+			info.Show()
 		}
 	}()
 }

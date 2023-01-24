@@ -14,22 +14,13 @@ builds:
       - windows
     goarch:
       - amd64
-    binary: app
     ldflags:
       - -s # -s and -w reduce binary size, but prevent debugging (not necessary for production build)
       - -w
       - -X github.com/stnokott/r6-dissect-influx/internal/constants.Version={{ .Version }}
       - -X github.com/stnokott/r6-dissect-influx/internal/constants.Commit={{ .ShortCommit }}
       - -H=windowsgui
-archives:
-  - name_template: >
-      {{ .ProjectName }}_
-      {{- .Version }}_
-      {{- title .Os }}_
-      {{- if eq .Arch "386" }}i386
-      {{- else if eq .Arch "amd64" }}x86_64
-      {{- else }}{{ .Arch }}{{ end }}
-    format: zip
+
 changelog:
   sort: asc
   abbrev: -1
@@ -59,6 +50,12 @@ changelog:
       regexp: "^ci"
     - title: Others
       order: 999
+
+archives:
+  - rlcp: true
+    format: zip
+    strip_parent_binary_folder: true
+
 release:
   target_commitish: "{{ .Commit }}"
   github:

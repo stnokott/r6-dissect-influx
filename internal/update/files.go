@@ -21,7 +21,6 @@ func downloadAsset(a asset) (filepath string, err error) {
 	req.Header.Add("Accept", "application/octet-stream")
 
 	var resp *http.Response
-	// TODO: progress
 	resp, err = http.DefaultClient.Do(req)
 	if err != nil {
 		return

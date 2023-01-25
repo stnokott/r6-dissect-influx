@@ -2,7 +2,6 @@ package root
 
 import (
 	"fmt"
-	"log"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -30,8 +29,6 @@ type aboutDialog struct {
 	lblUpdateReleaseNotes    *widget.RichText
 	btnOpenRelease           *widget.Button
 	btnUpdate                *widget.Button
-
-	err error
 }
 
 func newAboutDialog(parent fyne.Window) *aboutDialog {
@@ -102,7 +99,6 @@ func newAboutDialog(parent fyne.Window) *aboutDialog {
 		parent,
 	)
 	d.SetOnClosed(func() {
-		d.err = nil
 		d.lblNoUpdateAvailable.Hide()
 	})
 	d.Resize(fyne.NewSize(d.MinSize().Width*1.4, d.MinSize().Height))
@@ -113,46 +109,56 @@ func (d *aboutDialog) checkForUpdates() {
 	d.btnCheckForUpdates.Disable()
 	var err error
 	defer func() {
-		// TODO: show error
 		if err != nil {
-			log.Println(err)
-			d.err = err
+			utils.ShowErrDialog(err, nil, d.parent)
 			d.latestRelease = nil
 		}
 		d.btnCheckForUpdates.Enable()
+		d.updateContent()
 	}()
 	d.latestRelease, err = update.GetLatestRelease()
 	if err != nil {
 		return
 	}
-	d.updateContent()
 }
 
 func (d *aboutDialog) performUpdate() {
-	progress := dialog.NewCustom(
+	currentTask := widget.NewLabel("Preparing...")
+	progressDialog := dialog.NewCustom(
 		"Update",
-		"Downloading update...",
-		widget.NewProgressBarInfinite(),
+		"Hide",
+		container.NewVBox(
+			widget.NewProgressBarInfinite(),
+			currentTask,
+		),
 		d.parent,
 	)
-	progress.Show()
+	progressDialog.Show()
+
+	chProgress := d.latestRelease.DownloadAndApply()
 
 	go func() {
-		err := d.latestRelease.DownloadAndApply()
-		if err != nil {
-			progress.Hide()
-			utils.ShowErrDialog(err, d.Hide, d.parent)
-		} else {
-			progress.Hide()
-			info := dialog.NewInformation(
-				"Download complete",
-				"Update successfully downloaded and applied.\n\n"+
-					"Please restart the application now.",
-				d.parent,
-			)
-			info.SetDismissText("Restart")
-			info.SetOnClosed(d.onUpdateComplete)
-			info.Show()
+		for {
+			progressInfo, ok := <-chProgress
+			if !ok {
+				info := dialog.NewInformation(
+					"Download complete",
+					"Update successfully downloaded and applied.\n\n"+
+						"Please restart the application now.",
+					d.parent,
+				)
+				info.SetDismissText("Restart")
+				info.SetOnClosed(d.onUpdateComplete)
+				progressDialog.Hide()
+				info.Show()
+				return
+			} else if progressInfo.Err != nil {
+				progressDialog.Hide()
+				utils.ShowErrDialog(progressInfo.Err, d.Hide, d.parent)
+				return
+			} else {
+				currentTask.SetText(progressInfo.Task)
+			}
 		}
 	}()
 }

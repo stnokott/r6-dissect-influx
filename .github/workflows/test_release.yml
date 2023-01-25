@@ -29,3 +29,4 @@ jobs:
         with:
           name: release-binary
           path: dist/**/*.exe
+          retention-days: 2

@@ -1,8 +1,18 @@
 package constants
 
+import (
+	"net/url"
+
+	"github.com/hashicorp/go-version"
+	"github.com/stnokott/r6-dissect-influx/internal/utils"
+)
+
 var (
-	Version = "dev"
-	Commit  = "unknown"
+	Version     = "v0.0.1"
+	Commit      = "unknown"
+	ProjectName = "r6-dissect-influx"
+	SemVer      = version.Must(version.NewSemver(Version))
+	GithubURL   = utils.Must(url.Parse, "https://github.com/stnokott/"+ProjectName)
 )
 
 const (

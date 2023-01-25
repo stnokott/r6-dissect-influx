@@ -19,6 +19,7 @@ builds:
       - -w
       - -X github.com/stnokott/r6-dissect-influx/internal/constants.Version={{ .Version }}
       - -X github.com/stnokott/r6-dissect-influx/internal/constants.Commit={{ .ShortCommit }}
+      - -X github.com/stnokott/r6-dissect-influx/internal/constants.ProjectName={{ .ProjectName }}
       - -H=windowsgui
 
 changelog:
@@ -30,6 +31,7 @@ changelog:
       - "^style"
       - "^test"
       - "^Merge branch"
+      - "^Merge pull"
       - "^bump: version"
 
   groups:

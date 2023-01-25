@@ -41,7 +41,7 @@ func NewView(a fyne.App) *View {
 				v.openSettings,
 			),
 		),
-		newFooter(),
+		newFooter(v),
 		nil,
 		nil,
 		layout.NewSpacer(), // placeholder

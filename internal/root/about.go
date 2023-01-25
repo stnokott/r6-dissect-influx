@@ -20,23 +20,28 @@ type aboutDialog struct {
 
 	parent fyne.Window
 
-	btnCheckForUpdates   *widget.Button
-	latestRelease        *update.Release
+	btnCheckForUpdates *widget.Button
+	latestRelease      *update.Release
+
 	lblNoUpdateAvailable *widget.Label
-	lblUpdateAvailable   *widget.RichText
-	btnUpdate            *widget.Button
+
+	containerUpdateAvailable *fyne.Container
+	lblUpdateAvailable       *widget.RichText
+	lblUpdateReleaseNotes    *widget.RichText
+	btnOpenRelease           *widget.Button
+	btnUpdate                *widget.Button
 
 	err error
 }
 
 func newAboutDialog(parent fyne.Window) *aboutDialog {
 	d := &aboutDialog{
-		lblNoUpdateAvailable: widget.NewLabel("No update available."),
-		lblUpdateAvailable:   widget.NewRichText(),
-		parent:               parent,
+		lblNoUpdateAvailable:  widget.NewLabel("No update available."),
+		lblUpdateAvailable:    widget.NewRichText(),
+		lblUpdateReleaseNotes: widget.NewRichText(),
+		parent:                parent,
 	}
 	d.lblNoUpdateAvailable.Hide()
-	d.lblUpdateAvailable.Hide()
 
 	d.btnCheckForUpdates = widget.NewButtonWithIcon(
 		"Check for updates",
@@ -50,7 +55,27 @@ func newAboutDialog(parent fyne.Window) *aboutDialog {
 		theme.DownloadIcon(),
 		d.performUpdate,
 	)
-	d.btnUpdate.Hide()
+	d.btnOpenRelease = widget.NewButtonWithIcon(
+		"Show on GitHub",
+		theme.InfoIcon(),
+		func() {
+			utils.OpenURL(d.latestRelease.URL)
+		},
+	)
+
+	d.containerUpdateAvailable = container.NewVBox(
+		container.NewHBox(
+			d.lblUpdateAvailable,
+			d.btnOpenRelease,
+			layout.NewSpacer(),
+			d.btnUpdate,
+		),
+		widget.NewAccordion(widget.NewAccordionItem(
+			"Release notes",
+			d.lblUpdateReleaseNotes,
+		)),
+	)
+	d.containerUpdateAvailable.Hide()
 
 	d.Dialog = dialog.NewCustom(
 		"About",
@@ -68,10 +93,7 @@ func newAboutDialog(parent fyne.Window) *aboutDialog {
 					),
 					layout.NewSpacer(),
 				),
-				container.NewHBox(
-					d.lblUpdateAvailable,
-					d.btnUpdate,
-				),
+				d.containerUpdateAvailable,
 				layout.NewSpacer(),
 				d.btnCheckForUpdates,
 				d.lblNoUpdateAvailable,
@@ -155,15 +177,14 @@ func (d *aboutDialog) onUpdateComplete() {
 func (d *aboutDialog) updateContent() {
 	if d.latestRelease == nil || !d.latestRelease.IsNewer() {
 		d.lblNoUpdateAvailable.Show()
-		d.lblUpdateAvailable.Hide()
-		d.btnUpdate.Hide()
+		d.containerUpdateAvailable.Hide()
 	} else {
 		d.lblNoUpdateAvailable.Hide()
 		d.lblUpdateAvailable.ParseMarkdown(
-			"**Update available to " + d.latestRelease.SemVer.String() + "**",
+			"New version available: **" + d.latestRelease.SemVer.String() + "**",
 		)
-		d.lblUpdateAvailable.Show()
-		d.btnUpdate.Show()
+		d.lblUpdateReleaseNotes.ParseMarkdown(d.latestRelease.Body)
+		d.containerUpdateAvailable.Show()
 	}
 	d.Dialog.Refresh()
 }

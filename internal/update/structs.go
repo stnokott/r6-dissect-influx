@@ -14,6 +14,7 @@ type Release struct {
 	URL         string           `json:"html_url"`
 	SemVer      *version.Version `json:"tag_name"`
 	PublishedAt time.Time        `json:"published_at"`
+	Body        string           `json:"body"`
 	Assets      []asset          `json:"assets"`
 }
 

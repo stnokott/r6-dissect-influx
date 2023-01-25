@@ -1,3 +1,7 @@
+# Files generated from goversioninfo, used by go linker
+*.syso
+
+# Backup files after selfupdate performed
 *.old
 
 dist/**

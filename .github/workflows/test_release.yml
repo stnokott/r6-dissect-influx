@@ -1,0 +1,32 @@
+name: Test Release
+
+on:
+  pull_request: {}
+  pull_request_review_comment:
+    types: [created, edited]
+  workflow_dispatch:
+
+jobs:
+  goreleaser_snapshot:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3.3.0
+        with:
+          fetch-depth: 0
+      - run: git fetch --force --tags
+      - uses: actions/setup-go@v3.5.0
+        with:
+          go-version: ">=1.19"
+          cache: true
+      - uses: goreleaser/goreleaser-action@v4.1.0
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --rm-dist --config=build/.goreleaser.yaml --snapshot --skip-publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: release-binary
+          path: dist/**/*.exe
+          retention-days: 2

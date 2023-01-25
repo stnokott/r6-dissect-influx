@@ -24,7 +24,10 @@ builds:
       - -X github.com/stnokott/r6-dissect-influx/internal/constants.Commit={{ .ShortCommit }}
       - -X github.com/stnokott/r6-dissect-influx/internal/constants.ProjectName={{ .ProjectName }}
       - -linkmode internal
-      # - -H=windowsgui
+      - >-
+        {{- if not .IsSnapshot }}
+          -H=windowsgui
+        {{- end }}
 
 changelog:
   sort: asc

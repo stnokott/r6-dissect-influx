@@ -8,6 +8,8 @@ dist/**
 
 # VSCode
 .vscode/**
+!.vscode/launch.json
+!.vscode/tasks.json
 
 # Binaries for programs and plugins
 *.exe

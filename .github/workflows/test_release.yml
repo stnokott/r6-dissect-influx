@@ -22,7 +22,7 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: release --rm-dist --config=build/.goreleaser.yaml --snapshot --skip-publish
+          args: build --rm-dist --config=build/.goreleaser.yaml --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-artifact@v3

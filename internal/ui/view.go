@@ -1,4 +1,4 @@
-package root
+package ui
 
 import (
 	"log"
@@ -14,6 +14,7 @@ import (
 	"github.com/stnokott/r6-dissect-influx/internal/constants"
 	"github.com/stnokott/r6-dissect-influx/internal/db"
 	"github.com/stnokott/r6-dissect-influx/internal/game"
+	"github.com/stnokott/r6-dissect-influx/internal/ui/matches"
 	"github.com/stnokott/r6-dissect-influx/internal/utils"
 )
 
@@ -95,9 +96,9 @@ func (v *View) blockUntilConfigured() {
 }
 
 func (v *View) loadMainView() {
-	v.replaceCenter(container.NewCenter(
-		widget.NewLabel("PLACEHOLDER: connection validated"),
-	))
+	matchList := matches.NewMatchListView()
+
+	v.replaceCenter(container.NewMax(matchList))
 
 	reader, err := game.NewRoundsReader(config.Current.GameFolder)
 	if err != nil {
@@ -113,6 +114,7 @@ func (v *View) loadMainView() {
 					return
 				}
 				log.Println("got match info for ID:", roundInfo.MatchID)
+				matchList.Add(&roundInfo)
 			case err, ok := <-chErrors:
 				if !ok {
 					log.Println("match errors channel closed")

@@ -2,6 +2,7 @@ package constants
 
 import (
 	"net/url"
+	"time"
 
 	"github.com/hashicorp/go-version"
 	"github.com/stnokott/r6-dissect-influx/internal/utils"
@@ -13,6 +14,8 @@ var (
 	ProjectName = "r6-dissect-influx"
 	SemVer      = version.Must(version.NewSemver(Version))
 	GithubURL   = utils.Must(url.Parse, "https://github.com/stnokott/"+ProjectName)
+
+	UpdateCheckInterval = 5 * time.Minute
 )
 
 const (

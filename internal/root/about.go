@@ -44,7 +44,7 @@ func newAboutDialog(parent fyne.Window) *aboutDialog {
 		"Check for updates",
 		theme.ViewRefreshIcon(),
 		func() {
-			go d.checkForUpdates()
+			go d.CheckForUpdates()
 		},
 	)
 	d.btnUpdate = widget.NewButtonWithIcon(
@@ -105,7 +105,7 @@ func newAboutDialog(parent fyne.Window) *aboutDialog {
 	return d
 }
 
-func (d *aboutDialog) checkForUpdates() {
+func (d *aboutDialog) CheckForUpdates() bool {
 	d.btnCheckForUpdates.Disable()
 	var err error
 	defer func() {
@@ -118,8 +118,9 @@ func (d *aboutDialog) checkForUpdates() {
 	}()
 	d.latestRelease, err = update.GetLatestRelease()
 	if err != nil {
-		return
+		return false
 	}
+	return d.latestRelease.IsNewer()
 }
 
 func (d *aboutDialog) performUpdate() {

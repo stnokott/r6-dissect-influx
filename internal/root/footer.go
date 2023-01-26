@@ -2,6 +2,7 @@ package root
 
 import (
 	"fmt"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -16,13 +17,22 @@ type footer struct {
 	widget.BaseWidget
 	parent fyne.Window
 
-	aboutDialog *aboutDialog
+	btnOpenAbout       *widget.Button
+	lblUpdateAvailable *widget.RichText
+	aboutDialog        *aboutDialog
 }
 
 func newFooter(parent fyne.Window) *footer {
 	f := &footer{
-		parent:      parent,
-		aboutDialog: newAboutDialog(parent),
+		parent:             parent,
+		lblUpdateAvailable: widget.NewRichTextFromMarkdown("**Update available**"),
+		aboutDialog:        newAboutDialog(parent),
+	}
+	f.lblUpdateAvailable.Hide()
+	f.btnOpenAbout = &widget.Button{
+		Icon:       theme.InfoIcon(),
+		Importance: widget.LowImportance,
+		OnTapped:   f.aboutDialog.Show,
 	}
 	f.ExtendBaseWidget(f)
 
@@ -30,6 +40,8 @@ func newFooter(parent fyne.Window) *footer {
 }
 
 func (f *footer) CreateRenderer() fyne.WidgetRenderer {
+	go f.updateChecker()
+
 	return widget.NewSimpleRenderer(container.NewHBox(
 		layout.NewSpacer(),
 		&canvas.Text{
@@ -37,10 +49,22 @@ func (f *footer) CreateRenderer() fyne.WidgetRenderer {
 			TextSize: theme.CaptionTextSize(),
 			Color:    theme.DisabledColor(),
 		},
-		&widget.Button{
-			Icon:       theme.InfoIcon(),
-			Importance: widget.LowImportance,
-			OnTapped:   f.aboutDialog.Show,
-		},
+		f.lblUpdateAvailable,
+		f.btnOpenAbout,
 	))
+}
+
+func (f *footer) updateChecker() {
+	ticker := time.NewTicker(constants.UpdateCheckInterval)
+	for {
+		updateAvailable := f.aboutDialog.CheckForUpdates()
+		if updateAvailable {
+			f.lblUpdateAvailable.Show()
+			f.btnOpenAbout.SetIcon(theme.DownloadIcon())
+		} else {
+			f.lblUpdateAvailable.Hide()
+			f.btnOpenAbout.SetIcon(theme.InfoIcon())
+		}
+		<-ticker.C
+	}
 }

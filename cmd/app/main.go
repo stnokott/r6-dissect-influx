@@ -1,4 +1,6 @@
-//go:generate goversioninfo
+//go:build windows && cgo
+
+//go:generate goversioninfo -64
 
 package main
 
@@ -16,7 +18,7 @@ func main() {
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 
 	a := app.NewWithID(constants.APP_ID)
-	// a.SetIcon(constants.APP_ICON)
+	a.SetIcon(constants.APP_ICON)
 
 	config.Init(a)
 

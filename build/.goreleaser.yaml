@@ -6,9 +6,9 @@ before:
   hooks:
     - go mod tidy
     - go mod verify
-    # - go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@latest
-    # - go run ./tools/versioninfo.go --major {{ .Major }} --minor {{ .Minor }} --patch {{ .Patch }} --project_name {{ .ProjectName }} -o ./cmd/app/versioninfo.json
-    # - go generate ./...
+    - go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@latest
+    - go run ./tools/versioninfo.go --major {{ .Major }} --minor {{ .Minor }} --patch {{ .Patch }} --project_name {{ .ProjectName }} -o ./cmd/app/versioninfo.json
+    - go generate ./...
 builds:
   - main: ./cmd/app
     env:
@@ -23,7 +23,6 @@ builds:
       - -X github.com/stnokott/r6-dissect-influx/internal/constants.Version={{ .Version }}
       - -X github.com/stnokott/r6-dissect-influx/internal/constants.Commit={{ .ShortCommit }}
       - -X github.com/stnokott/r6-dissect-influx/internal/constants.ProjectName={{ .ProjectName }}
-      - -linkmode internal
       - >-
         {{- if not .IsSnapshot }}
           -H=windowsgui

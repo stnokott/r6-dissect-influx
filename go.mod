@@ -10,7 +10,7 @@ require (
 	github.com/josephspurrier/goversioninfo v1.4.0
 	github.com/minio/selfupdate v0.6.0
 	github.com/redraskal/r6-dissect v0.6.1
-	github.com/rs/zerolog v1.28.0
+	github.com/rs/zerolog v1.29.0
 	golang.org/x/sys v0.4.0
 	golang.org/x/text v0.6.0
 )

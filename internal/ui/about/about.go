@@ -56,7 +56,9 @@ func NewDialog(parent fyne.Window) *Dialog {
 		"Show on GitHub",
 		theme.InfoIcon(),
 		func() {
-			utils.OpenURL(d.latestRelease.URL)
+			if err := utils.OpenURL(d.latestRelease.URL); err != nil {
+				utils.ShowErrDialog(err, nil, d.parent)
+			}
 		},
 	)
 

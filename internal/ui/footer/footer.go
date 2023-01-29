@@ -1,4 +1,4 @@
-package ui
+package footer
 
 import (
 	"fmt"
@@ -11,6 +11,7 @@ import (
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/stnokott/r6-dissect-influx/internal/constants"
+	"github.com/stnokott/r6-dissect-influx/internal/ui/about"
 )
 
 type footer struct {
@@ -19,14 +20,14 @@ type footer struct {
 
 	btnOpenAbout       *widget.Button
 	lblUpdateAvailable *widget.RichText
-	aboutDialog        *aboutDialog
+	aboutDialog        *about.Dialog
 }
 
-func newFooter(parent fyne.Window) *footer {
+func New(parent fyne.Window) *footer {
 	f := &footer{
 		parent:             parent,
 		lblUpdateAvailable: widget.NewRichTextFromMarkdown("**Update available**"),
-		aboutDialog:        newAboutDialog(parent),
+		aboutDialog:        about.NewDialog(parent),
 	}
 	f.lblUpdateAvailable.Hide()
 	f.btnOpenAbout = &widget.Button{

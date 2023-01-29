@@ -1,4 +1,4 @@
-package ui
+package root
 
 import (
 	"log"
@@ -14,11 +14,12 @@ import (
 	"github.com/stnokott/r6-dissect-influx/internal/constants"
 	"github.com/stnokott/r6-dissect-influx/internal/db"
 	"github.com/stnokott/r6-dissect-influx/internal/game"
+	"github.com/stnokott/r6-dissect-influx/internal/ui/footer"
 	"github.com/stnokott/r6-dissect-influx/internal/ui/matches"
 	"github.com/stnokott/r6-dissect-influx/internal/utils"
 )
 
-type View struct {
+type Window struct {
 	fyne.Window
 
 	influxClient *db.InfluxClient
@@ -27,11 +28,11 @@ type View struct {
 	centerObject    fyne.CanvasObject
 }
 
-func NewView(a fyne.App) *View {
+func NewWindow(a fyne.App) *Window {
 	w := a.NewWindow(constants.WINDOW_TITLE)
 	w.Resize(fyne.NewSize(800, 600))
 
-	v := &View{
+	v := &Window{
 		Window: w,
 	}
 	v.SetOnClosed(v.onClosed)
@@ -44,7 +45,7 @@ func NewView(a fyne.App) *View {
 				v.openSettings,
 			),
 		),
-		newFooter(v),
+		footer.New(v),
 		nil,
 		nil,
 		layout.NewSpacer(), // placeholder
@@ -60,7 +61,7 @@ func NewView(a fyne.App) *View {
 	return v
 }
 
-func (v *View) replaceCenter(newCenter fyne.CanvasObject) {
+func (v *Window) replaceCenter(newCenter fyne.CanvasObject) {
 	if v.centerObject != nil {
 		v.borderContainer.Remove(v.centerObject)
 	}
@@ -69,7 +70,7 @@ func (v *View) replaceCenter(newCenter fyne.CanvasObject) {
 	v.borderContainer.Refresh()
 }
 
-func (v *View) validateConfig() {
+func (v *Window) validateConfig() {
 	v.replaceCenter(container.NewCenter(
 		container.NewVBox(
 			widget.NewProgressBarInfinite(),
@@ -86,7 +87,7 @@ func (v *View) validateConfig() {
 	}
 }
 
-func (v *View) blockUntilConfigured() {
+func (v *Window) blockUntilConfigured() {
 	v.replaceCenter(container.NewCenter(
 		container.NewVBox(
 			widget.NewLabel("Configuration required."),
@@ -95,7 +96,7 @@ func (v *View) blockUntilConfigured() {
 	))
 }
 
-func (v *View) loadMainView() {
+func (v *Window) loadMainView() {
 	matchList := matches.NewMatchListView()
 
 	v.replaceCenter(container.NewMax(matchList))
@@ -128,18 +129,18 @@ func (v *View) loadMainView() {
 	}()
 }
 
-func (v *View) updateInfluxClient(c *db.InfluxClient) {
+func (v *Window) updateInfluxClient(c *db.InfluxClient) {
 	if v.influxClient != nil {
 		v.influxClient.Close()
 	}
 	v.influxClient = c
 }
 
-func (v *View) openSettings() {
+func (v *Window) openSettings() {
 	config.ShowDialog(v, v.onSettingsConfirmed)
 }
 
-func (v *View) onSettingsConfirmed() {
+func (v *Window) onSettingsConfirmed() {
 	newClient := config.Current.NewInfluxClient()
 	progressDialog := dialog.NewCustom(
 		"Validating connection...",
@@ -171,7 +172,7 @@ func (v *View) onSettingsConfirmed() {
 	}
 }
 
-func (v *View) onClosed() {
+func (v *Window) onClosed() {
 	if v.influxClient != nil {
 		v.influxClient.Close()
 	}

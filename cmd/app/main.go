@@ -10,7 +10,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/stnokott/r6-dissect-influx/internal/config"
 	"github.com/stnokott/r6-dissect-influx/internal/constants"
-	"github.com/stnokott/r6-dissect-influx/internal/ui"
+	"github.com/stnokott/r6-dissect-influx/internal/ui/root"
 )
 
 func main() {
@@ -22,5 +22,5 @@ func main() {
 
 	config.Init(a)
 
-	ui.NewView(a).ShowAndRun()
+	root.NewWindow(a).ShowAndRun()
 }

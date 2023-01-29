@@ -1,4 +1,4 @@
-package ui
+package about
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ import (
 	"github.com/stnokott/r6-dissect-influx/internal/utils"
 )
 
-type aboutDialog struct {
+type Dialog struct {
 	dialog.Dialog
 
 	parent fyne.Window
@@ -31,8 +31,8 @@ type aboutDialog struct {
 	btnUpdate                *widget.Button
 }
 
-func newAboutDialog(parent fyne.Window) *aboutDialog {
-	d := &aboutDialog{
+func NewDialog(parent fyne.Window) *Dialog {
+	d := &Dialog{
 		lblNoUpdateAvailable:  widget.NewLabel("No update available."),
 		lblUpdateAvailable:    widget.NewRichText(),
 		lblUpdateReleaseNotes: widget.NewRichText(),
@@ -105,7 +105,7 @@ func newAboutDialog(parent fyne.Window) *aboutDialog {
 	return d
 }
 
-func (d *aboutDialog) CheckForUpdates() bool {
+func (d *Dialog) CheckForUpdates() bool {
 	d.btnCheckForUpdates.Disable()
 	var err error
 	defer func() {
@@ -123,7 +123,7 @@ func (d *aboutDialog) CheckForUpdates() bool {
 	return d.latestRelease.IsNewer()
 }
 
-func (d *aboutDialog) performUpdate() {
+func (d *Dialog) performUpdate() {
 	currentTask := widget.NewLabel("Preparing...")
 	progressDialog := dialog.NewCustom(
 		"Update",
@@ -164,7 +164,7 @@ func (d *aboutDialog) performUpdate() {
 	}()
 }
 
-func (d *aboutDialog) onUpdateComplete() {
+func (d *Dialog) onUpdateComplete() {
 	if err := utils.RestartApp(); err != nil {
 		d.Hide()
 		e := dialog.NewError(
@@ -181,7 +181,7 @@ func (d *aboutDialog) onUpdateComplete() {
 	}
 }
 
-func (d *aboutDialog) updateContent() {
+func (d *Dialog) updateContent() {
 	if d.latestRelease == nil || !d.latestRelease.IsNewer() {
 		d.lblNoUpdateAvailable.Show()
 		d.containerUpdateAvailable.Hide()

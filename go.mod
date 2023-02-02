@@ -9,7 +9,7 @@ require (
 	github.com/influxdata/influxdb-client-go/v2 v2.12.2
 	github.com/josephspurrier/goversioninfo v1.4.0
 	github.com/minio/selfupdate v0.6.0
-	github.com/redraskal/r6-dissect v0.6.1
+	github.com/redraskal/r6-dissect v0.7.0
 	github.com/rs/zerolog v1.29.0
 	golang.org/x/sys v0.4.0
 	golang.org/x/text v0.6.0
@@ -45,7 +45,7 @@ require (
 	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/tevino/abool v1.2.0 // indirect
 	github.com/yuin/goldmark v1.4.0 // indirect
-	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b // indirect
+	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	golang.org/x/image v0.0.0-20220601225756-64ec528b34cd // indirect
 	golang.org/x/mobile v0.0.0-20211207041440-4e6c2922fdee // indirect
 	golang.org/x/net v0.0.0-20221014081412-f15817d10f9b // indirect

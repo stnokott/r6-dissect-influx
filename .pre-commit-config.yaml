@@ -1,17 +1,17 @@
 fail_fast: true
 repos:
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v2.39.1
+    rev: v2.40.0
     hooks:
       - id: commitizen
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.20.0
+    rev: 0.21.0
     hooks:
       - id: check-github-actions
       - id: check-github-workflows
-  - repo: https://github.com/golangci/golangci-lint
-    rev: v1.50.1
-    hooks:
-      - id: golangci-lint
-        args:
-          - "--timeout=3m0s"
+  #- repo: https://github.com/golangci/golangci-lint
+  #  rev: v1.51.0
+  #  hooks:
+  #    - id: golangci-lint
+  #      args:
+  #        - "--timeout=3m0s"

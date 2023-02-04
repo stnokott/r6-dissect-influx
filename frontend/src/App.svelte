@@ -27,8 +27,7 @@
 
 <style>
   #root {
-    padding-top: 48px;
-    height: calc(100vh - 48px);
+    height: calc(100vh - 4rem);
 
     display: flex;
     flex-direction: column;

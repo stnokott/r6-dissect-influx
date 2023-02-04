@@ -51,20 +51,6 @@
 			"problemMatcher": []
 		},
 		{
-			"label": "npm run prepare-theme",
-			"type": "npm",
-			"script": "prepare-theme",
-			"options": {
-				"cwd": "${workspaceFolder}/frontend"
-			},
-			"presentation": {
-				"clear": true,
-				"panel": "shared",
-				"showReuseMessage": false
-			},
-			"problemMatcher": []
-		},
-		{
 			"label": "wails: generate module",
 			"type": "shell",
 			"command": "wails generate module",

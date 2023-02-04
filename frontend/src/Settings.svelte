@@ -2,13 +2,15 @@
 	import {
 		Modal,
 		Button,
-		ButtonSet,
+		Form,
 		Grid,
+		Tile,
 		Row,
 		Column,
 		TextInput,
 		NumberInput,
 	} from "carbon-components-svelte";
+	import Folder from "carbon-icons-svelte/lib/Folder.svelte";
 
 	export let open = false;
 
@@ -26,33 +28,52 @@
 	primaryButtonText="Save"
 	secondaryButtonText="Cancel"
 >
-	<Grid>
-		<Row>
-			<Column>
-				<TextInput
-					bind:value={gameDir}
-					labelText="Game directory"
-					helperText="Folder should contain RainbowSix.exe"
-				/>
-			</Column>
-			<Column>
-				<ButtonSet>
-					<Button>Open</Button>
-					<Button kind="secondary">Autodetect</Button>
-				</ButtonSet>
-			</Column>
-		</Row>
-		<Row>
-			<Column>
-				<TextInput
-					bind:value={influxDBHost}
-					labelText="InfluxDB Host"
-					helperText="IP or hostname, without http(s)"
-				/>
-			</Column>
-			<Column>
-				<NumberInput bind:value={influxDBPort} label="Port" />
-			</Column>
-		</Row>
-	</Grid>
+	<Form>
+		<Tile light style="margin-bottom: 1rem;">
+			<Grid narrow padding>
+				<Row><h5>Game</h5></Row>
+				<Row>
+					<Column>
+						<TextInput
+							bind:value={gameDir}
+							labelText="Directory"
+							helperText="Folder should contain RainbowSix.exe"
+							required
+						/>
+					</Column>
+					<Column>
+						<div id="game-dir-buttons">
+							<Button icon={Folder} size="field" iconDescription="Open" />
+							<Button kind="secondary" size="field">Autodetect</Button>
+						</div>
+					</Column>
+				</Row>
+			</Grid>
+		</Tile>
+		<Tile light>
+			<Grid narrow padding>
+				<Row><h5>InfluxDB</h5></Row>
+				<Row>
+					<Column>
+						<TextInput
+							bind:value={influxDBHost}
+							labelText="Host"
+							helperText="IP or hostname, without http(s)"
+							required
+						/>
+					</Column>
+					<Column>
+						<NumberInput bind:value={influxDBPort} label="Port" required />
+					</Column>
+				</Row>
+			</Grid>
+		</Tile>
+	</Form>
 </Modal>
+
+<style>
+	#game-dir-buttons {
+		/* accounting for input label */
+		margin-top: calc(1rem + 0.5rem);
+	}
+</style>

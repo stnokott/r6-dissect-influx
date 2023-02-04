@@ -1,19 +1,23 @@
 <script lang="ts">
-	import IconButton from "@smui/icon-button";
+	import { Button, TextInput, Tile } from "carbon-components-svelte";
+	import Add from "carbon-icons-svelte/lib/Add.svelte";
 
+	import { GetVersion } from "../wailsjs/go/main/App.js";
+
+	let buildInfo: string = "";
 	export let openSettings: () => any;
+
+	GetVersion().then((bi) => {
+		buildInfo = `${bi.Version} - ${bi.Commit}`;
+	});
 </script>
 
 <div id="root" class="footer">
 	<div id="left">
-		<IconButton
-			class="material-icons"
-			style="--wails-draggable:no-drag"
-			on:click={openSettings}>settings</IconButton
-		>
+		<Button on:click={openSettings} icon={Add}>Greet</Button>
 	</div>
-	<pre>v0.0.1 - 12345abc</pre>
-	<IconButton class="material-icons-outlined">info</IconButton>
+	<pre>{buildInfo}</pre>
+	<Button icon={Add} style="--wails-draggable:no-drag">Greet</Button>
 </div>
 
 <style>

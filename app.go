@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
+
+	"github.com/stnokott/r6-dissect-influx/internal/constants"
 )
 
 // App struct
@@ -21,7 +22,19 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
+type BuildInfo struct {
+	Version string
+	Commit  string
+}
+
+func (a *App) GetWindowTitle() string {
+	return constants.WINDOW_TITLE
+}
+
 // Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
+func (a *App) GetVersion() *BuildInfo {
+	return &BuildInfo{
+		Version: constants.Version,
+		Commit:  constants.Commit,
+	}
 }

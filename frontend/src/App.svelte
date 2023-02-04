@@ -1,20 +1,20 @@
 <script lang="ts">
-  import "@material-design-icons/font/filled.css";
-  import "@material-design-icons/font/outlined.css";
+  // TODO: change to SCSS
+  import "carbon-components-svelte/css/g90.css";
 
-  import ConfigDialog from "./Dialog.svelte";
+  import SettingsDialog from "./Settings.svelte";
   import ContentView from "./Content.svelte";
   import HeaderView from "./Header.svelte";
   import FooterView from "./Footer.svelte";
 
-  let configDialogOpen: boolean;
+  let settingsDialogOpen: boolean;
 
   function openSettings(): void {
-    configDialogOpen = true;
+    settingsDialogOpen = true;
   }
 </script>
 
-<ConfigDialog bind:open={configDialogOpen} />
+<SettingsDialog bind:open={settingsDialogOpen} />
 <HeaderView />
 <div id="root">
   <div id="content">

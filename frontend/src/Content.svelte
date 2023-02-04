@@ -1,31 +1,17 @@
 <script lang="ts">
-	import Button from "@smui/button";
-	import { Label } from "@smui/common";
-	import Textfield from "@smui/textfield";
-	import HelperText from "@smui/textfield/helper-text";
-	import Card, { Actions, Content } from "@smui/card";
-
-	import { Greet } from "../wailsjs/go/main/App.js";
+	import { Button, TextInput, Tile } from "carbon-components-svelte";
+	import Add from "carbon-icons-svelte/lib/Add.svelte";
 
 	let resultText: string = "Please enter your name below 👇";
 	let name: string = "";
 
 	function greet(): void {
-		Greet(name).then((result) => (resultText = result));
+		resultText = name;
 	}
 </script>
 
-<Card>
-	<Content>
-		<Textfield variant="filled" bind:value={name} label="Name">
-			<HelperText slot="helper">Name to greet</HelperText>
-		</Textfield>
-		<pre>{resultText}</pre>
-	</Content>
-	<Actions fullBleed>
-		<Button on:click={greet}>
-			<Label>Greet</Label>
-			<i class="material-icons-outlined" aria-hidden="true">arrow_forward</i>
-		</Button>
-	</Actions>
-</Card>
+<Tile>
+	<TextInput bind:value={name} labelText="Name" helperText="Name to greet" />
+	<Button on:click={greet} icon={Add}>Greet</Button>
+	{resultText}
+</Tile>

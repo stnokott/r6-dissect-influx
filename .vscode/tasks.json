@@ -65,6 +65,15 @@
 			"problemMatcher": []
 		},
 		{
+			"label": "wails: generate module",
+			"type": "shell",
+			"command": "wails generate module",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		},
+		{
 			"label": "build",
 			"type": "shell",
 			"options": {
@@ -93,6 +102,7 @@
 				"build",
 				"-tags",
 				"production,desktop",
+				"--ldflags='-X github.com/stnokott/r6-dissect-influx/internal/constants.Version=${input:version} -X github.com/stnokott/r6-dissect-influx/internal/constants.Commit=123456a -X github.com/stnokott/r6-dissect-influx/internal/constants.ProjectName=r6-dissect-influx'",
 				"-gcflags",
 				"all=-N -l",
 				"-o",
@@ -132,6 +142,7 @@
 				"build",
 				"-tags",
 				"production,desktop,debug",
+				"--ldflags='-X github.com/stnokott/r6-dissect-influx/internal/constants.Version=${input:version} -X github.com/stnokott/r6-dissect-influx/internal/constants.Commit=123456a -X github.com/stnokott/r6-dissect-influx/internal/constants.ProjectName=r6-dissect-influx'",
 				"-gcflags",
 				"all=-N -l",
 				"-o",
@@ -167,11 +178,23 @@
 				"build",
 				"-tags",
 				"dev",
+				"--ldflags='-X github.com/stnokott/r6-dissect-influx/internal/constants.Version=0.0.1 -X github.com/stnokott/r6-dissect-influx/internal/constants.Commit=123456a -X github.com/stnokott/r6-dissect-influx/internal/constants.ProjectName=r6-dissect-influx'",
 				"-gcflags",
 				"all=-N -l",
 				"-o",
 				"build/bin/r6-dissect-influx-wails.exe"
 			]
+		},
+		{
+			"label": "Wails: Dev",
+			"type": "process",
+			"command": "wails",
+			"args": [
+				"dev"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
 		}
 	],
 	"inputs": [

@@ -5,14 +5,6 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch",
-			"type": "go",
-			"request": "launch",
-			"mode": "auto",
-			"program": "${workspaceFolder}/cmd/app/main.go",
-			"buildFlags": "-tags hints --ldflags='-X github.com/stnokott/r6-dissect-influx/internal/constants.Version=0.0.1 -X github.com/stnokott/r6-dissect-influx/internal/constants.Commit=123456a -X github.com/stnokott/r6-dissect-influx/internal/constants.ProjectName=r6-dissect-influx'",
-		},
-		{
 			"name": "Wails: Production",
 			"type": "go",
 			"request": "launch",

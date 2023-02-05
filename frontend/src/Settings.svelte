@@ -27,6 +27,9 @@
 	modalHeading="Settings"
 	primaryButtonText="Save"
 	secondaryButtonText="Cancel"
+	hasForm={true}
+	hasScrollingContent={true}
+	on:click:button--secondary={() => (open = false)}
 >
 	<Form>
 		<Tile light style="margin-bottom: 1rem;">
@@ -65,6 +68,25 @@
 					<Column>
 						<NumberInput bind:value={influxDBPort} label="Port" required />
 					</Column>
+				</Row>
+				<Row>
+					<Column>
+						<TextInput
+							bind:value={influxDBOrg}
+							labelText="Organization"
+							required
+						/>
+					</Column>
+					<Column>
+						<TextInput
+							bind:value={influxDBBucket}
+							labelText="Bucket"
+							required
+						/>
+					</Column>
+				</Row>
+				<Row>
+					<TextInput bind:value={influxDBToken} labelText="Token" required />
 				</Row>
 			</Grid>
 		</Tile>

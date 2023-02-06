@@ -26,7 +26,7 @@ const (
 	CONFIG_DEFAULT_INFLUX_DB_PORT int = 8086
 )
 
-type Config struct {
+type ConfigDetails struct {
 	GameFolder     string
 	InfluxDBHost   string
 	InfluxDBPort   int
@@ -35,11 +35,11 @@ type Config struct {
 	InfluxDBToken  string
 }
 
-func (c *Config) InfluxURL() string {
+func (c *ConfigDetails) InfluxURL() string {
 	return "http://" + c.InfluxDBHost + ":" + strconv.Itoa(c.InfluxDBPort)
 }
 
-func (c *Config) NewInfluxClient() *db.InfluxClient {
+func (c *ConfigDetails) NewInfluxClient() *db.InfluxClient {
 	return db.NewInfluxClient(db.ConnectOpts{
 		URL:    c.InfluxURL(),
 		Token:  c.InfluxDBToken,
@@ -50,7 +50,7 @@ func (c *Config) NewInfluxClient() *db.InfluxClient {
 
 var (
 	prefs              fyne.Preferences
-	Current            = new(Config)
+	Current            = new(ConfigDetails)
 	bindMatchReplayDir = binding.BindString(&Current.GameFolder)
 	bindInfluxHost     = binding.BindString(&Current.InfluxDBHost)
 	bindInfluxPort     = binding.BindInt(&Current.InfluxDBPort)
@@ -89,26 +89,26 @@ func write() {
 
 const gameExeName string = "RainbowSix.exe"
 
-func gameDirectoryValidator(gameDir string) (err error) {
+func validateGameDir(gameDir string) (err error) {
 	stats, statErr := os.Stat(gameDir)
 	if statErr != nil {
 		if os.IsNotExist(statErr) {
-			err = errors.New("directory does not exist")
+			err = errors.New("Directory does not exist")
 		} else {
 			err = statErr
 		}
 		return
 	} else if !stats.IsDir() {
-		err = errors.New("not a directory")
+		err = errors.New("Not a directory")
 		return
 	}
 
 	pathToExe := path.Join(gameDir, gameExeName)
 	if _, statErr = os.Stat(pathToExe); statErr != nil {
 		if os.IsNotExist(statErr) {
-			err = fmt.Errorf("no %s found in directory", gameExeName)
+			err = fmt.Errorf("No %s found in directory", gameExeName)
 		} else {
-			err = fmt.Errorf("could not find %s in directory: %w", gameExeName, statErr)
+			err = fmt.Errorf("Could not find %s in directory: %w", gameExeName, statErr)
 		}
 		return
 	}
@@ -120,7 +120,7 @@ var (
 	regexHostname = regexp.MustCompile(`^(?:[0-9a-zA-Z]+\.)+[0-9a-zA-Z]{2,4}$`)
 )
 
-func hostAddressValidator(s string) (err error) {
+func validateHostAddress(s string) (err error) {
 	if regexIPv4.MatchString(s) {
 		return
 	} else if regexHostname.MatchString(s) {
@@ -131,7 +131,7 @@ func hostAddressValidator(s string) (err error) {
 	return
 }
 
-func integerValidator(s string) (err error) {
+func validateInteger(s string) (err error) {
 	var port int
 	port, err = strconv.Atoi(s)
 	if err != nil {
@@ -142,7 +142,7 @@ func integerValidator(s string) (err error) {
 	return
 }
 
-func requiredValidator(s string) (err error) {
+func validateRequired(s string) (err error) {
 	if s == "" {
 		err = errors.New("Cannot be empty") //lint:ignore ST1005 will be displayed in UI
 	}

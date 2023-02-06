@@ -12,7 +12,7 @@ import (
 
 const gameFolderRegistryKey string = `SOFTWARE\WOW6432Node\Ubisoft\Launcher\Installs\635`
 
-func matchReplayFolderFromRegistry() (result string, err error) {
+func gameFolderFromRegistry() (result string, err error) {
 	var key registry.Key
 	key, err = registry.OpenKey(registry.LOCAL_MACHINE, gameFolderRegistryKey, registry.QUERY_VALUE)
 	if err != nil {
@@ -29,12 +29,12 @@ func matchReplayFolderFromRegistry() (result string, err error) {
 	var gameDir string
 	gameDir, _, err = key.GetStringValue("InstallDir")
 	if err != nil {
-		err = errors.New("game directory not found")
+		err = errors.New("game directory not found in registry")
 		return
 	}
 
-	if err = gameDirectoryValidator(gameDir); err != nil {
-		err = fmt.Errorf(`game directory "%s" found, but: %w`, gameDir, err)
+	if err = validateGameDir(gameDir); err != nil {
+		err = fmt.Errorf(`game directory "%s" found in registry, but %w`, gameDir, err)
 	} else {
 		result = gameDir
 	}

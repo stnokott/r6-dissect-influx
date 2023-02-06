@@ -137,7 +137,7 @@ func (v *Window) updateInfluxClient(c *db.InfluxClient) {
 }
 
 func (v *Window) openSettings() {
-	config.ShowDialog(v, v.onSettingsConfirmed)
+	//config.ShowDialog(v, v.onSettingsConfirmed)
 }
 
 func (v *Window) onSettingsConfirmed() {

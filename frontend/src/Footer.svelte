@@ -2,14 +2,17 @@
 	import { Button, TextInput, Tile } from "carbon-components-svelte";
 	import Information from "carbon-icons-svelte/lib/Information.svelte";
 	import Settings from "carbon-icons-svelte/lib/Settings.svelte";
+	import { onMount } from "svelte";
 
 	import { GetVersion } from "../wailsjs/go/main/App.js";
 
 	let buildInfo: string = "";
 	export let openSettings: () => any;
 
-	GetVersion().then((bi) => {
-		buildInfo = `${bi.Version} - ${bi.Commit}`;
+	onMount(() => {
+		GetVersion().then((bi) => {
+			buildInfo = `${bi.Version} - ${bi.Commit}`;
+		});
 	});
 </script>
 

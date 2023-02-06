@@ -8,6 +8,7 @@ import (
 	"embed"
 
 	"github.com/rs/zerolog"
+	"github.com/stnokott/r6-dissect-influx/internal/config"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -23,8 +24,8 @@ func main() {
 
 	// config.Init(a)
 
-	// Create an instance of the app structure
 	app := NewApp()
+	cfg := &config.Config{}
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -36,6 +37,7 @@ func main() {
 		OnStartup: app.startup,
 		Bind: []interface{}{
 			app,
+			cfg,
 		},
 		Windows: &windows.Options{
 			Theme: windows.Dark,

@@ -6,12 +6,15 @@
 	import Maximize from "carbon-icons-svelte/lib/Maximize.svelte";
 
 	import { GetWindowTitle } from "../wailsjs/go/main/App.js";
+	import { onMount } from "svelte";
 
 	let title: string = "";
 	let isMaximized = false;
-	window.runtime.WindowIsMaximised().then((v: boolean) => (isMaximized = v));
 
-	GetWindowTitle().then((v) => (title = v));
+	onMount(() => {
+		window.runtime.WindowIsMaximised().then((v: boolean) => (isMaximized = v));
+		GetWindowTitle().then((v) => (title = v));
+	});
 
 	function toggleMaximise(): void {
 		if (isMaximized) {

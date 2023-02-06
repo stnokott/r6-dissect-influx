@@ -2,7 +2,7 @@
   // TODO: change to SCSS
   import "carbon-components-svelte/css/g90.css";
 
-  import SettingsDialog from "./Settings.svelte";
+  import SettingsDialog from "./settings/Settings.svelte";
   import ContentView from "./Content.svelte";
   import HeaderView from "./Header.svelte";
   import FooterView from "./Footer.svelte";

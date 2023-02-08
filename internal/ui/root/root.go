@@ -22,6 +22,7 @@ import (
 type Window struct {
 	fyne.Window
 
+	cfg          *config.ConfigJSON
 	influxClient *db.InfluxClient
 
 	borderContainer *fyne.Container
@@ -52,7 +53,7 @@ func NewWindow(a fyne.App) *Window {
 	)
 	v.SetContent(v.borderContainer)
 
-	if config.IsComplete() {
+	if v.cfg.IsComplete() {
 		go v.validateConfig()
 	} else {
 		v.blockUntilConfigured()
@@ -77,7 +78,7 @@ func (v *Window) validateConfig() {
 			widget.NewLabel("Validating config..."),
 		),
 	))
-	client := config.Current.NewInfluxClient()
+	client := v.cfg.NewInfluxClient()
 	details := client.ValidateConn(10 * time.Second)
 	if details.Err != nil {
 		utils.ShowErrDialog(details.Err, v.openSettings, v.Window)
@@ -101,7 +102,7 @@ func (v *Window) loadMainView() {
 
 	v.replaceCenter(container.NewMax(matchList))
 
-	reader, err := game.NewRoundsReader(config.Current.GameFolder)
+	reader, err := game.NewRoundsReader(v.cfg.Game.InstallDir)
 	if err != nil {
 		panic(err)
 	}
@@ -141,7 +142,7 @@ func (v *Window) openSettings() {
 }
 
 func (v *Window) onSettingsConfirmed() {
-	newClient := config.Current.NewInfluxClient()
+	newClient := v.cfg.NewInfluxClient()
 	progressDialog := dialog.NewCustom(
 		"Validating connection...",
 		"Attempting to connect to InfluxDB...",

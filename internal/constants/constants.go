@@ -13,7 +13,7 @@ var (
 	Commit      = "unknown"
 	ProjectName = "r6-dissect-influx"
 	SemVer      = version.Must(version.NewSemver(Version))
-	GithubURL   = utils.Must(url.Parse, "https://github.com/stnokott/"+ProjectName)
+	GithubURL   = utils.MustArg(url.Parse, "https://github.com/stnokott/"+ProjectName)
 
 	UpdateCheckInterval = 5 * time.Minute
 )

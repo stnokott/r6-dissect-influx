@@ -8,11 +8,16 @@
 		Row,
 		Column,
 		TextInput,
+		PasswordInput,
 		NumberInput,
 		InlineNotification,
+		ToastNotification,
 	} from "carbon-components-svelte";
 	import Folder from "carbon-icons-svelte/lib/Folder.svelte";
+	import { onMount } from "svelte";
 	import {
+		GetConfig,
+		SaveConfig,
 		AutodetectGameDir,
 		ValidateGameDir,
 		ValidateInfluxHost,
@@ -20,11 +25,13 @@
 		ValidateInfluxOrg,
 		ValidateInfluxBucket,
 		ValidateInfluxToken,
-	} from "../../wailsjs/go/config/Config";
-
-	// TODO: persist using stores
+	} from "../../wailsjs/go/config/API";
+	import { config } from "../../wailsjs/go/models";
 
 	export let open = false;
+
+	let errorTitle: string;
+	let errorDetail: string;
 
 	let gameDir: string = "";
 	let influxHost: string = "";
@@ -101,16 +108,65 @@
 		ValidateInfluxToken(influxToken),
 		(e) => (influxTokenValidationErr = e)
 	);
+
+	async function loadConfig() {
+		let cfg = await GetConfig();
+		gameDir = cfg.game.install_dir;
+		influxHost = cfg.influx_db.host;
+		influxPort = cfg.influx_db.port;
+		influxOrg = cfg.influx_db.org;
+		influxBucket = cfg.influx_db.bucket;
+		influxToken = cfg.influx_db.token;
+	}
+
+	async function writeConfig() {
+		let cfg = new config.ConfigJSON({
+			game: {
+				install_dir: gameDir,
+			},
+			influx_db: {
+				host: influxHost,
+				port: influxPort,
+				org: influxOrg,
+				bucket: influxBucket,
+				token: influxToken,
+			},
+		});
+		await SaveConfig(cfg);
+	}
+
+	function onOpen() {
+		loadConfig().catch((e) => {
+			errorTitle = "Could not load config";
+			errorDetail = e;
+		});
+	}
+
+	let writingConfig = false;
+
+	function onConfirm() {
+		writingConfig = true;
+		writeConfig()
+			.then(() => (open = false))
+			.catch((e) => {
+				errorTitle = "Could not write config";
+				errorDetail = e;
+			})
+			.finally(() => (writingConfig = false));
+	}
 </script>
 
 <Modal
 	bind:open
 	modalHeading="Settings"
 	primaryButtonText="Save"
-	primaryButtonDisabled={formInvalid}
+	primaryButtonDisabled={formInvalid || writingConfig}
 	secondaryButtonText="Cancel"
-	hasForm={true}
-	hasScrollingContent={true}
+	preventCloseOnClickOutside
+	hasForm
+	hasScrollingContent
+	on:open={onOpen}
+	on:click:button--primary={onConfirm}
 	on:click:button--secondary={() => (open = false)}
 >
 	<Form>
@@ -201,7 +257,7 @@
 					</Column>
 				</Row>
 				<Row>
-					<TextInput
+					<PasswordInput
 						bind:value={influxToken}
 						invalid={influxTokenValidationErr !== null}
 						invalidText={influxTokenValidationErr}
@@ -212,6 +268,17 @@
 			</Grid>
 		</Tile>
 	</Form>
+	{#if errorTitle}
+		<ToastNotification>
+			kind="error" title="Error" subtitle={errorTitle}
+			caption={errorDetail}
+			timeout={5000}
+			on:close={(e) => {
+				e.preventDefault();
+				errorTitle = null;
+			}}
+		</ToastNotification>
+	{/if}
 </Modal>
 
 <style>

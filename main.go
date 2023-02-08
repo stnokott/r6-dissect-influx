@@ -6,6 +6,9 @@ package main
 
 import (
 	"embed"
+	"os"
+
+	"github.com/tawesoft/golib/v2/dialog"
 
 	"github.com/rs/zerolog"
 	"github.com/stnokott/r6-dissect-influx/internal/config"
@@ -22,13 +25,17 @@ func main() {
 	// necessary for r6-dissect
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 
-	// config.Init(a)
+	_ = dialog.Init()
 
 	app := NewApp()
-	cfg := &config.Config{}
+	cfg, err := config.New()
+	if err != nil {
+		_ = dialog.Error(err.Error())
+		os.Exit(-1)
+	}
 
 	// Create application with options
-	err := wails.Run(&options.App{
+	err = wails.Run(&options.App{
 		Width:  800,
 		Height: 600,
 		AssetServer: &assetserver.Options{
@@ -46,6 +53,7 @@ func main() {
 	})
 
 	if err != nil {
-		println("Error:", err.Error())
+		_ = dialog.Error(err.Error())
+		os.Exit(-1)
 	}
 }

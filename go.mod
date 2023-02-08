@@ -11,6 +11,7 @@ require (
 	github.com/minio/selfupdate v0.6.0
 	github.com/redraskal/r6-dissect v0.6.1
 	github.com/rs/zerolog v1.29.0
+	github.com/tawesoft/golib/v2 v2.7.1
 	github.com/wailsapp/wails/v2 v2.3.1
 	golang.org/x/sys v0.4.0
 	golang.org/x/text v0.6.0
@@ -19,6 +20,7 @@ require (
 require (
 	aead.dev/minisign v0.2.0 // indirect
 	github.com/akavel/rsrc v0.10.2 // indirect
+	github.com/alessio/shellescape v1.4.1 // indirect
 	github.com/benoitkugler/textlayout v0.3.0 // indirect
 	github.com/bep/debounce v1.2.1 // indirect
 	github.com/deepmap/oapi-codegen v1.8.2 // indirect
@@ -53,7 +55,7 @@ require (
 	github.com/wailsapp/mimetype v1.4.1 // indirect
 	github.com/yuin/goldmark v1.4.13 // indirect
 	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b // indirect
-	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
+	golang.org/x/exp v0.0.0-20221208152030-732eee02a75a // indirect
 	golang.org/x/image v0.0.0-20220601225756-64ec528b34cd // indirect
 	golang.org/x/mobile v0.0.0-20211207041440-4e6c2922fdee // indirect
 	golang.org/x/net v0.0.0-20221014081412-f15817d10f9b // indirect

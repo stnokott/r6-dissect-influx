@@ -7,21 +7,28 @@
   import HeaderView from "./Header.svelte";
   import FooterView from "./Footer.svelte";
 
+  import type { db } from "./settings/types";
+
   let settingsDialogOpen: boolean;
+  let connectionDetails: db.ConnectionDetails;
 
   function openSettings(): void {
     settingsDialogOpen = true;
   }
+
+  function onConnected(details: db.ConnectionDetails): void {
+    connectionDetails = details;
+  }
 </script>
 
-<SettingsDialog bind:open={settingsDialogOpen} />
+<SettingsDialog bind:open={settingsDialogOpen} {onConnected} />
 <HeaderView />
 <div id="root">
   <div id="content">
     <ContentView />
   </div>
   <div id="footer">
-    <FooterView {openSettings} />
+    <FooterView {openSettings} {connectionDetails} />
   </div>
 </div>
 

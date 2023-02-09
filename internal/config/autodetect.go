@@ -12,7 +12,7 @@ import (
 
 const gameFolderRegistryKey string = `SOFTWARE\WOW6432Node\Ubisoft\Launcher\Installs\635`
 
-func gameFolderFromRegistry() (result string, err error) {
+func GameFolderFromRegistry() (result string, err error) {
 	var key registry.Key
 	key, err = registry.OpenKey(registry.LOCAL_MACHINE, gameFolderRegistryKey, registry.QUERY_VALUE)
 	if err != nil {

@@ -22,7 +22,7 @@ import (
 type Window struct {
 	fyne.Window
 
-	cfg          *config.ConfigJSON
+	cfg          *config.Config
 	influxClient *db.InfluxClient
 
 	borderContainer *fyne.Container
@@ -79,9 +79,9 @@ func (v *Window) validateConfig() {
 		),
 	))
 	client := v.cfg.NewInfluxClient()
-	details := client.ValidateConn(10 * time.Second)
-	if details.Err != nil {
-		utils.ShowErrDialog(details.Err, v.openSettings, v.Window)
+	_, err := client.ValidateConn(10 * time.Second)
+	if err != nil {
+		utils.ShowErrDialog(err, v.openSettings, v.Window)
 		v.blockUntilConfigured()
 	} else {
 		v.loadMainView()
@@ -150,10 +150,10 @@ func (v *Window) onSettingsConfirmed() {
 		v,
 	)
 	progressDialog.Show()
-	details := newClient.ValidateConn(10 * time.Second)
-	if details.Err != nil {
+	details, err := newClient.ValidateConn(10 * time.Second)
+	if err != nil {
 		progressDialog.Hide()
-		utils.ShowErrDialog(details.Err, v.openSettings, v)
+		utils.ShowErrDialog(err, v.openSettings, v)
 	} else {
 		v.updateInfluxClient(newClient)
 		progressDialog.Hide()

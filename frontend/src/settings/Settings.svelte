@@ -7,17 +7,16 @@
 		Tile,
 		Row,
 		Column,
+		InlineLoading,
 		TextInput,
 		PasswordInput,
 		NumberInput,
 		InlineNotification,
-		ToastNotification,
 	} from "carbon-components-svelte";
 	import Folder from "carbon-icons-svelte/lib/Folder.svelte";
-	import { onMount } from "svelte";
 	import {
 		GetConfig,
-		SaveConfig,
+		SaveAndValidateConfig,
 		AutodetectGameDir,
 		ValidateGameDir,
 		ValidateInfluxHost,
@@ -25,10 +24,14 @@
 		ValidateInfluxOrg,
 		ValidateInfluxBucket,
 		ValidateInfluxToken,
-	} from "../../wailsjs/go/config/API";
+	} from "../../wailsjs/go/main/App";
 	import { config } from "../../wailsjs/go/models";
+	import type { db } from "./types";
 
 	export let open = false;
+	// TODO: this needs to be typed, but Wails currently does not generate the correct bindings
+	// try running bindings again once this is fixed and see if the TS type is available
+	export let onConnected: (details: db.ConnectionDetails) => void = undefined;
 
 	let errorTitle: string;
 	let errorDetail: string;
@@ -119,8 +122,8 @@
 		influxToken = cfg.influx_db.token;
 	}
 
-	async function writeConfig() {
-		let cfg = new config.ConfigJSON({
+	async function saveConfig() {
+		let cfg = new config.Config({
 			game: {
 				install_dir: gameDir,
 			},
@@ -132,27 +135,49 @@
 				token: influxToken,
 			},
 		});
-		await SaveConfig(cfg);
+		let connDetails = await SaveAndValidateConfig(cfg);
+		if (onConnected) {
+			onConnected(connDetails);
+			console.log(connDetails);
+		}
 	}
+
+	let loadingConfig = false;
 
 	function onOpen() {
-		loadConfig().catch((e) => {
-			errorTitle = "Could not load config";
-			errorDetail = e;
-		});
-	}
-
-	let writingConfig = false;
-
-	function onConfirm() {
-		writingConfig = true;
-		writeConfig()
-			.then(() => (open = false))
+		loadingConfig = true;
+		loadConfig()
 			.catch((e) => {
-				errorTitle = "Could not write config";
+				errorTitle = "Could not load config:";
 				errorDetail = e;
 			})
-			.finally(() => (writingConfig = false));
+			.finally(() => (loadingConfig = false));
+	}
+
+	let validatingConfig = false;
+
+	function onConfirm() {
+		validatingConfig = true;
+		saveConfig()
+			.then(() => (open = false))
+			.catch((e) => {
+				errorTitle = "Could not save config:";
+				errorDetail = e;
+			})
+			.finally(() => (validatingConfig = false));
+	}
+
+	let loadingDesc: string;
+	$: {
+		if (autodetectRunning) {
+			loadingDesc = "Finding game folder...";
+		} else if (loadingConfig) {
+			loadingDesc = "Loading configuration...";
+		} else if (validatingConfig) {
+			loadingDesc = "Validating configuration...";
+		} else {
+			loadingDesc = null;
+		}
 	}
 </script>
 
@@ -160,7 +185,7 @@
 	bind:open
 	modalHeading="Settings"
 	primaryButtonText="Save"
-	primaryButtonDisabled={formInvalid || writingConfig}
+	primaryButtonDisabled={formInvalid || validatingConfig}
 	secondaryButtonText="Cancel"
 	preventCloseOnClickOutside
 	hasForm
@@ -169,6 +194,23 @@
 	on:click:button--primary={onConfirm}
 	on:click:button--secondary={() => (open = false)}
 >
+	<div id="header" style:display={loadingDesc || errorTitle ? "flex" : "none"}>
+		<div>
+			{#if loadingDesc}
+				<InlineLoading description={loadingDesc} />
+			{:else if errorTitle}
+				<InlineNotification
+					kind="error"
+					title={errorTitle}
+					subtitle={errorDetail}
+					on:close={(e) => {
+						e.preventDefault();
+						errorTitle = null;
+					}}
+				/>
+			{/if}
+		</div>
+	</div>
 	<Form>
 		<Tile light style="margin-bottom: 1rem;">
 			<Grid narrow padding>
@@ -268,22 +310,25 @@
 			</Grid>
 		</Tile>
 	</Form>
-	{#if errorTitle}
-		<ToastNotification>
-			kind="error" title="Error" subtitle={errorTitle}
-			caption={errorDetail}
-			timeout={5000}
-			on:close={(e) => {
-				e.preventDefault();
-				errorTitle = null;
-			}}
-		</ToastNotification>
-	{/if}
 </Modal>
 
 <style>
 	#game-dir-buttons {
 		/* accounting for input label */
 		margin-top: calc(1rem + 0.5rem);
+	}
+
+	#header {
+		position: fixed;
+		z-index: 1000;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.666);
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 </style>

@@ -16,7 +16,7 @@ import (
 
 const CONFIG_DEFAULT_INFLUX_DB_PORT int = 8086
 
-type ConfigJSON struct {
+type Config struct {
 	Game     GameConfigJson   `json:"game"`
 	InfluxDB InfluxConfigJson `json:"influx_db"`
 }
@@ -33,7 +33,30 @@ type InfluxConfigJson struct {
 	Token  string `json:"token"`
 }
 
-func (c *ConfigJSON) IsComplete() bool {
+func (c *Config) Read() error {
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			// config file does not exist
+			setDefaults(c)
+			return c.Write()
+		} else {
+			return err
+		}
+	}
+
+	return json.Unmarshal(data, c)
+}
+
+func (c *Config) Write() error {
+	if data, err := json.Marshal(c); err != nil {
+		return err
+	} else {
+		return os.WriteFile(configPath, data, 0644)
+	}
+}
+
+func (c *Config) IsComplete() bool {
 	return c.Game.InstallDir != "" &&
 		c.InfluxDB.Host != "" &&
 		c.InfluxDB.Org != "" &&
@@ -41,11 +64,11 @@ func (c *ConfigJSON) IsComplete() bool {
 		c.InfluxDB.Token != ""
 }
 
-func (c *ConfigJSON) InfluxURL() string {
+func (c *Config) InfluxURL() string {
 	return "http://" + c.InfluxDB.Host + ":" + strconv.Itoa(c.InfluxDB.Port)
 }
 
-func (c *ConfigJSON) NewInfluxClient() *db.InfluxClient {
+func (c *Config) NewInfluxClient() *db.InfluxClient {
 	return db.NewInfluxClient(db.ConnectOpts{
 		URL:    c.InfluxURL(),
 		Token:  c.InfluxDB.Token,
@@ -54,31 +77,8 @@ func (c *ConfigJSON) NewInfluxClient() *db.InfluxClient {
 	})
 }
 
-func setDefaults(target *ConfigJSON) {
+func setDefaults(target *Config) {
 	target.InfluxDB.Port = CONFIG_DEFAULT_INFLUX_DB_PORT
-}
-
-func read(configPath string, target *ConfigJSON) error {
-	data, err := os.ReadFile(configPath)
-	if err != nil {
-		if os.IsNotExist(err) {
-			// config file does not exist
-			setDefaults(target)
-			return write(target, configPath)
-		} else {
-			return err
-		}
-	}
-
-	return json.Unmarshal(data, target)
-}
-
-func write(target *ConfigJSON, configPath string) error {
-	if data, err := json.Marshal(target); err != nil {
-		return err
-	} else {
-		return os.WriteFile(configPath, data, 0644)
-	}
 }
 
 const gameExeName string = "RainbowSix.exe"

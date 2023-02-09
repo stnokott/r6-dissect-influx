@@ -32,12 +32,12 @@ export namespace config {
 	        this.install_dir = source["install_dir"];
 	    }
 	}
-	export class ConfigJSON {
+	export class Config {
 	    game: GameConfigJson;
 	    influx_db: InfluxConfigJson;
 	
 	    static createFrom(source: any = {}) {
-	        return new ConfigJSON(source);
+	        return new Config(source);
 	    }
 	
 	    constructor(source: any = {}) {

@@ -8,10 +8,10 @@ import (
 	"embed"
 	"os"
 
+	"github.com/stnokott/r6-dissect-influx/internal/config"
 	"github.com/tawesoft/golib/v2/dialog"
 
 	"github.com/rs/zerolog"
-	"github.com/stnokott/r6-dissect-influx/internal/config"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -27,12 +27,13 @@ func main() {
 
 	_ = dialog.Init()
 
-	app := NewApp()
-	cfg, err := config.New()
+	cfg, err := config.Init()
 	if err != nil {
 		_ = dialog.Error(err.Error())
 		os.Exit(-1)
 	}
+
+	app := NewApp(cfg)
 
 	// Create application with options
 	err = wails.Run(&options.App{
@@ -44,7 +45,6 @@ func main() {
 		OnStartup: app.startup,
 		Bind: []interface{}{
 			app,
-			cfg,
 		},
 		Windows: &windows.Options{
 			Theme: windows.Dark,

@@ -17,6 +17,7 @@
 	import {
 		GetConfig,
 		SaveAndValidateConfig,
+		OpenGameDirDialog,
 		AutodetectGameDir,
 		ValidateGameDir,
 		ValidateInfluxHost,
@@ -58,10 +59,18 @@
 		influxBucketValidationErr !== null ||
 		influxTokenValidationErr !== null;
 
+	function openGameDirDialog(): void {
+		OpenGameDirDialog().then((d) => {
+			if (d !== "") {
+				gameDir = d;
+			}
+		});
+	}
+
 	let autodetectRunning = false;
 	let autodetectError: string = null;
 
-	async function autodetect(): Promise<void> {
+	async function autodetectGameDir(): Promise<void> {
 		autodetectRunning = true;
 		try {
 			gameDir = await AutodetectGameDir();
@@ -227,9 +236,14 @@
 					</Column>
 					<Column>
 						<div id="game-dir-buttons">
-							<Button icon={Folder} size="field" iconDescription="Open" />
 							<Button
-								on:click={autodetect}
+								on:click={openGameDirDialog}
+								icon={Folder}
+								size="field"
+								iconDescription="Open"
+							/>
+							<Button
+								on:click={autodetectGameDir}
 								disabled={autodetectRunning}
 								kind="secondary"
 								size="field">Autodetect</Button

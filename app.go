@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/wailsapp/wails/v2/pkg/runtime"
+
 	"github.com/stnokott/r6-dissect-influx/internal/config"
 	"github.com/stnokott/r6-dissect-influx/internal/constants"
 	"github.com/stnokott/r6-dissect-influx/internal/db"
@@ -40,6 +42,13 @@ func (a *App) GetVersion() *BuildInfo {
 		Version: constants.Version,
 		Commit:  constants.Commit,
 	}
+}
+
+func (a *App) OpenGameDirDialog() (string, error) {
+	options := runtime.OpenDialogOptions{
+		Title: "Choose game directory",
+	}
+	return runtime.OpenDirectoryDialog(a.ctx, options)
 }
 
 func (_ *App) AutodetectGameDir() (string, error) {

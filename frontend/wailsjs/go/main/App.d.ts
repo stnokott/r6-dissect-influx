@@ -12,7 +12,11 @@ export function GetVersion():Promise<main.BuildInfo>;
 
 export function GetWindowTitle():Promise<string>;
 
+export function OpenGameDirDialog():Promise<string>;
+
 export function SaveAndValidateConfig(arg1:config.Config):Promise<db.ConnectionDetails>;
+
+export function SubscribeMatches():Promise<void>;
 
 export function ValidateGameDir(arg1:string):Promise<void>;
 

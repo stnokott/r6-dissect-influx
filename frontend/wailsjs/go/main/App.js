@@ -18,8 +18,16 @@ export function GetWindowTitle() {
   return window['go']['main']['App']['GetWindowTitle']();
 }
 
+export function OpenGameDirDialog() {
+  return window['go']['main']['App']['OpenGameDirDialog']();
+}
+
 export function SaveAndValidateConfig(arg1) {
   return window['go']['main']['App']['SaveAndValidateConfig'](arg1);
+}
+
+export function SubscribeMatches() {
+  return window['go']['main']['App']['SubscribeMatches']();
 }
 
 export function ValidateGameDir(arg1) {

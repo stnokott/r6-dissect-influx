@@ -3,7 +3,7 @@ module github.com/stnokott/r6-dissect-influx
 go 1.19
 
 require (
-	fyne.io/fyne/v2 v2.3.0
+	fyne.io/fyne/v2 v2.3.1
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/hashicorp/go-version v1.6.0
 	github.com/influxdata/influxdb-client-go/v2 v2.12.2
@@ -17,7 +17,7 @@ require (
 
 require (
 	aead.dev/minisign v0.2.0 // indirect
-	fyne.io/systray v1.10.1-0.20221115204952-d16a6177e6f1 // indirect
+	fyne.io/systray v1.10.1-0.20230207085535-4a244dbb9d03 // indirect
 	github.com/akavel/rsrc v0.10.2 // indirect
 	github.com/benoitkugler/textlayout v0.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

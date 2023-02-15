@@ -9,3 +9,39 @@ declare global {
 }
 
 window.runtime = window.runtime || {};
+
+export namespace app {
+	export class AppInfo {
+		ProjectName: string
+		Version: string
+		Commit: string
+		GithubURL: string
+	}
+	export class ReleaseInfo {
+		IsNewer: boolean
+		Version: string
+		Commitish: string
+		PublishedAt: string
+		Changelog: string
+	}
+	export class UpdateProgress {
+		Task: string
+		Complete: boolean
+	}
+
+	export class EventNames {
+		NewRound: string
+		RoundWatcherError: string
+		RoundWatcherStopped: string
+		UpdateProgress: string
+		UpdateErr: string
+	}
+}
+
+export namespace db {
+	export class ConnectionDetails {
+		Name: string
+		Version: string
+		Commit: string
+	}
+}

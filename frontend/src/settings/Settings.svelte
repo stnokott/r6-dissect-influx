@@ -28,7 +28,8 @@
 		ValidateInfluxToken,
 	} from "../../wailsjs/go/main/App";
 	import { config } from "../../wailsjs/go/models";
-	import type { db } from "./settings";
+	import type { db } from "../index";
+	import LoadingOverlay from "../components/LoadingOverlay.svelte";
 
 	export let open = false;
 
@@ -165,17 +166,24 @@
 			.finally(() => (loadingConfig = false));
 	}
 
+	let loadingOverlayVisible = false;
 	let validatingConfig = false;
 
 	function onConfirm() {
 		validatingConfig = true;
+		loadingOverlayVisible = true;
 		saveConfig()
-			.then(() => (open = false))
+			.then(() => {
+				open = false;
+				loadingOverlayVisible = false;
+			})
 			.catch((e) => {
 				errorTitle = "Could not save config:";
 				errorDetail = e;
 			})
-			.finally(() => (validatingConfig = false));
+			.finally(() => {
+				validatingConfig = false;
+			});
 	}
 
 	let loadingDesc: string;
@@ -196,32 +204,24 @@
 	bind:open
 	modalHeading="Settings"
 	primaryButtonText="Save"
-	primaryButtonDisabled={configInvalid || validatingConfig}
+	primaryButtonDisabled={configInvalid ||
+		validatingConfig ||
+		loadingOverlayVisible}
 	secondaryButtonText="Cancel"
 	preventCloseOnClickOutside
 	hasForm
 	hasScrollingContent
+	selectorPrimaryFocus="#input-influx-host"
 	on:open={onOpen}
 	on:click:button--primary={onConfirm}
 	on:click:button--secondary={() => (open = false)}
 >
-	<div id="header" style:display={loadingDesc || errorTitle ? "flex" : "none"}>
-		<div>
-			{#if loadingDesc}
-				<InlineLoading description={loadingDesc} />
-			{:else if errorTitle}
-				<InlineNotification
-					kind="error"
-					title={errorTitle}
-					subtitle={errorDetail}
-					on:close={(e) => {
-						e.preventDefault();
-						errorTitle = null;
-					}}
-				/>
-			{/if}
-		</div>
-	</div>
+	<LoadingOverlay
+		bind:open={loadingOverlayVisible}
+		{loadingDesc}
+		{errorTitle}
+		{errorDetail}
+	/>
 	<Form>
 		<Tile light style="margin-bottom: 1rem;">
 			<Grid narrow padding>
@@ -276,6 +276,7 @@
 				<Row>
 					<Column>
 						<TextInput
+							id="input-influx-host"
 							bind:value={influxHost}
 							invalid={influxHostValidationErr !== null}
 							invalidText={influxHostValidationErr}
@@ -332,19 +333,5 @@
 	#game-dir-buttons {
 		/* accounting for input label */
 		margin-top: calc(1rem + 0.5rem);
-	}
-
-	#header {
-		position: fixed;
-		z-index: 1000;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.666);
-
-		display: flex;
-		align-items: center;
-		justify-content: center;
 	}
 </style>

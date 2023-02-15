@@ -11,6 +11,7 @@
 		GetEventNames,
 		StartRoundWatcher,
 	} from "./../../wailsjs/go/main/App";
+	import type { app } from "../index";
 	import type { matches } from "./matches";
 
 	let error: string;
@@ -32,7 +33,7 @@
 	}
 
 	onMount(() => {
-		GetEventNames().then((e: matches.EventNames) => {
+		GetEventNames().then((e: app.EventNames) => {
 			window.runtime.EventsOn(e.NewRound, onNewRound);
 			window.runtime.EventsOn(e.RoundWatcherStopped, onRoundWatcherStopped);
 			window.runtime.EventsOn(e.RoundWatcherError, onRoundWatcherError);

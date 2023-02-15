@@ -10,6 +10,10 @@ export function Connect() {
   return window['go']['main']['App']['Connect']();
 }
 
+export function GetAppInfo() {
+  return window['go']['main']['App']['GetAppInfo']();
+}
+
 export function GetConfig() {
   return window['go']['main']['App']['GetConfig']();
 }
@@ -18,8 +22,8 @@ export function GetEventNames() {
   return window['go']['main']['App']['GetEventNames']();
 }
 
-export function GetVersion() {
-  return window['go']['main']['App']['GetVersion']();
+export function GetLatestRelease() {
+  return window['go']['main']['App']['GetLatestRelease']();
 }
 
 export function GetWindowTitle() {
@@ -40,6 +44,10 @@ export function SaveAndValidateConfig(arg1) {
 
 export function StartRoundWatcher() {
   return window['go']['main']['App']['StartRoundWatcher']();
+}
+
+export function StartUpdate() {
+  return window['go']['main']['App']['StartUpdate']();
 }
 
 export function ValidateGameDir(arg1) {

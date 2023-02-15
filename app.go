@@ -10,6 +10,7 @@ import (
 	"github.com/stnokott/r6-dissect-influx/internal/config"
 	"github.com/stnokott/r6-dissect-influx/internal/constants"
 	"github.com/stnokott/r6-dissect-influx/internal/db"
+	"github.com/stnokott/r6-dissect-influx/internal/update"
 )
 
 // App struct
@@ -29,20 +30,77 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-type BuildInfo struct {
-	Version string
-	Commit  string
+type AppInfo struct {
+	ProjectName string
+	Version     string
+	Commit      string
+	GithubURL   string
 }
 
 func (a *App) GetWindowTitle() string {
 	return constants.WINDOW_TITLE
 }
 
-func (a *App) GetVersion() *BuildInfo {
-	return &BuildInfo{
-		Version: constants.Version,
-		Commit:  constants.Commit,
+func (a *App) GetAppInfo() *AppInfo {
+	return &AppInfo{
+		ProjectName: constants.ProjectName,
+		Version:     constants.Version,
+		Commit:      constants.Commit,
+		GithubURL:   constants.GithubURL.String(),
 	}
+}
+
+type ReleaseInfo struct {
+	IsNewer     bool
+	Version     string
+	Commitish   string
+	PublishedAt time.Time
+	Changelog   string
+}
+
+func (_ *App) GetLatestRelease() (*ReleaseInfo, error) {
+	release, err := update.GetLatestRelease()
+	if err != nil {
+		return nil, err
+	}
+	if len(release.Commitish) > 7 {
+		release.Commitish = release.Commitish[:7]
+	}
+	return &ReleaseInfo{
+		IsNewer:     release.IsNewer(),
+		Version:     release.SemVer.String(),
+		Commitish:   release.Commitish,
+		PublishedAt: release.PublishedAt,
+		Changelog:   release.Body,
+	}, nil
+}
+
+type UpdateProgress struct {
+	Task     string
+	Complete bool
+}
+
+func (a *App) StartUpdate() error {
+	release, err := update.GetLatestRelease()
+	if err != nil {
+		return err
+	}
+	chProgress := release.DownloadAndApply()
+	go func() {
+		for {
+			progressInfo, ok := <-chProgress
+			if !ok {
+				runtime.EventsEmit(a.ctx, eventNames.UpdateProgress, UpdateProgress{Complete: true})
+				return
+			} else if progressInfo.Err != nil {
+				runtime.EventsEmit(a.ctx, eventNames.UpdateErr, progressInfo.Err.Error())
+				return
+			} else {
+				runtime.EventsEmit(a.ctx, eventNames.UpdateProgress, UpdateProgress{Task: progressInfo.Task})
+			}
+		}
+	}()
+	return nil
 }
 
 func (a *App) OpenGameDirDialog() (string, error) {
@@ -116,5 +174,5 @@ func (a *App) Connect() (details *db.ConnectionDetails, err error) {
 	if a.influxClient == nil {
 		a.influxClient = a.config.NewInfluxClient()
 	}
-	return a.influxClient.ValidateConn(10 * time.Second);
+	return a.influxClient.ValidateConn(10 * time.Second)
 }

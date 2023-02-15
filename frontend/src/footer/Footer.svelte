@@ -1,7 +1,6 @@
 <script lang="ts">
 	import {
 		Button,
-		SkeletonPlaceholder,
 		Tag,
 		TagSkeleton,
 		TooltipDefinition,
@@ -11,18 +10,21 @@
 	import Settings from "carbon-icons-svelte/lib/Settings.svelte";
 	import { onMount } from "svelte";
 
-	import { GetVersion } from "../wailsjs/go/main/App.js";
-	import type { db } from "./settings/settings";
+	import { GetAppInfo } from "../../wailsjs/go/main/App.js";
+	import type { app, db } from "../index";
 	import { Cloud, CloudOffline } from "carbon-icons-svelte";
+	import About from "../about/About.svelte";
 
 	const dispatch = createEventDispatcher<{ openSettings: void }>();
+
+	let aboutOpen = false;
 
 	let buildInfo: string = "";
 
 	export let promConnectionDetails: Promise<db.ConnectionDetails> = null;
 
 	onMount(() => {
-		GetVersion().then((bi) => {
+		GetAppInfo().then((bi: app.AppInfo) => {
 			buildInfo = `${bi.Version} - ${bi.Commit}`;
 		});
 	});
@@ -65,8 +67,10 @@
 		tooltipPosition="left"
 		size="field"
 		kind="ghost"
+		on:click={() => (aboutOpen = true)}
 	/>
 </div>
+<About bind:open={aboutOpen} />
 
 <style>
 	#root {

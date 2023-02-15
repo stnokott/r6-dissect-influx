@@ -8,10 +8,10 @@
   import SettingsDialog from "./settings/Settings.svelte";
   import MatchList from "./matches/MatchList.svelte";
   import HeaderView from "./Header.svelte";
-  import FooterView from "./Footer.svelte";
+  import FooterView from "./footer/Footer.svelte";
 
   import { IsConfigComplete, Connect } from "./../wailsjs/go/main/App";
-  import type { db } from "./settings/settings";
+  import type { db } from "./index";
   import { onMount } from "svelte";
 
   let settingsDialogOpen: boolean;

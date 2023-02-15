@@ -6,8 +6,16 @@ export function AutodetectGameDir() {
   return window['go']['main']['App']['AutodetectGameDir']();
 }
 
+export function Connect() {
+  return window['go']['main']['App']['Connect']();
+}
+
 export function GetConfig() {
   return window['go']['main']['App']['GetConfig']();
+}
+
+export function GetEventNames() {
+  return window['go']['main']['App']['GetEventNames']();
 }
 
 export function GetVersion() {
@@ -18,6 +26,10 @@ export function GetWindowTitle() {
   return window['go']['main']['App']['GetWindowTitle']();
 }
 
+export function IsConfigComplete() {
+  return window['go']['main']['App']['IsConfigComplete']();
+}
+
 export function OpenGameDirDialog() {
   return window['go']['main']['App']['OpenGameDirDialog']();
 }
@@ -26,8 +38,8 @@ export function SaveAndValidateConfig(arg1) {
   return window['go']['main']['App']['SaveAndValidateConfig'](arg1);
 }
 
-export function SubscribeMatches() {
-  return window['go']['main']['App']['SubscribeMatches']();
+export function StartRoundWatcher() {
+  return window['go']['main']['App']['StartRoundWatcher']();
 }
 
 export function ValidateGameDir(arg1) {

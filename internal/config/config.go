@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path"
@@ -29,6 +30,29 @@ func Init() (*Config, error) {
 		return nil, err
 	}
 	return config, nil
+}
+
+func (c *Config) Read() error {
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			// config file does not exist
+			setDefaults(c)
+			return c.Write()
+		} else {
+			return err
+		}
+	}
+
+	return json.Unmarshal(data, c)
+}
+
+func (c *Config) Write() error {
+	if data, err := json.Marshal(c); err != nil {
+		return err
+	} else {
+		return os.WriteFile(configPath, data, 0644)
+	}
 }
 
 type fnValidator func(string) error

@@ -13,6 +13,7 @@
 		NumberInput,
 		InlineNotification,
 	} from "carbon-components-svelte";
+	import { createEventDispatcher } from "svelte";
 	import Folder from "carbon-icons-svelte/lib/Folder.svelte";
 	import {
 		GetConfig,
@@ -27,12 +28,14 @@
 		ValidateInfluxToken,
 	} from "../../wailsjs/go/main/App";
 	import { config } from "../../wailsjs/go/models";
-	import type { db } from "./types";
+	import type { db } from "./settings";
 
 	export let open = false;
-	// TODO: this needs to be typed, but Wails currently does not generate the correct bindings
-	// try running bindings again once this is fixed and see if the TS type is available
-	export let onConnected: (details: db.ConnectionDetails) => void = undefined;
+
+	const dispatch = createEventDispatcher<{
+		connected: db.ConnectionDetails;
+		changed: void;
+	}>();
 
 	let errorTitle: string;
 	let errorDetail: string;
@@ -51,7 +54,7 @@
 	let influxBucketValidationErr: string;
 	let influxTokenValidationErr: string;
 
-	$: formInvalid =
+	$: configInvalid =
 		gameDirValidationErr !== null ||
 		influxHostValidationErr !== null ||
 		influxPortValidationErr !== null ||
@@ -145,10 +148,9 @@
 			},
 		});
 		let connDetails = await SaveAndValidateConfig(cfg);
-		if (onConnected) {
-			onConnected(connDetails);
-			console.log(connDetails);
-		}
+
+		dispatch("connected", connDetails);
+		dispatch("changed");
 	}
 
 	let loadingConfig = false;
@@ -194,7 +196,7 @@
 	bind:open
 	modalHeading="Settings"
 	primaryButtonText="Save"
-	primaryButtonDisabled={formInvalid || validatingConfig}
+	primaryButtonDisabled={configInvalid || validatingConfig}
 	secondaryButtonText="Cancel"
 	preventCloseOnClickOutside
 	hasForm

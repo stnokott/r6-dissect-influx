@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -83,6 +84,10 @@ func (a *App) GetConfig() *config.Config {
 	return a.config
 }
 
+func (a *App) IsConfigComplete() bool {
+	return a.config.IsComplete()
+}
+
 func (a *App) SaveAndValidateConfig(cfg *config.Config) (details *db.ConnectionDetails, err error) {
 	newClient := cfg.NewInfluxClient()
 	details, err = newClient.ValidateConn(10 * time.Second)
@@ -95,11 +100,21 @@ func (a *App) SaveAndValidateConfig(cfg *config.Config) (details *db.ConnectionD
 		}
 	}()
 
-	if err = a.config.Write(); err != nil {
+	if err = cfg.Write(); err != nil {
 		return
 	}
 
 	a.config = cfg
 	a.influxClient = newClient
 	return
+}
+
+func (a *App) Connect() (details *db.ConnectionDetails, err error) {
+	if a.config == nil || !a.config.IsComplete() {
+		return nil, errors.New("config incomplete, please setup first")
+	}
+	if a.influxClient == nil {
+		a.influxClient = a.config.NewInfluxClient()
+	}
+	return a.influxClient.ValidateConn(10 * time.Second);
 }

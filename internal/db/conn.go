@@ -61,7 +61,7 @@ func (c *InfluxClient) Close() {
 	c.client.Close()
 }
 
-func (c *InfluxClient) ValidateConn(timeout time.Duration) (update *ConnectionDetails, err error) {
+func (c *InfluxClient) ValidateConn(timeout time.Duration) (details *ConnectionDetails, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -77,7 +77,7 @@ func (c *InfluxClient) ValidateConn(timeout time.Duration) (update *ConnectionDe
 	if err = c.validateCanWrite(c.opts.Org, c.opts.Bucket); err != nil {
 		return
 	}
-	update = &ConnectionDetails{
+	details = &ConnectionDetails{
 		Name:    health.Name,
 		Version: *health.Version,
 		Commit:  *health.Commit,

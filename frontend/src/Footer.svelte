@@ -1,17 +1,25 @@
 <script lang="ts">
-	import { Button, Tag } from "carbon-components-svelte";
+	import {
+		Button,
+		SkeletonPlaceholder,
+		Tag,
+		TagSkeleton,
+		TooltipDefinition,
+	} from "carbon-components-svelte";
+	import { createEventDispatcher } from "svelte";
 	import Information from "carbon-icons-svelte/lib/Information.svelte";
 	import Settings from "carbon-icons-svelte/lib/Settings.svelte";
-	import ConnectionSignal from "carbon-icons-svelte/lib/ConnectionSignal.svelte";
-	import ConnectionSignalOff from "carbon-icons-svelte/lib/ConnectionSignalOff.svelte";
 	import { onMount } from "svelte";
 
 	import { GetVersion } from "../wailsjs/go/main/App.js";
-	import type { db } from "./settings/types";
+	import type { db } from "./settings/settings";
+	import { Cloud, CloudOffline } from "carbon-icons-svelte";
+
+	const dispatch = createEventDispatcher<{ openSettings: void }>();
 
 	let buildInfo: string = "";
-	export let openSettings: () => any;
-	export let connectionDetails: db.ConnectionDetails = null;
+
+	export let promConnectionDetails: Promise<db.ConnectionDetails> = null;
 
 	onMount(() => {
 		GetVersion().then((bi) => {
@@ -23,7 +31,7 @@
 <div id="root" class="footer">
 	<div id="left">
 		<Button
-			on:click={openSettings}
+			on:click={() => dispatch("openSettings")}
 			icon={Settings}
 			iconDescription="Settings"
 			tooltipPosition="right"
@@ -31,15 +39,22 @@
 			kind="secondary"
 		/>
 		<div id="connection-details">
-			{#if connectionDetails}
-				<ConnectionSignal size={16} />
-				<Tag size="sm">{connectionDetails.Name}</Tag>
-				<Tag size="sm"
-					>{connectionDetails.Version} - {connectionDetails.Commit}</Tag
-				>
+			{#if promConnectionDetails}
+				{#await promConnectionDetails}
+					<TagSkeleton size="sm" />
+				{:then connectionDetails}
+					<Tag size="sm" icon={Cloud}
+						>{connectionDetails.Name} - {connectionDetails.Version} - {connectionDetails.Commit}</Tag
+					>
+				{:catch err}
+					<TooltipDefinition direction="top" align="start" tooltipText={err}>
+						<Tag size="sm" icon={CloudOffline} type="red" interactive
+							>Connection error</Tag
+						>
+					</TooltipDefinition>
+				{/await}
 			{:else}
-				<ConnectionSignalOff size={16} />
-				<Tag size="sm">Not connected</Tag>
+				<Tag size="sm" icon={CloudOffline}>Not connected</Tag>
 			{/if}
 		</div>
 	</div>

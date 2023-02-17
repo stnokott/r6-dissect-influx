@@ -51,7 +51,7 @@
 					updateTask = "Preparing...";
 					updateErr = null;
 				})
-				.catch((e) => console.log(e));
+				.catch((e) => (updateErr = e));
 		}
 	}
 
@@ -65,7 +65,6 @@
 	}
 
 	function onUpdateErr(err: string) {
-		console.log(`err: ${err}`);
 		updateTask = null;
 		updateErr = err;
 	}
@@ -139,6 +138,10 @@
 					</TooltipDefinition>
 				{/await}
 			</div>
+			{#if updateErr && !updateOverlayVisible}
+				<InlineNotification title="Error" subtitle={updateErr} />
+			{/if}
+
 			<!--UPDATE-->
 			{#await promReleaseInfo}
 				<SkeletonPlaceholder style="width: 100%" />

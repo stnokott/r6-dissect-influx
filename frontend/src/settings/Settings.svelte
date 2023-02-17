@@ -172,6 +172,7 @@
 	function onConfirm() {
 		validatingConfig = true;
 		loadingOverlayVisible = true;
+		errorTitle = null;
 		saveConfig()
 			.then(() => {
 				open = false;

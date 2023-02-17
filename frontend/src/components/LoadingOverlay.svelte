@@ -3,15 +3,24 @@
 
 	export let open: boolean;
 	export let loadingDesc: string;
+
+	// will show slotted component if done == true
+	export let done = false;
+
+	// will show loader with loadingDesc if errorTitle is null
 	export let errorTitle: string = null;
 	export let errorDetail: string = null;
 </script>
 
 <div id="root" style:display={open ? "flex" : "none"}>
 	<div>
-		{#if loadingDesc}
-			<InlineLoading description={loadingDesc} />
-		{:else if errorTitle}
+		{#if errorTitle === null}
+			{#if !done}
+				<InlineLoading description={loadingDesc} />
+			{:else}
+				<slot />
+			{/if}
+		{:else}
 			<InlineNotification
 				kind="error"
 				title={errorTitle}

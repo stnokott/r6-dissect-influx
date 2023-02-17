@@ -2,6 +2,7 @@
 	import {
 		Button,
 		ExpandableTile,
+		InlineNotification,
 		Link,
 		Modal,
 		SkeletonPlaceholder,
@@ -31,27 +32,34 @@
 		return GetAppInfo();
 	}
 
-	let updateInProgress = false;
+	let updateOverlayVisible = false;
+	let updateComplete = false;
 	let updateTask: string;
-	let updateErr: string;
+	let updateErr: string = null;
 
-	function startUpdate(release: app.ReleaseInfo) {
-		if (release.IsNewer) {
+	function startUpdate(release?: app.ReleaseInfo) {
+		if (updateComplete) {
+			// update already complete, waiting for restart
+			updateOverlayVisible = true;
+			return;
+		}
+		if (release!.IsNewer) {
 			// TODO: catch
 			StartUpdate()
-				.then(() => (updateInProgress = true))
+				.then(() => {
+					updateOverlayVisible = true;
+					updateTask = "Preparing...";
+					updateErr = null;
+				})
 				.catch((e) => console.log(e));
 		}
 	}
 
 	function onUpdateProgress(p: app.UpdateProgress) {
-		console.log("progress");
-		console.log(p);
 		if (!p.Complete) {
 			updateTask = p.Task;
 		} else {
-			// TODO: popup
-			updateInProgress = false;
+			updateComplete = true;
 			updateTask = null;
 		}
 	}
@@ -78,11 +86,23 @@
 	on:close={() => (open = false)}
 >
 	<LoadingOverlay
-		bind:open={updateInProgress}
+		bind:open={updateOverlayVisible}
 		loadingDesc={updateTask}
-		errorTitle="Update failed"
+		errorTitle={updateErr === null ? null : "Update failed"}
 		errorDetail={updateErr}
-	/>
+		done={updateComplete}
+	>
+		<InlineNotification
+			kind="success"
+			title="Update downloaded and applied"
+			subtitle="Please restart the application"
+			on:close={(e) => {
+				e.preventDefault();
+				updateOverlayVisible = false;
+				open = false;
+			}}
+		/>
+	</LoadingOverlay>
 	<Tile>
 		{#await appInfo()}
 			<SkeletonText heading />

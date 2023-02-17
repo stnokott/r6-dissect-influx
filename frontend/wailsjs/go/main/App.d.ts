@@ -14,15 +14,17 @@ export function GetConfig():Promise<config.Config>;
 
 export function GetEventNames():Promise<main.EventNames>;
 
-export function GetLatestRelease():Promise<main.ReleaseInfo>;
-
 export function GetWindowTitle():Promise<string>;
 
 export function IsConfigComplete():Promise<boolean>;
 
 export function OpenGameDirDialog():Promise<string>;
 
+export function RequestLatestReleaseInfo():Promise<void>;
+
 export function SaveAndValidateConfig(arg1:config.Config):Promise<db.ConnectionDetails>;
+
+export function StartReleaseWatcher():Promise<void>;
 
 export function StartRoundWatcher():Promise<void>;
 

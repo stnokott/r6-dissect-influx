@@ -21,7 +21,7 @@
 	import {
 		GetAppInfo,
 		GetEventNames,
-		GetLatestRelease,
+		RequestLatestReleaseInfo,
 		StartUpdate,
 	} from "../../wailsjs/go/main/App";
 	import type { app } from "../index";
@@ -34,10 +34,10 @@
 		return GetAppInfo();
 	}
 
-	let promReleaseInfo: Promise<app.ReleaseInfo>;
+	let latestReleaseInfo: app.ReleaseInfo = null;
+	let latestReleaseInfoErr: string = null;
 	let updateCheckCooldownFunc = null;
-	const updateCheckCooldownMs = 30 * 1000;
-	checkForUpdate();
+	const updateCheckCooldownMs = 60 * 1000;
 
 	function checkForUpdate() {
 		if (updateCheckCooldownFunc) {
@@ -46,7 +46,7 @@
 		updateCheckCooldownFunc = setTimeout(() => {
 			updateCheckCooldownFunc = null;
 		}, updateCheckCooldownMs);
-		promReleaseInfo = GetLatestRelease();
+		RequestLatestReleaseInfo();
 	}
 
 	let updateOverlayVisible = false;
@@ -85,10 +85,21 @@
 		updateErr = err;
 	}
 
+	function onLatestReleaseInfo(r: app.ReleaseInfo) {
+		latestReleaseInfo = r;
+		latestReleaseInfoErr = null;
+	}
+
+	function onLatestReleaseInfoErr(e: string) {
+		latestReleaseInfoErr = e;
+	}
+
 	onMount(() => {
 		GetEventNames().then((e: app.EventNames) => {
 			window.runtime.EventsOn(e.UpdateProgress, onUpdateProgress);
 			window.runtime.EventsOn(e.UpdateErr, onUpdateErr);
+			window.runtime.EventsOn(e.LatestReleaseInfo, onLatestReleaseInfo);
+			window.runtime.EventsOn(e.LatestReleaseInfoErr, onLatestReleaseInfoErr);
 		});
 	});
 </script>
@@ -139,29 +150,25 @@
 
 				<span id="lbl-latest-version">Latest version:</span>
 				<span id="tag-latest-version">
-					{#if promReleaseInfo === null}
+					{#if latestReleaseInfo === null}
 						<Tag skeleton />
+					{:else if latestReleaseInfoErr === null}
+						<Tag
+							type={latestReleaseInfo.IsNewer ? "green" : "gray"}
+							interactive={latestReleaseInfo.IsNewer}
+							icon={latestReleaseInfo.IsNewer ? CloudDownload : undefined}
+							on:click={() => startUpdate(latestReleaseInfo)}
+						>
+							{latestReleaseInfo.Version} - {latestReleaseInfo.Commitish}
+						</Tag>
 					{:else}
-						{#await promReleaseInfo}
-							<Tag skeleton />
-						{:then release}
-							<Tag
-								type={release.IsNewer ? "green" : "gray"}
-								interactive={release.IsNewer}
-								icon={release.IsNewer ? CloudDownload : undefined}
-								on:click={() => startUpdate(release)}
-							>
-								{release.Version} - {release.Commitish}
-							</Tag>
-						{:catch err}
-							<TooltipDefinition
-								direction="top"
-								align="start"
-								tooltipText={err}
-							>
-								<Tag type="red" interactive>Error</Tag>
-							</TooltipDefinition>
-						{/await}
+						<TooltipDefinition
+							direction="top"
+							align="start"
+							tooltipText={latestReleaseInfoErr}
+						>
+							<Tag type="red" interactive>Error</Tag>
+						</TooltipDefinition>
 					{/if}
 				</span>
 				<div id="btn-check-updates">
@@ -185,26 +192,28 @@
 			{/if}
 
 			<!--UPDATE-->
-			{#await promReleaseInfo}
+			{#if latestReleaseInfo === null}
 				<SkeletonPlaceholder style="width: 100%; height: 8vh;" />
-			{:then release}
+			{:else}
 				<ExpandableTile light>
 					<div slot="above">
-						<span>Changelog for <strong>{release.Version}</strong></span>
+						<span
+							>Changelog for <strong>{latestReleaseInfo.Version}</strong></span
+						>
 					</div>
 					<div slot="below">
-						{#await marked.parse( release.Changelog, { gfm: true, async: true, headerIds: false } )}
+						{#await marked.parse( latestReleaseInfo.Changelog, { gfm: true, async: true, headerIds: false } )}
 							<SkeletonPlaceholder style="width: 100%; height: 10vh" />
 						{:then md}
 							{@html md}
 						{/await}
 						{@const publishedString = new Date(
-							release.PublishedAt
+							latestReleaseInfo.PublishedAt
 						).toLocaleString()}
 						<Tag type="outline">Published {publishedString}</Tag>
 					</div>
 				</ExpandableTile>
-			{/await}
+			{/if}
 		{/await}
 	</Tile>
 </Modal>

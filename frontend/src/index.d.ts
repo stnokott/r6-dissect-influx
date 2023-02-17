@@ -33,6 +33,8 @@ export namespace app {
 		NewRound: string
 		RoundWatcherError: string
 		RoundWatcherStopped: string
+		LatestReleaseInfo: string
+		LatestReleaseInfoErr: string
 		UpdateProgress: string
 		UpdateErr: string
 	}

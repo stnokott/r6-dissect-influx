@@ -22,10 +22,6 @@ export function GetEventNames() {
   return window['go']['main']['App']['GetEventNames']();
 }
 
-export function GetLatestRelease() {
-  return window['go']['main']['App']['GetLatestRelease']();
-}
-
 export function GetWindowTitle() {
   return window['go']['main']['App']['GetWindowTitle']();
 }
@@ -38,8 +34,16 @@ export function OpenGameDirDialog() {
   return window['go']['main']['App']['OpenGameDirDialog']();
 }
 
+export function RequestLatestReleaseInfo() {
+  return window['go']['main']['App']['RequestLatestReleaseInfo']();
+}
+
 export function SaveAndValidateConfig(arg1) {
   return window['go']['main']['App']['SaveAndValidateConfig'](arg1);
+}
+
+export function StartReleaseWatcher() {
+  return window['go']['main']['App']['StartReleaseWatcher']();
 }
 
 export function StartRoundWatcher() {

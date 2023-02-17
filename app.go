@@ -58,7 +58,7 @@ type ReleaseInfo struct {
 	Changelog   string
 }
 
-func (_ *App) GetLatestRelease() (*ReleaseInfo, error) {
+func (*App) getLatestRelease() (*ReleaseInfo, error) {
 	release, err := update.GetLatestRelease()
 	if err != nil {
 		return nil, err
@@ -73,6 +73,25 @@ func (_ *App) GetLatestRelease() (*ReleaseInfo, error) {
 		PublishedAt: release.PublishedAt,
 		Changelog:   release.Body,
 	}, nil
+}
+
+func (a *App) RequestLatestReleaseInfo() {
+	latest, err := a.getLatestRelease()
+	if err == nil {
+		runtime.EventsEmit(a.ctx, eventNames.LatestReleaseInfo, latest)
+	} else {
+		runtime.EventsEmit(a.ctx, eventNames.LatestReleaseInfoErr, err)
+	}
+}
+
+func (a *App) StartReleaseWatcher() {
+	ticker := time.NewTicker(constants.UpdateCheckInterval)
+	go func() {
+		for {
+			a.RequestLatestReleaseInfo()
+			<-ticker.C
+		}
+	}()
 }
 
 type UpdateProgress struct {
@@ -110,31 +129,31 @@ func (a *App) OpenGameDirDialog() (string, error) {
 	return runtime.OpenDirectoryDialog(a.ctx, options)
 }
 
-func (_ *App) AutodetectGameDir() (string, error) {
+func (*App) AutodetectGameDir() (string, error) {
 	return config.GameFolderFromRegistry()
 }
 
-func (_ *App) ValidateGameDir(v string) error {
+func (*App) ValidateGameDir(v string) error {
 	return config.GameDirValidator.Validate(v)
 }
 
-func (_ *App) ValidateInfluxHost(v string) error {
+func (*App) ValidateInfluxHost(v string) error {
 	return config.InfluxHostValidator.Validate(v)
 }
 
-func (_ *App) ValidateInfluxPort(v string) error {
+func (*App) ValidateInfluxPort(v string) error {
 	return config.InfluxPortValidator.Validate(v)
 }
 
-func (_ *App) ValidateInfluxOrg(v string) error {
+func (*App) ValidateInfluxOrg(v string) error {
 	return config.InfluxOrgValidator.Validate(v)
 }
 
-func (_ *App) ValidateInfluxBucket(v string) error {
+func (*App) ValidateInfluxBucket(v string) error {
 	return config.InfluxBucketValidator.Validate(v)
 }
 
-func (_ *App) ValidateInfluxToken(v string) error {
+func (*App) ValidateInfluxToken(v string) error {
 	return config.InfluxTokenValidator.Validate(v)
 }
 

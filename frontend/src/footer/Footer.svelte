@@ -10,9 +10,13 @@
 	import Settings from "carbon-icons-svelte/lib/Settings.svelte";
 	import { onMount } from "svelte";
 
-	import { GetAppInfo } from "../../wailsjs/go/main/App.js";
+	import {
+		GetAppInfo,
+		GetEventNames,
+		StartReleaseWatcher,
+	} from "../../wailsjs/go/main/App.js";
 	import type { app, db } from "../index";
-	import { Cloud, CloudOffline } from "carbon-icons-svelte";
+	import { Cloud, CloudOffline, MacShift } from "carbon-icons-svelte";
 	import About from "../about/About.svelte";
 
 	const dispatch = createEventDispatcher<{ openSettings: void }>();
@@ -23,9 +27,19 @@
 
 	export let promConnectionDetails: Promise<db.ConnectionDetails> = null;
 
+	let updateAvailable = false;
+
+	function onLatestReleaseInfo(r: app.ReleaseInfo) {
+		updateAvailable = r.IsNewer;
+	}
+
 	onMount(() => {
 		GetAppInfo().then((bi: app.AppInfo) => {
 			buildInfo = `${bi.Version} - ${bi.Commit}`;
+		});
+		GetEventNames().then((e: app.EventNames) => {
+			window.runtime.EventsOn(e.LatestReleaseInfo, onLatestReleaseInfo);
+			StartReleaseWatcher();
 		});
 	});
 </script>
@@ -62,11 +76,13 @@
 	</div>
 	<pre>{buildInfo}</pre>
 	<Button
-		icon={Information}
-		iconDescription="Information"
+		icon={updateAvailable ? MacShift : Information}
+		kind={updateAvailable ? "secondary" : "ghost"}
+		iconDescription={updateAvailable
+			? "Information (Update available!)"
+			: "Information"}
 		tooltipPosition="left"
 		size="field"
-		kind="ghost"
 		on:click={() => (aboutOpen = true)}
 	/>
 </div>

@@ -11,7 +11,11 @@
 		Tile,
 		TooltipDefinition,
 	} from "carbon-components-svelte";
-	import { CloudDownload, Launch } from "carbon-icons-svelte";
+	import {
+		CloudDownload,
+		Launch,
+		WatsonHealthRotate_360,
+	} from "carbon-icons-svelte";
 	import { marked } from "marked";
 	import LoadingOverlay from "../components/LoadingOverlay.svelte";
 	import {
@@ -25,11 +29,24 @@
 
 	export let open = false;
 
-	const promReleaseInfo: Promise<app.ReleaseInfo> = GetLatestRelease();
-
 	// stupid wrapper to add typing because Wails doesn't generate typing for GetAppInfo
 	function appInfo(): Promise<app.AppInfo> {
 		return GetAppInfo();
+	}
+
+	let promReleaseInfo: Promise<app.ReleaseInfo>;
+	let updateCheckCooldownFunc = null;
+	const updateCheckCooldownMs = 30 * 1000;
+	checkForUpdate();
+
+	function checkForUpdate() {
+		if (updateCheckCooldownFunc) {
+			return;
+		}
+		updateCheckCooldownFunc = setTimeout(() => {
+			updateCheckCooldownFunc = null;
+		}, updateCheckCooldownMs);
+		promReleaseInfo = GetLatestRelease();
 	}
 
 	let updateOverlayVisible = false;
@@ -44,7 +61,6 @@
 			return;
 		}
 		if (release!.IsNewer) {
-			// TODO: catch
 			StartUpdate()
 				.then(() => {
 					updateOverlayVisible = true;
@@ -105,9 +121,7 @@
 	<Tile>
 		{#await appInfo()}
 			<SkeletonText heading />
-			<SkeletonText />
-			<SkeletonText heading />
-			<SkeletonText />
+			<SkeletonPlaceholder style="width: 100%; height: 20vh;" />
 		{:then info}
 			<!--HEADER-->
 			<h2>{info.ProjectName}</h2>
@@ -118,25 +132,53 @@
 			>
 			<!--VERSION-->
 			<div id="versions-container">
-				<span>Current version:</span>
-				<Tag>{info.Version} - {info.Commit}</Tag>
-				<span>Latest version:</span>
-				{#await promReleaseInfo}
-					<Tag skeleton />
-				{:then release}
-					<Tag
-						type={release.IsNewer ? "green" : "gray"}
-						interactive={release.IsNewer}
-						icon={release.IsNewer ? CloudDownload : undefined}
-						on:click={() => startUpdate(release)}
-					>
-						{release.Version} - {release.Commitish}
-					</Tag>
-				{:catch err}
-					<TooltipDefinition direction="top" align="start" tooltipText={err}>
-						<Tag type="red" interactive>Error</Tag>
-					</TooltipDefinition>
-				{/await}
+				<span id="lbl-current-version">Current version:</span>
+				<span id="tag-current-version"
+					><Tag>{info.Version} - {info.Commit}</Tag></span
+				>
+
+				<span id="lbl-latest-version">Latest version:</span>
+				<span id="tag-latest-version">
+					{#if promReleaseInfo === null}
+						<Tag skeleton />
+					{:else}
+						{#await promReleaseInfo}
+							<Tag skeleton />
+						{:then release}
+							<Tag
+								type={release.IsNewer ? "green" : "gray"}
+								interactive={release.IsNewer}
+								icon={release.IsNewer ? CloudDownload : undefined}
+								on:click={() => startUpdate(release)}
+							>
+								{release.Version} - {release.Commitish}
+							</Tag>
+						{:catch err}
+							<TooltipDefinition
+								direction="top"
+								align="start"
+								tooltipText={err}
+							>
+								<Tag type="red" interactive>Error</Tag>
+							</TooltipDefinition>
+						{/await}
+					{/if}
+				</span>
+				<div id="btn-check-updates">
+					{#if updateCheckCooldownFunc === null}
+						<Button
+							icon={WatsonHealthRotate_360}
+							size="field"
+							on:click={checkForUpdate}>Check for Updates</Button
+						>
+					{:else}
+						<TooltipDefinition tooltipText="On cooldown" direction="top">
+							<Button icon={WatsonHealthRotate_360} size="field" disabled
+								>Check for Updates</Button
+							>
+						</TooltipDefinition>
+					{/if}
+				</div>
 			</div>
 			{#if updateErr && !updateOverlayVisible}
 				<InlineNotification title="Error" subtitle={updateErr} />
@@ -144,7 +186,7 @@
 
 			<!--UPDATE-->
 			{#await promReleaseInfo}
-				<SkeletonPlaceholder style="width: 100%" />
+				<SkeletonPlaceholder style="width: 100%; height: 8vh;" />
 			{:then release}
 				<ExpandableTile light>
 					<div slot="above">
@@ -169,11 +211,36 @@
 
 <style>
 	#versions-container {
-		margin-top: 0.5rem;
+		margin: 0.5rem 0;
 
 		display: grid;
-		grid-template-columns: repeat(2, fit-content(100%));
+		grid-template-columns: repeat(2, fit-content(100%)) auto;
+		grid-template-rows: repeat(2, 1fr);
+		grid-template-areas:
+			"lbl-current-version tag-current-version ."
+			"lbl-latest-version  tag-latest-version  btn-check-updates";
 		align-items: center;
 		column-gap: 0.5rem;
+	}
+
+	#lbl-current-version {
+		grid-area: lbl-current-version;
+	}
+
+	#lbl-latest-version {
+		grid-area: lbl-latest-version;
+	}
+
+	#tag-current-version {
+		grid-area: tag-current-version;
+	}
+
+	#tag-latest-version {
+		grid-area: tag-latest-version;
+	}
+
+	#btn-check-updates {
+		grid-area: btn-check-updates;
+		justify-self: end;
 	}
 </style>

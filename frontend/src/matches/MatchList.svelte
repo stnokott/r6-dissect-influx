@@ -1,11 +1,7 @@
 <script lang="ts">
-	import {
-		Tile,
-		UnorderedList,
-		ListItem,
-		InlineNotification,
-	} from "carbon-components-svelte";
+	import { InlineNotification } from "carbon-components-svelte";
 	import { onMount } from "svelte";
+	import MatchItem from "./MatchItem.svelte";
 
 	import {
 		GetEventNames,
@@ -43,6 +39,14 @@
 	});
 </script>
 
+<div id="match-container">
+	{#each [...matchInfos] as [matchID, roundInfos] (matchID)}
+		<MatchItem {roundInfos} />
+	{:else}
+		No content
+	{/each}
+</div>
+
 <div id="error-container">
 	{#if error}
 		<InlineNotification
@@ -58,17 +62,13 @@
 	{/if}
 </div>
 
-<Tile>
-	<UnorderedList>
-		{#each [...matchInfos] as [matchID, roundInfos]}
-			<ListItem>{matchID} -> {roundInfos.length} rounds</ListItem>
-		{:else}
-			No content
-		{/each}
-	</UnorderedList>
-</Tile>
-
 <style>
+	#match-container {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
 	#error-container {
 		position: fixed;
 		right: 0;

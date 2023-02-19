@@ -1,12 +1,23 @@
 export namespace matches {
 	export class RoundInfo {
-		// Players             []Player
+		Players: Array<PlayerInfo>
 		SeasonSlug: string
 		RecordingPlayerName: string
 		MatchID: string
-		// Time                time.Time
-		MatchType: string
-		GameMode: string
+		Time: string
+		MatchType: "CASUAL" | "UNRANKED" | "RANKED"
+		GameMode: "BOMB" | "HOSTAGE"
 		MapName: string
+	}
+
+	export class PlayerInfo {
+		Username: string
+		Operator: string
+		Role: PlayerRole
+	}
+
+	export enum PlayerRole {
+		Defense = 4,
+		Attack = 0
 	}
 }

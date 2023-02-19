@@ -1,5 +1,18 @@
 package utils
 
+import (
+	"log"
+
+	"github.com/tawesoft/golib/v2/dialog"
+)
+
+func ErrDialog(err error) {
+	if errInner := dialog.Error(err.Error()); errInner != nil {
+		log.Println("error while displaying error dialog:", errInner)
+		log.Println("original error:", err)
+	}
+}
+
 func MustArg[P any, T any](fn func(P) (T, error), param P) T {
 	v, err := fn(param)
 	if err != nil {

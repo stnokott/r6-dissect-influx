@@ -6,9 +6,11 @@ package main
 
 import (
 	"embed"
+	"log"
 	"os"
 
 	"github.com/stnokott/r6-dissect-influx/internal/config"
+	"github.com/stnokott/r6-dissect-influx/internal/utils"
 	"github.com/tawesoft/golib/v2/dialog"
 
 	"github.com/rs/zerolog"
@@ -25,11 +27,13 @@ func main() {
 	// necessary for r6-dissect
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 
-	_ = dialog.Init()
+	if err := dialog.Init(); err != nil {
+		log.Fatalln(err)
+	}
 
 	cfg, err := config.Init()
 	if err != nil {
-		_ = dialog.Error(err.Error())
+		utils.ErrDialog(err)
 		os.Exit(-1)
 	}
 
@@ -53,7 +57,7 @@ func main() {
 	})
 
 	if err != nil {
-		_ = dialog.Error(err.Error())
+		utils.ErrDialog(err)
 		os.Exit(-1)
 	}
 }

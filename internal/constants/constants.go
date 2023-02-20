@@ -26,9 +26,4 @@ const (
 
 	MATCH_REPLAY_FOLDER_NAME string = "MatchReplay"
 	MATCH_REPLAY_SUFFIX      string = ".rec"
-
-	INFO_CONNECTED = "Successfully connected"
-
-	STATUS_DISCONNECTED = "Disconnected"
-	STATUS_CONNECTED    = "Connected"
 )

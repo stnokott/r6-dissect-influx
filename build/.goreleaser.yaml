@@ -68,6 +68,11 @@ changelog:
     - title: Others
       order: 999
 
+archives:
+  - rlcp: true
+    format: zip
+    strip_parent_binary_folder: true
+
 release:
   target_commitish: "{{ .Commit }}"
   github:

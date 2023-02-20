@@ -35,7 +35,15 @@ builds:
       - production
     hooks:
       post:
-        - upx --brute {{ .Path }}
+        - >-
+          upx
+          {{ if not .IsSnapshot -}}
+            --brute
+          {{- end }}
+          {{ if .IsSnapshot -}}
+            -1
+          {{- end }}
+          {{ .Path }}
 
 changelog:
   sort: asc

@@ -11,7 +11,7 @@ require (
 	github.com/rs/zerolog v1.29.0
 	github.com/tawesoft/golib/v2 v2.8.5
 	github.com/wailsapp/wails/v2 v2.3.1
-	golang.org/x/sys v0.4.0
+	golang.org/x/sys v0.5.0
 )
 
 require (

@@ -1,0 +1,7 @@
+version: "3"
+
+tasks:
+  frontend:
+    dir: "{{.USER_WORKING_DIR}}/frontend"
+    cmds:
+      - npm run build

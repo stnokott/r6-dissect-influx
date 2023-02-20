@@ -6,7 +6,6 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/hashicorp/go-version v1.6.0
 	github.com/influxdata/influxdb-client-go/v2 v2.12.2
-	github.com/josephspurrier/goversioninfo v1.4.0
 	github.com/minio/selfupdate v0.6.0
 	github.com/redraskal/r6-dissect v0.6.1
 	github.com/rs/zerolog v1.29.0
@@ -17,7 +16,6 @@ require (
 
 require (
 	aead.dev/minisign v0.2.0 // indirect
-	github.com/akavel/rsrc v0.10.2 // indirect
 	github.com/alessio/shellescape v1.4.1 // indirect
 	github.com/bep/debounce v1.2.1 // indirect
 	github.com/deepmap/oapi-codegen v1.8.2 // indirect

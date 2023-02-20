@@ -1,7 +1,5 @@
 //go:build windows
 
-//go:generate goversioninfo -64
-
 package main
 
 import (

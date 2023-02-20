@@ -1,6 +1,7 @@
 build/bin
 node_modules
 frontend/dist
+upx*
 
 # Files generated from goversioninfo, used by go linker
 *.syso

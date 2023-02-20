@@ -6,20 +6,7 @@
 		{
 			"label": "Build Snapshot",
 			"type": "shell",
-			"command": "goreleaser build --rm-dist --snapshot --config=build/.goreleaser.yaml",
-			"problemMatcher": "$go"
-		},
-		{
-			"label": "Build version",
-			"type": "shell",
-			"command": "go",
-			"args": [
-				"build",
-				"-o='app.exe'",
-				"-tags=hints",
-				"--ldflags='-X github.com/stnokott/r6-dissect-influx/internal/constants.Version=${input:version} -X github.com/stnokott/r6-dissect-influx/internal/constants.Commit=123456a -X github.com/stnokott/r6-dissect-influx/internal/constants.ProjectName=${workspaceFolderBasename}'",
-				"./cmd/app"
-			],
+			"command": "goreleaser build --clean --snapshot --config=build/.goreleaser.yaml",
 			"problemMatcher": "$go"
 		},
 		{

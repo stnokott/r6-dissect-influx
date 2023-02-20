@@ -106,6 +106,7 @@ func (a *App) StartUpdate() error {
 			progressInfo, ok := <-chProgress
 			if !ok {
 				runtime.EventsEmit(a.ctx, eventNames.UpdateProgress, "Restarting...")
+				time.Sleep(3 * time.Second)
 				if err = utils.RestartSelf(); err != nil {
 					runtime.EventsEmit(a.ctx, eventNames.UpdateErr, err)
 				}

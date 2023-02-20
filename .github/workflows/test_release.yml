@@ -19,6 +19,7 @@ jobs:
           node-version: 18
           cache: "npm"
       - run: npm install
+        working-directory: frontend
       - uses: actions/setup-go@v3.5.0
         with:
           go-version: ">=1.19"

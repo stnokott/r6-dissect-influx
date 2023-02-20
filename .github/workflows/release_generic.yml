@@ -26,11 +26,12 @@ jobs:
           go-version-file: "go.mod"
           cache: false # don't use cache because it's huge (>1GB)
       - name: Install UPX
+        shell: powershell
         run:
           Invoke-WebRequest -Uri https://github.com/upx/upx/releases/download/v4.0.2/upx-4.0.2-win64.zip -OutFile upx-4.0.2-win64.zip;
           Add-Type -AssemblyName System.IO.Compression.FileSystem;
           [System.IO.Compression.ZipFile]::ExtractToDirectory("$PWD/upx-4.0.2-win64.zip", "$PWD");
-          $env:Path += ";$PWD\upx-4.0.2-win64"
+          echo "$PWD/upx-4.0.2-win64" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - if: inputs.snapshot == false
         uses: goreleaser/goreleaser-action@v4.2.0
         with:

@@ -1,4 +1,4 @@
-name: Release
+name: Generic Release
 
 on:
   workflow_call:
@@ -26,7 +26,13 @@ jobs:
       - uses: actions/setup-go@v3.5.0
         with:
           go-version-file: "go.mod"
-          cache: true
+          cache: false # don't use cache because it's huge (>1GB)
+      - name: Install UPX
+        run:
+          Invoke-WebRequest -Uri https://github.com/upx/upx/releases/download/v4.0.2/upx-4.0.2-win64.zip -OutFile upx-4.0.2-win64.zip;
+          Add-Type -AssemblyName System.IO.Compression.FileSystem;
+          [System.IO.Compression.ZipFile]::ExtractToDirectory("$PWD/upx-4.0.2-win64.zip", "$PWD");
+          $env:Path += ";$PWD\upx-4.0.2-win64"
       - if: inputs.snapshot == false
         uses: goreleaser/goreleaser-action@v4.2.0
         with:

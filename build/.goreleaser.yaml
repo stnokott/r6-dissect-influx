@@ -33,9 +33,9 @@ builds:
     tags:
       - desktop
       - production
-    #hooks:
-    #  post:
-    #    - upx --brute {{ .Path }}
+    hooks:
+      post:
+        - upx --brute {{ .Path }}
 
 changelog:
   sort: asc
@@ -67,11 +67,6 @@ changelog:
       regexp: "^ci"
     - title: Others
       order: 999
-
-archives:
-  - rlcp: true
-    format: zip
-    strip_parent_binary_folder: true
 
 release:
   target_commitish: "{{ .Commit }}"

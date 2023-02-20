@@ -50,16 +50,10 @@
 	}
 
 	let updateOverlayVisible = false;
-	let updateComplete = false;
 	let updateTask: string;
 	let updateErr: string = null;
 
 	function startUpdate(release?: app.ReleaseInfo) {
-		if (updateComplete) {
-			// update already complete, waiting for restart
-			updateOverlayVisible = true;
-			return;
-		}
 		if (release!.IsNewer) {
 			StartUpdate()
 				.then(() => {
@@ -71,13 +65,8 @@
 		}
 	}
 
-	function onUpdateProgress(p: app.UpdateProgress) {
-		if (!p.Complete) {
-			updateTask = p.Task;
-		} else {
-			updateComplete = true;
-			updateTask = null;
-		}
+	function onUpdateProgress(description: string) {
+		updateTask = description;
 	}
 
 	function onUpdateErr(err: string) {
@@ -117,19 +106,7 @@
 		loadingDesc={updateTask}
 		errorTitle={updateErr === null ? null : "Update failed"}
 		errorDetail={updateErr}
-		done={updateComplete}
-	>
-		<InlineNotification
-			kind="success"
-			title="Update downloaded and applied"
-			subtitle="Please restart the application"
-			on:close={(e) => {
-				e.preventDefault();
-				updateOverlayVisible = false;
-				open = false;
-			}}
-		/>
-	</LoadingOverlay>
+	/>
 	<Tile>
 		{#await appInfo()}
 			<SkeletonText heading />

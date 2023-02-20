@@ -16,7 +16,7 @@
     "carbon-components-svelte": "^0.72.1",
     "carbon-icons-svelte": "^11.4.0",
     "carbon-preprocess-svelte": "^0.9.1",
-    "sass": "^1.58.0",
+    "sass": "^1.58.3",
     "svelte": "^3.49.0",
     "svelte-check": "^2.8.0",
     "svelte-preprocess": "^4.10.7",

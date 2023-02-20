@@ -24,10 +24,6 @@ export namespace app {
 		PublishedAt: string
 		Changelog: string
 	}
-	export class UpdateProgress {
-		Task: string
-		Complete: boolean
-	}
 
 	export class EventNames {
 		NewRound: string

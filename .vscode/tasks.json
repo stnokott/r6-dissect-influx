@@ -83,7 +83,8 @@
 			],
 			"dependsOn": [
 				"npm install",
-				"npm run build"
+				"npm run build",
+				"build manifest"
 			]
 		},
 		{
@@ -120,7 +121,8 @@
 				"all=-N -l",
 				"-o",
 				"build/bin/r6-dissect-influx-wails.exe"
-			]
+			],
+			"dependsOn": "build manifest"
 		},
 		{
 			"label": "build dev",
@@ -156,18 +158,20 @@
 				"all=-N -l",
 				"-o",
 				"build/bin/r6-dissect-influx-wails.exe"
-			]
+			],
+			"dependsOn": "build manifest"
 		},
 		{
-			"label": "Wails: Dev",
-			"type": "process",
-			"command": "wails",
+			"label": "build manifest",
+			"type": "shell",
+			"command": "go-winres",
 			"args": [
-				"dev"
+				"make",
+				"--arch=amd64",
+				"--product-version=0.0.1",
+				"--file-version=0.0.1"
 			],
-			"options": {
-				"cwd": "${workspaceFolder}"
-			}
+			"problemMatcher": []
 		}
 	],
 	"inputs": [

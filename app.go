@@ -11,6 +11,7 @@ import (
 	"github.com/stnokott/r6-dissect-influx/internal/constants"
 	"github.com/stnokott/r6-dissect-influx/internal/db"
 	"github.com/stnokott/r6-dissect-influx/internal/update"
+	"github.com/stnokott/r6-dissect-influx/internal/utils"
 )
 
 // App struct
@@ -94,11 +95,6 @@ func (a *App) StartReleaseWatcher() {
 	}()
 }
 
-type UpdateProgress struct {
-	Task     string
-	Complete bool
-}
-
 func (a *App) StartUpdate() error {
 	release, err := update.GetLatestRelease()
 	if err != nil {
@@ -109,13 +105,18 @@ func (a *App) StartUpdate() error {
 		for {
 			progressInfo, ok := <-chProgress
 			if !ok {
-				runtime.EventsEmit(a.ctx, eventNames.UpdateProgress, UpdateProgress{Complete: true})
+				runtime.EventsEmit(a.ctx, eventNames.UpdateProgress, "Restarting...")
+				time.Sleep(3 * time.Second)
+				if err = utils.RestartSelf(); err != nil {
+					runtime.EventsEmit(a.ctx, eventNames.UpdateErr, err)
+				}
+				// no further event needed as app is expected to be shut down now
 				return
 			} else if progressInfo.Err != nil {
 				runtime.EventsEmit(a.ctx, eventNames.UpdateErr, progressInfo.Err.Error())
 				return
 			} else {
-				runtime.EventsEmit(a.ctx, eventNames.UpdateProgress, UpdateProgress{Task: progressInfo.Task})
+				runtime.EventsEmit(a.ctx, eventNames.UpdateProgress, progressInfo.Task)
 			}
 		}
 	}()

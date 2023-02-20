@@ -50,16 +50,10 @@
 	}
 
 	let updateOverlayVisible = false;
-	let updateComplete = false;
 	let updateTask: string;
 	let updateErr: string = null;
 
 	function startUpdate(release?: app.ReleaseInfo) {
-		if (updateComplete) {
-			// update already complete, waiting for restart
-			updateOverlayVisible = true;
-			return;
-		}
 		if (release!.IsNewer) {
 			StartUpdate()
 				.then(() => {
@@ -71,13 +65,8 @@
 		}
 	}
 
-	function onUpdateProgress(p: app.UpdateProgress) {
-		if (!p.Complete) {
-			updateTask = p.Task;
-		} else {
-			updateComplete = true;
-			updateTask = null;
-		}
+	function onUpdateProgress(description: string) {
+		updateTask = description;
 	}
 
 	function onUpdateErr(err: string) {
@@ -88,6 +77,7 @@
 	function onLatestReleaseInfo(r: app.ReleaseInfo) {
 		latestReleaseInfo = r;
 		latestReleaseInfoErr = null;
+		updateErr = null;
 	}
 
 	function onLatestReleaseInfoErr(e: string) {
@@ -116,19 +106,7 @@
 		loadingDesc={updateTask}
 		errorTitle={updateErr === null ? null : "Update failed"}
 		errorDetail={updateErr}
-		done={updateComplete}
-	>
-		<InlineNotification
-			kind="success"
-			title="Update downloaded and applied"
-			subtitle="Please restart the application"
-			on:close={(e) => {
-				e.preventDefault();
-				updateOverlayVisible = false;
-				open = false;
-			}}
-		/>
-	</LoadingOverlay>
+	/>
 	<Tile>
 		{#await appInfo()}
 			<SkeletonText heading />
@@ -153,12 +131,7 @@
 					{#if latestReleaseInfo === null}
 						<Tag skeleton />
 					{:else if latestReleaseInfoErr === null}
-						<Tag
-							type={latestReleaseInfo.IsNewer ? "green" : "gray"}
-							interactive={latestReleaseInfo.IsNewer}
-							icon={latestReleaseInfo.IsNewer ? CloudDownload : undefined}
-							on:click={() => startUpdate(latestReleaseInfo)}
-						>
+						<Tag type={latestReleaseInfo.IsNewer ? "green" : "gray"}>
 							{latestReleaseInfo.Version} - {latestReleaseInfo.Commitish}
 						</Tag>
 					{:else}
@@ -171,25 +144,33 @@
 						</TooltipDefinition>
 					{/if}
 				</span>
-				<div id="btn-check-updates">
-					{#if updateCheckCooldownFunc === null}
-						<Button
-							icon={WatsonHealthRotate_360}
-							size="field"
-							on:click={checkForUpdate}>Check for Updates</Button
-						>
-					{:else}
-						<TooltipDefinition tooltipText="On cooldown" direction="top">
-							<Button icon={WatsonHealthRotate_360} size="field" disabled
-								>Check for Updates</Button
-							>
-						</TooltipDefinition>
-					{/if}
-				</div>
 			</div>
-			{#if updateErr && !updateOverlayVisible}
-				<InlineNotification title="Error" subtitle={updateErr} />
-			{/if}
+
+			<div id="update-buttons-container">
+				{#if latestReleaseInfo && latestReleaseInfo.IsNewer}
+					<Button
+						icon={CloudDownload}
+						size="small"
+						on:click={() => startUpdate(latestReleaseInfo)}
+					>
+						Apply Update
+					</Button>
+				{/if}
+				{#if updateCheckCooldownFunc === null}
+					<Button
+						icon={WatsonHealthRotate_360}
+						size="small"
+						kind="tertiary"
+						on:click={checkForUpdate}>Check for Updates</Button
+					>
+				{:else}
+					<TooltipDefinition tooltipText="On cooldown" direction="top">
+						<Button icon={WatsonHealthRotate_360} size="field" disabled
+							>Check for Updates</Button
+						>
+					</TooltipDefinition>
+				{/if}
+			</div>
 
 			<!--UPDATE-->
 			{#if latestReleaseInfo === null}
@@ -223,11 +204,12 @@
 		margin: 0.5rem 0;
 
 		display: grid;
-		grid-template-columns: repeat(2, fit-content(100%)) auto;
+		grid-template-columns: repeat(2, fit-content(100%));
 		grid-template-rows: repeat(2, 1fr);
 		grid-template-areas:
-			"lbl-current-version tag-current-version ."
-			"lbl-latest-version  tag-latest-version  btn-check-updates";
+			"lbl-current-version tag-current-version"
+			"lbl-latest-version  tag-latest-version "
+			"buttons-container   buttons-container  ";
 		align-items: center;
 		column-gap: 0.5rem;
 	}
@@ -248,8 +230,7 @@
 		grid-area: tag-latest-version;
 	}
 
-	#btn-check-updates {
-		grid-area: btn-check-updates;
-		justify-self: end;
+	#update-buttons-container {
+		margin: 1rem 0;
 	}
 </style>

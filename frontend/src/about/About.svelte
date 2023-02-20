@@ -88,6 +88,7 @@
 	function onLatestReleaseInfo(r: app.ReleaseInfo) {
 		latestReleaseInfo = r;
 		latestReleaseInfoErr = null;
+		updateErr = null;
 	}
 
 	function onLatestReleaseInfoErr(e: string) {

@@ -6,13 +6,16 @@ before:
   hooks:
     - go mod tidy
     - go mod verify
-    - go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@latest
-    - go run ./tools/versioninfo.go --major {{ .Major }} --minor {{ .Minor }} --patch {{ .Patch }} --project_name {{ .ProjectName }} -o ./cmd/app/versioninfo.json
-    - go generate ./...
+    # run Task
+    - go install github.com/go-task/task/v3/cmd/task@latest
+    - task frontend
+    # bundle .syso
+    - go install github.com/tc-hib/go-winres@latest
+    - go-winres make --arch amd64 --product-version={{ .Tag }} --file-version={{ .Tag }}
 builds:
-  - main: ./cmd/app
+  - # main: ./cmd/app
     env:
-      - CGO_ENABLED=1
+      - CGO_ENABLED=0
     goos:
       - windows
     goarch:
@@ -27,6 +30,12 @@ builds:
         {{- if not .IsSnapshot }}
           -H=windowsgui
         {{- end }}
+    tags:
+      - desktop
+      - production
+    #hooks:
+    #  post:
+    #    - upx --brute {{ .Path }}
 
 changelog:
   sort: asc

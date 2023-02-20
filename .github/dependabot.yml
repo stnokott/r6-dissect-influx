@@ -18,3 +18,12 @@ updates:
       - "stnokott"
     reviewers:
       - "stnokott"
+  - directory: "/frontend"
+    package-ecosystem: npm
+    schedule:
+      interval: "daily"
+      timezone: "Europe/Berlin"
+    assignees:
+      - "stnokott"
+    reviewers:
+      - "stnokott"

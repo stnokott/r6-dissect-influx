@@ -1,0 +1,30 @@
+run:
+  timeout: "3m"
+linters:
+  disable-all: true
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - typecheck
+    - unused
+
+    - bodyclose
+    - contextcheck
+    - decorder
+    - exportloopref
+    - goconst
+    - nilerr
+
+linters-settings:
+  errcheck:
+    check-blank: true
+  govet:
+    check-shadowing: true
+  goconst:
+    match-constant: true
+    min-len: 3
+    min-occurrences: 2
+    ignore-tests: true

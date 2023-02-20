@@ -13,7 +13,7 @@ var (
 	Commit      = "unknown"
 	ProjectName = "r6-dissect-influx"
 	SemVer      = version.Must(version.NewSemver(Version))
-	GithubURL   = utils.Must(url.Parse, "https://github.com/stnokott/"+ProjectName)
+	GithubURL   = utils.MustArg(url.Parse, "https://github.com/stnokott/"+ProjectName)
 
 	UpdateCheckInterval = 5 * time.Minute
 )
@@ -26,9 +26,4 @@ const (
 
 	MATCH_REPLAY_FOLDER_NAME string = "MatchReplay"
 	MATCH_REPLAY_SUFFIX      string = ".rec"
-
-	INFO_CONNECTED = "Successfully connected"
-
-	STATUS_DISCONNECTED = "Disconnected"
-	STATUS_CONNECTED    = "Connected"
 )

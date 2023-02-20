@@ -16,6 +16,13 @@ jobs:
         with:
           fetch-depth: 0
       - run: git fetch --force --tags
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm install
+        working-directory: frontend
       - uses: actions/setup-go@v3.5.0
         with:
           go-version: ">=1.19"
@@ -24,6 +31,6 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: release --rm-dist --config=build/.goreleaser.yaml
+          args: release --clean --config=build/.goreleaser.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -29,6 +29,6 @@ func RestartApp() error {
 	return nil
 }
 
-func OpenURL(url string) {
-	_ = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+func OpenURL(url string) error {
+	return exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
 }

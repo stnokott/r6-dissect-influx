@@ -13,6 +13,7 @@ import (
 type Release struct {
 	URL         string           `json:"html_url"`
 	SemVer      *version.Version `json:"tag_name"`
+	Commitish   string           `json:"target_commitish"`
 	PublishedAt time.Time        `json:"published_at"`
 	Body        string           `json:"body"`
 	Assets      []asset          `json:"assets"`

@@ -30,7 +30,6 @@ type ConnectOpts struct {
 }
 
 type ConnectionDetails struct {
-	Err     error
 	Name    string
 	Version string
 	Commit  string
@@ -62,26 +61,27 @@ func (c *InfluxClient) Close() {
 	c.client.Close()
 }
 
-func (c *InfluxClient) ValidateConn(timeout time.Duration) (update ConnectionDetails) {
+func (c *InfluxClient) ValidateConn(timeout time.Duration) (details *ConnectionDetails, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
 	health, healthErr := c.client.Health(ctx)
 	if healthErr != nil {
-		update.Err = fmt.Errorf("could not validate InfluxDB server health: %w", healthErr)
+		err = fmt.Errorf("could not validate InfluxDB server health: %w", healthErr)
 		return
 	} else if health.Status != domain.HealthCheckStatusPass {
-		update.Err = fmt.Errorf("InfluxDB server unhealthy (%s), please check your server logs", health.Status)
+		err = fmt.Errorf("InfluxDB server unhealthy (%s), please check your server logs", health.Status)
 		return
 	}
 
-	if err := c.validateCanWrite(c.opts.Org, c.opts.Bucket); err != nil {
-		update.Err = err
+	if err = c.validateCanWrite(c.opts.Org, c.opts.Bucket); err != nil {
 		return
 	}
-	update.Name = health.Name
-	update.Version = *health.Version
-	update.Commit = *health.Commit
+	details = &ConnectionDetails{
+		Name:    health.Name,
+		Version: *health.Version,
+		Commit:  *health.Commit,
+	}
 	return
 }
 

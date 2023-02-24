@@ -4,12 +4,10 @@ package main
 
 import (
 	"embed"
-	"log"
 	"os"
 
 	"github.com/stnokott/r6-dissect-influx/internal/config"
 	"github.com/stnokott/r6-dissect-influx/internal/utils"
-	"github.com/tawesoft/golib/v2/dialog"
 
 	"github.com/rs/zerolog"
 	"github.com/wailsapp/wails/v2"
@@ -24,10 +22,6 @@ var assets embed.FS
 func main() {
 	// necessary for r6-dissect
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
-
-	if err := dialog.Init(); err != nil {
-		log.Fatalln(err)
-	}
 
 	cfg, err := config.Init()
 	if err != nil {

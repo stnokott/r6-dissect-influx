@@ -3,11 +3,11 @@ package utils
 import (
 	"log"
 
-	"github.com/tawesoft/golib/v2/dialog"
+	"github.com/ncruces/zenity"
 )
 
 func ErrDialog(err error) {
-	if errInner := dialog.Error(err.Error()); errInner != nil {
+	if errInner := zenity.Error(err.Error(), zenity.Title("Error"), zenity.ErrorIcon, zenity.Modal()); errInner != nil {
 		log.Println("error while displaying error dialog:", errInner)
 		log.Println("original error:", err)
 	}

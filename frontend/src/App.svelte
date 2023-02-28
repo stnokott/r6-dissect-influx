@@ -1,5 +1,4 @@
 <script lang="ts">
-  // TODO: change to SCSS
   import "carbon-components-svelte/css/g90.css";
 
   import { Button, Loading } from "carbon-components-svelte";

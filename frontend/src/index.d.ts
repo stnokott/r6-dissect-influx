@@ -27,6 +27,7 @@ export namespace app {
 
 	export class EventNames {
 		NewRound: string
+		RoundWatcherStarted: string
 		RoundWatcherError: string
 		RoundWatcherStopped: string
 		LatestReleaseInfo: string

@@ -1,6 +1,7 @@
 package game
 
 import (
+	"context"
 	"fmt"
 	"io/fs"
 	"log"
@@ -14,11 +15,11 @@ import (
 	"github.com/stnokott/r6-dissect-influx/internal/constants"
 )
 
-type RoundsReader struct {
+type RoundsWatcher struct {
 	gameDir string
 }
 
-func NewRoundsReader(gameDir string) (r *RoundsReader, err error) {
+func NewRoundsWatcher(gameDir string) (r *RoundsWatcher, err error) {
 	_, errStat := os.Stat(gameDir)
 	if errStat != nil {
 		if os.IsNotExist(errStat) {
@@ -29,30 +30,40 @@ func NewRoundsReader(gameDir string) (r *RoundsReader, err error) {
 		return
 	}
 
-	r = &RoundsReader{gameDir: gameDir}
+	r = &RoundsWatcher{gameDir: gameDir}
 	return
 }
 
-func (r *RoundsReader) WatchAsync() (<-chan RoundInfo, <-chan error) {
+func (r *RoundsWatcher) Start(ctx context.Context) (<-chan RoundInfo, <-chan error) {
 	chRounds := make(chan RoundInfo, 10)
 	chErrors := make(chan error, 1)
-	go r.watchMatches(chRounds, chErrors)
+	go r.watchMatches(ctx, chRounds, chErrors)
 	return chRounds, chErrors
 }
 
-func (r *RoundsReader) watchMatches(chRounds chan<- RoundInfo, chErrors chan<- error) {
+// watchMatches parses round replay files as they are created.
+// It has an underlying file watcher goroutine that watches for changes in the game's replay directory.
+func (r *RoundsWatcher) watchMatches(ctx context.Context, chRounds chan<- RoundInfo, chErrors chan<- error) {
 	defer func() {
 		log.Println("ending watchMatches")
 		close(chRounds)
 		close(chErrors)
 	}()
-	matchReplayFolder := r.waitForMatchReplayDir()
+
+	matchReplayFolder, ok := r.waitForMatchReplayDir(ctx)
+	if !ok {
+		return
+	}
 
 	chRoundReplayFiles := make(chan string, 10)
 	chFileErrors := make(chan error, 1)
-	go watchRounds(matchReplayFolder, chRoundReplayFiles, chFileErrors)
+
+	go watchRounds(ctx, matchReplayFolder, chRoundReplayFiles, chFileErrors)
 	for {
 		select {
+		case <-ctx.Done():
+			log.Println("watchMatches context cancelled")
+			return
 		case filePath, ok := <-chRoundReplayFiles:
 			if !ok {
 				return
@@ -75,20 +86,31 @@ func (r *RoundsReader) watchMatches(chRounds chan<- RoundInfo, chErrors chan<- e
 	}
 }
 
-func (r *RoundsReader) waitForMatchReplayDir() string {
-	matchReplayDir := path.Join(r.gameDir, constants.MATCH_REPLAY_FOLDER_NAME)
+// waitForMatchReplayDir waits for the replay dir in the game folder to exist.
+// It returns the replay folder once found and a boolean indicating if successful.
+// The boolean will only be false when the context has been cancelled.
+func (r *RoundsWatcher) waitForMatchReplayDir(ctx context.Context) (string, bool) {
 	log.Println("waiting for match replay folder...")
+	matchReplayDir := path.Join(r.gameDir, constants.MATCH_REPLAY_FOLDER_NAME)
+
+	var chInterval <-chan time.Time
 	for {
 		log.Println("checking", matchReplayDir)
 		stat, err := os.Stat(matchReplayDir)
 		if err == nil && stat.IsDir() {
-			return matchReplayDir
+			return matchReplayDir, true
 		}
-		<-time.After(10 * time.Second)
+		chInterval = time.After(10 * time.Second)
+		select {
+		case <-ctx.Done():
+			return "", false
+		case <-chInterval:
+			continue
+		}
 	}
 }
 
-func watchRounds(matchReplayFolder string, chFiles chan<- string, chErrors chan<- error) {
+func watchRounds(ctx context.Context, matchReplayFolder string, chFiles chan<- string, chErrors chan<- error) {
 	var errInitial error
 	defer func() {
 		log.Println("ending watchRounds")
@@ -122,6 +144,9 @@ func watchRounds(matchReplayFolder string, chFiles chan<- string, chErrors chan<
 
 	for {
 		select {
+		case <-ctx.Done():
+			log.Println("watchRounds context cancelled")
+			return
 		case event, ok := <-matchDirWatcher.Events:
 			if !ok {
 				return

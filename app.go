@@ -16,9 +16,10 @@ import (
 
 // App struct
 type App struct {
-	ctx          context.Context
-	config       *config.Config
-	influxClient *db.InfluxClient
+	ctx               context.Context
+	config            *config.Config
+	influxClient      *db.InfluxClient
+	roundsWatcherStop context.CancelFunc
 }
 
 func NewApp(cfg *config.Config) *App {

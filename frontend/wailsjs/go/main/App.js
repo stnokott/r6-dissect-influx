@@ -54,6 +54,10 @@ export function StartUpdate() {
   return window['go']['main']['App']['StartUpdate']();
 }
 
+export function StopRoundWatcher() {
+  return window['go']['main']['App']['StopRoundWatcher']();
+}
+
 export function ValidateGameDir(arg1) {
   return window['go']['main']['App']['ValidateGameDir'](arg1);
 }

@@ -30,6 +30,8 @@ export function StartRoundWatcher():Promise<void>;
 
 export function StartUpdate():Promise<void>;
 
+export function StopRoundWatcher():Promise<void>;
+
 export function ValidateGameDir(arg1:string):Promise<void>;
 
 export function ValidateInfluxBucket(arg1:string):Promise<void>;

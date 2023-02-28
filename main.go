@@ -19,6 +19,8 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+// TODO: move to cmd package
+
 func main() {
 	// necessary for r6-dissect
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)

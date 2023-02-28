@@ -10,6 +10,10 @@ export function Connect() {
   return window['go']['main']['App']['Connect']();
 }
 
+export function Disconnect() {
+  return window['go']['main']['App']['Disconnect']();
+}
+
 export function GetAppInfo() {
   return window['go']['main']['App']['GetAppInfo']();
 }

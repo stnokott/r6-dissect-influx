@@ -8,6 +8,8 @@ export function AutodetectGameDir():Promise<string>;
 
 export function Connect():Promise<db.ConnectionDetails>;
 
+export function Disconnect():Promise<void>;
+
 export function GetAppInfo():Promise<main.AppInfo>;
 
 export function GetConfig():Promise<config.Config>;

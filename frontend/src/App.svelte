@@ -10,7 +10,11 @@
   import HeaderView from "./Header.svelte";
   import FooterView from "./footer/Footer.svelte";
 
-  import { IsConfigComplete, Connect } from "./../wailsjs/go/main/App";
+  import {
+    IsConfigComplete,
+    Connect,
+    Disconnect,
+  } from "./../wailsjs/go/main/App";
   import type { db } from "./index";
   import { onMount } from "svelte";
   import type { MatchListAPI } from "./matches/matchlist";
@@ -29,8 +33,9 @@
           matchListAPI.onConfigChanged();
         }
         if (complete) {
-          // TODO: reconnect
-          promConnectionDetails = Connect();
+          Disconnect().then(() => {
+            promConnectionDetails = Connect();
+          });
         }
       });
     }

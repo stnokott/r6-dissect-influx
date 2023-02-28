@@ -1,5 +1,4 @@
 <script lang="ts">
-  // TODO: change to SCSS
   import "carbon-components-svelte/css/g90.css";
 
   import { Button, Loading } from "carbon-components-svelte";
@@ -10,21 +9,43 @@
   import HeaderView from "./Header.svelte";
   import FooterView from "./footer/Footer.svelte";
 
-  import { IsConfigComplete, Connect } from "./../wailsjs/go/main/App";
+  import {
+    IsConfigComplete,
+    Connect,
+    Disconnect,
+  } from "./../wailsjs/go/main/App";
   import type { db } from "./index";
   import { onMount } from "svelte";
+  import type { MatchListAPI } from "./matches/matchlist";
 
   let settingsDialogOpen: boolean;
 
   let promIsConfigComplete: Promise<boolean>;
   let promConnectionDetails: Promise<db.ConnectionDetails>;
 
+  let matchListAPI: MatchListAPI;
+
+  $: {
+    if (promIsConfigComplete) {
+      promIsConfigComplete.then((complete) => {
+        if (matchListAPI) {
+          matchListAPI.onConfigChanged();
+        }
+        if (complete) {
+          Disconnect().then(() => {
+            promConnectionDetails = Connect();
+          });
+        }
+      });
+    }
+  }
+
   function openSettings(): void {
     settingsDialogOpen = true;
   }
 
   function onConfigChanged(_e: CustomEvent<void>) {
-    // can assume that config is complete
+    // can assume that config is complete since only then can the config dialog be closed/confirmed
     promIsConfigComplete = new Promise((r) => r(true));
   }
 
@@ -34,11 +55,6 @@
 
   onMount(() => {
     promIsConfigComplete = IsConfigComplete();
-    promIsConfigComplete.then((b) => {
-      if (b) {
-        promConnectionDetails = Connect();
-      }
-    });
   });
 </script>
 
@@ -57,7 +73,7 @@
       </div>
     {:then isComplete}
       {#if isComplete}
-        <MatchList />
+        <MatchList bind:matchListAPI />
       {:else}
         <div class="container-centered">
           <Button kind="primary" icon={SettingsIcon} on:click={openSettings}

@@ -2,6 +2,7 @@ package main
 
 type EventNames struct {
 	NewRound             string
+	RoundWatcherStarted  string
 	RoundWatcherError    string
 	RoundWatcherStopped  string
 	LatestReleaseInfo    string
@@ -12,6 +13,7 @@ type EventNames struct {
 
 var eventNames = EventNames{
 	NewRound:             "R6_NEW_ROUND",
+	RoundWatcherStarted:  "R6_ROUNDS_WATCHER_STARTED",
 	RoundWatcherError:    "R6_ROUND_WATCHER_ERROR",
 	RoundWatcherStopped:  "R6_ROUND_WATCHER_STOPPED",
 	LatestReleaseInfo:    "R6_RELEASE_INFO",

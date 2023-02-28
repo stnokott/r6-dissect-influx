@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -16,9 +17,10 @@ import (
 
 // App struct
 type App struct {
-	ctx          context.Context
-	config       *config.Config
-	influxClient *db.InfluxClient
+	ctx               context.Context
+	config            *config.Config
+	influxClient      *db.InfluxClient
+	roundsWatcherStop context.CancelFunc
 }
 
 func NewApp(cfg *config.Config) *App {
@@ -183,6 +185,7 @@ func (a *App) SaveAndValidateConfig(cfg *config.Config) (details *db.ConnectionD
 	}
 
 	a.config = cfg
+	a.Disconnect()
 	a.influxClient = newClient
 	return
 }
@@ -191,8 +194,18 @@ func (a *App) Connect() (details *db.ConnectionDetails, err error) {
 	if a.config == nil || !a.config.IsComplete() {
 		return nil, errors.New("config incomplete, please setup first")
 	}
-	if a.influxClient == nil {
-		a.influxClient = a.config.NewInfluxClient()
+	if a.influxClient != nil {
+		log.Println("WARNING: trying to connect while still connected")
+		a.Disconnect()
 	}
+	a.influxClient = a.config.NewInfluxClient()
+
 	return a.influxClient.ValidateConn(10 * time.Second)
+}
+
+func (a *App) Disconnect() {
+	if a.influxClient != nil {
+		a.influxClient.Close()
+		a.influxClient = nil
+	}
 }

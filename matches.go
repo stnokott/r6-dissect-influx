@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"log"
 
 	"github.com/stnokott/r6-dissect-influx/internal/game"
@@ -8,16 +10,21 @@ import (
 )
 
 func (a *App) StartRoundWatcher() error {
-	reader, err := game.NewRoundsReader(a.config.Game.InstallDir)
+	watcher, err := game.NewRoundsWatcher(a.config.Game.InstallDir)
 	if err != nil {
 		return err
 	}
-	chRoundInfos, chErrors := reader.WatchAsync()
+	var ctxRoundWatcher context.Context
+	ctxRoundWatcher, a.roundsWatcherStop = context.WithCancel(context.Background())
+	chRoundInfos, chErrors := watcher.Start(ctxRoundWatcher)
 	go func() {
 		defer runtime.EventsEmit(a.ctx, eventNames.RoundWatcherStopped)
 
 		for {
 			select {
+			case <-ctxRoundWatcher.Done():
+				log.Println("roundsWatcher in App cancelled")
+				return
 			case roundInfo, ok := <-chRoundInfos:
 				if !ok {
 					return
@@ -35,5 +42,14 @@ func (a *App) StartRoundWatcher() error {
 		}
 	}()
 
+	runtime.EventsEmit(a.ctx, eventNames.RoundWatcherStarted)
+	return nil
+}
+
+func (a *App) StopRoundWatcher() error {
+	if a.roundsWatcherStop == nil {
+		return errors.New("no round watcher running")
+	}
+	a.roundsWatcherStop()
 	return nil
 }

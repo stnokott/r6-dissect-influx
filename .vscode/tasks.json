@@ -172,6 +172,17 @@
 				"--file-version=0.0.1"
 			],
 			"problemMatcher": []
+		},
+		{
+			"label": "Wails: Dev",
+			"type": "process",
+			"command": "wails",
+			"args": [
+				"dev"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
 		}
 	],
 	"inputs": [

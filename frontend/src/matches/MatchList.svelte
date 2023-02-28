@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { InlineNotification } from "carbon-components-svelte";
+	import { InlineLoading, InlineNotification } from "carbon-components-svelte";
 	import { onMount } from "svelte";
 	import MatchItem from "./MatchItem.svelte";
 
@@ -70,12 +70,19 @@
 		{#each [...matchInfos] as [matchID, roundInfos] (matchID)}
 			<MatchItem {roundInfos} />
 		{:else}
-			<!--TODO: better look-->
-			No content
+			<div class="placeholder-center">
+				<div class="placeholder-center-content">
+					<InlineLoading description="Waiting for matches..." />
+				</div>
+			</div>
 		{/each}
 	</div>
 {:else}
-	Round Watcher not running
+	<div class="placeholder-center">
+		<div class="placeholder-center-content">
+			<InlineLoading description="Waiting for Round Watcher..." />
+		</div>
+	</div>
 {/if}
 
 <div id="error-container">
@@ -106,5 +113,18 @@
 		bottom: 0;
 
 		margin: 0 2rem 2rem 0;
+	}
+
+	.placeholder-center {
+		height: 100%;
+		position: relative;
+	}
+
+	.placeholder-center-content {
+		position: absolute;
+
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
 	}
 </style>

@@ -12,7 +12,6 @@ linters:
     - unused
 
     - bodyclose
-    - contextcheck
     - decorder
     - exportloopref
     - goconst

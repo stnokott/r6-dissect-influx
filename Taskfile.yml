@@ -5,3 +5,7 @@ tasks:
     dir: "{{.USER_WORKING_DIR}}/frontend"
     cmds:
       - npm run build
+
+  test:
+    cmds:
+      - go test ./...

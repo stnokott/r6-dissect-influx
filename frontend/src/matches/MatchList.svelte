@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { InlineLoading, InlineNotification } from "carbon-components-svelte";
-	import { onMount } from "svelte";
+	import { afterUpdate, onMount } from "svelte";
 	import MatchItem from "./MatchItem.svelte";
 
 	import {
@@ -32,6 +32,7 @@
 	};
 
 	let roundWatcherRunning = false;
+	let matchesContainer: HTMLElement;
 	let matchInfos: Map<string, Array<matches.RoundInfo>> = new Map();
 
 	async function onNewRound(r: matches.RoundInfo) {
@@ -63,10 +64,18 @@
 			window.runtime.EventsOn(e.RoundWatcherError, onRoundWatcherError);
 		});
 	});
+
+	afterUpdate(async () => {
+		if (matchesContainer) {
+			let lastItem =
+				matchesContainer.children[matchesContainer.children.length - 1];
+			lastItem.scrollIntoView({ behavior: "smooth" });
+		}
+	});
 </script>
 
 {#if roundWatcherRunning}
-	<div id="match-container">
+	<div id="match-container" bind:this={matchesContainer}>
 		{#each [...matchInfos] as [matchID, roundInfos] (matchID)}
 			<MatchItem {roundInfos} />
 		{:else}

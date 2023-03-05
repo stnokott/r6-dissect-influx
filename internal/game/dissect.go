@@ -3,7 +3,7 @@ package game
 import (
 	"os"
 
-	"github.com/redraskal/r6-dissect/reader"
+	"github.com/redraskal/r6-dissect/dissect"
 )
 
 func parseFile(f string) (info RoundInfo, err error) {
@@ -19,8 +19,8 @@ func parseFile(f string) (info RoundInfo, err error) {
 		}
 	}()
 
-	var c reader.DissectReader
-	c, err = reader.NewReader(r)
+	var c *dissect.DissectReader
+	c, err = dissect.NewReader(r)
 	if err != nil {
 		return
 	}

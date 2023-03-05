@@ -1,6 +1,8 @@
 <script lang="ts">
 	import {
 		ImageLoader,
+		ProgressIndicator,
+		ProgressStep,
 		SkeletonPlaceholder,
 		Tag,
 		Tile,
@@ -30,6 +32,15 @@
 	{@const firstRound = roundInfos[0]}
 	{@const playTime = new Date(firstRound.Time).toLocaleString()}
 	<div style="z-index: 2; position: relative">
+		<ProgressIndicator preventChangeOnClick currentIndex={-1}>
+			{#each roundInfos as roundInfo}
+				<ProgressStep
+					complete
+					label={roundInfo.RoundWon ? "Won" : "Lost"}
+					invalid={!roundInfo.RoundWon}
+				/>
+			{/each}
+		</ProgressIndicator>
 		<Tag>{playTime}</Tag>
 		<Tag>{firstRound.GameMode}</Tag>
 		<Tag type={matchTypeColors[firstRound.MatchType]}

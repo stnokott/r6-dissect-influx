@@ -13,6 +13,7 @@ type RoundInfo struct {
 	MatchType           string
 	GameMode            string
 	MapName             string
+	RoundWon            bool
 }
 
 type Role int

@@ -8,6 +8,7 @@ export namespace matches {
 		MatchType: "CASUAL" | "UNRANKED" | "RANKED"
 		GameMode: "BOMB" | "HOSTAGE"
 		MapName: string
+		RoundWon: boolean
 	}
 
 	export class PlayerInfo {

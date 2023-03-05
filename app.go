@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -20,6 +21,7 @@ type App struct {
 	ctx               context.Context
 	config            *config.Config
 	influxClient      *db.InfluxClient
+	influxClientMutex sync.Mutex
 	roundsWatcherStop context.CancelFunc
 }
 
@@ -108,10 +110,11 @@ func (a *App) StartUpdate() error {
 			progressInfo, ok := <-chProgress
 			if !ok {
 				runtime.EventsEmit(a.ctx, eventNames.UpdateProgress, "Restarting...")
-				time.Sleep(3 * time.Second)
 				if err = utils.RestartSelf(); err != nil {
 					runtime.EventsEmit(a.ctx, eventNames.UpdateErr, err)
 				}
+				// give time for process to launch
+				time.Sleep(3 * time.Second)
 				// no further event needed as app is expected to be shut down now
 				return
 			} else if progressInfo.Err != nil {
@@ -191,6 +194,8 @@ func (a *App) SaveAndValidateConfig(cfg *config.Config) (details *db.ConnectionD
 }
 
 func (a *App) Connect() (details *db.ConnectionDetails, err error) {
+	a.influxClientMutex.Lock()
+	defer a.influxClientMutex.Unlock()
 	if a.config == nil || !a.config.IsComplete() {
 		return nil, errors.New("config incomplete, please setup first")
 	}
@@ -204,6 +209,8 @@ func (a *App) Connect() (details *db.ConnectionDetails, err error) {
 }
 
 func (a *App) Disconnect() {
+	a.influxClientMutex.Lock()
+	defer a.influxClientMutex.Unlock()
 	if a.influxClient != nil {
 		a.influxClient.Close()
 		a.influxClient = nil

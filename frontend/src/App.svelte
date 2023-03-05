@@ -20,24 +20,22 @@
 
   let settingsDialogOpen: boolean;
 
-  let promIsConfigComplete: Promise<boolean>;
+  let isConfigComplete = false;
   let promConnectionDetails: Promise<db.ConnectionDetails>;
 
   let matchListAPI: MatchListAPI;
 
   $: {
-    if (promIsConfigComplete) {
-      promIsConfigComplete.then((complete) => {
-        if (matchListAPI) {
-          matchListAPI.onConfigChanged();
-        }
-        if (complete) {
-          Disconnect().then(() => {
-            promConnectionDetails = Connect();
-          });
-        }
-      });
+    isConfigComplete;
+    if (matchListAPI) {
+      matchListAPI.onConfigChanged();
     }
+  }
+
+  $: if (isConfigComplete) {
+    Disconnect().then(() => {
+      promConnectionDetails = Connect();
+    });
   }
 
   function openSettings(): void {
@@ -46,15 +44,15 @@
 
   function onConfigChanged(_e: CustomEvent<void>) {
     // can assume that config is complete since only then can the config dialog be closed/confirmed
-    promIsConfigComplete = new Promise((r) => r(true));
+    isConfigComplete = true;
   }
 
   function onConnected(e: CustomEvent<db.ConnectionDetails>) {
     promConnectionDetails = new Promise((r) => r(e.detail));
   }
 
-  onMount(() => {
-    promIsConfigComplete = IsConfigComplete();
+  onMount(async () => {
+    isConfigComplete = await IsConfigComplete();
   });
 </script>
 
@@ -66,22 +64,15 @@
 <HeaderView />
 <div id="root">
   <div id="content">
-    {#await promIsConfigComplete}
+    {#if isConfigComplete}
+      <MatchList bind:matchListAPI />
+    {:else}
       <div class="container-centered">
-        <Loading withOverlay={false} small />
-        <span style="margin-left: .333rem;">Initializing...</span>
+        <Button kind="primary" icon={SettingsIcon} on:click={openSettings}
+          >Setup</Button
+        >
       </div>
-    {:then isComplete}
-      {#if isComplete}
-        <MatchList bind:matchListAPI />
-      {:else}
-        <div class="container-centered">
-          <Button kind="primary" icon={SettingsIcon} on:click={openSettings}
-            >Setup</Button
-          >
-        </div>
-      {/if}
-    {/await}
+    {/if}
   </div>
   <div id="footer">
     <FooterView on:openSettings={openSettings} {promConnectionDetails} />

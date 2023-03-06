@@ -16,7 +16,5 @@ tasks:
       - frontend
     cmds:
       - go run -tags pprof,dev .
-      - go run tools/merge_pprofs.go -root build/cpu_profiles/hosts -o build/cpu_profiles/merged.pprof
     summary: |
       Runs the application with CPU profiling enabled.
-      Merges all existing profiles afterwards into build/cpu_profiles/merged.pprof which is used for building.

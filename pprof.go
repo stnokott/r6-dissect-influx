@@ -56,5 +56,11 @@ func init() {
 
 	onShutdownFuncs = append(onShutdownFuncs, func(_ context.Context) {
 		pprof.StopCPUProfile()
+		log.Println()
+		log.Println("############################## IMPORTANT ############################")
+		log.Println("# Remember to merge profiles:                                       #")
+		log.Println("# > cd build/cpu_profiles                                           #")
+		log.Println("# > go tool pprof -proto hosts/a.pprof hosts/b.pprof > merged.pprof #")
+		log.Println("#####################################################################")
 	})
 }

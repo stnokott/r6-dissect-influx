@@ -19,7 +19,15 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+// functions to run before or after any program logic
+// targeted usecase is adding functions to the slices in build-tag-dependant source files
+var beforeFuncs, afterFuncs []func()
+
 func main() {
+	for _, f := range beforeFuncs {
+		f()
+	}
+
 	// necessary for r6-dissect
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 
@@ -47,6 +55,10 @@ func main() {
 		},
 		Frameless: true,
 	})
+
+	for _, f := range afterFuncs {
+		f()
+	}
 
 	if err != nil {
 		utils.ErrDialog(err)

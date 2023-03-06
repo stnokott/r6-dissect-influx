@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/fsnotify/fsnotify v1.6.0
+	github.com/google/pprof v0.0.0-20230228050547-1710fef4ab10
 	github.com/hashicorp/go-version v1.6.0
 	github.com/influxdata/influxdb-client-go/v2 v2.12.2
 	github.com/minio/selfupdate v0.6.0

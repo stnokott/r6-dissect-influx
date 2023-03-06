@@ -10,3 +10,11 @@ tasks:
   test:
     cmds:
       - go test ./...
+
+  run_pprof:
+    deps:
+      - frontend
+    cmds:
+      - go run -tags pprof,dev .
+    summary: |
+      Runs the application with CPU profiling enabled.

@@ -49,6 +49,7 @@
 		/>
 		<Button
 			on:click={window.runtime.Quit}
+			id="btn-close-application"
 			icon={Close}
 			iconDescription="Close"
 			size="small"

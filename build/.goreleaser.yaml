@@ -13,13 +13,14 @@ before:
     - go install github.com/tc-hib/go-winres@latest
     - go-winres make --arch amd64 --product-version={{ .Tag }} --file-version={{ .Tag }}
 builds:
-  - # main: ./cmd/app
-    env:
+  - env:
       - CGO_ENABLED=0
     goos:
       - windows
     goarch:
       - amd64
+    flags:
+      - -pgo=build/cpu_profiles/merged.pprof
     ldflags:
       - -s # -s and -w reduce binary size, but prevent debugging (not necessary for production build)
       - -w

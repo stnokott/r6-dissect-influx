@@ -45,7 +45,7 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: build --clean --config=build/.goreleaser.yaml --snapshot
+          args: build --clean --debug --config=build/.goreleaser.yaml --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - if: inputs.snapshot == true

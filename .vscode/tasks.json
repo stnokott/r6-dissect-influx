@@ -4,7 +4,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Build Snapshot",
+			"label": "build Snapshot",
 			"type": "shell",
 			"command": "goreleaser build --clean --snapshot --config=build/.goreleaser.yaml",
 			"problemMatcher": "$go"
@@ -183,6 +183,19 @@
 			"options": {
 				"cwd": "${workspaceFolder}"
 			}
+		},
+		{
+			"label": "create CPU profile",
+			"type": "shell",
+			"command": "task",
+			"args": [
+				"run_pprof"
+			],
+			"options": {
+				"env": {
+					"PPROF_FILENAME": "${input:pprof_filename}"
+				}
+			}
 		}
 	],
 	"inputs": [
@@ -191,6 +204,11 @@
 			"default": "0.0.1",
 			"description": "Version to embed in binary",
 			"type": "promptString",
+		},
+		{
+			"id": "pprof_filename",
+			"description": "Filename for .pprof file",
+			"type": "promptString"
 		}
 	]
 }

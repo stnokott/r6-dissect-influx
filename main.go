@@ -52,6 +52,18 @@ func main() {
 		},
 		Windows: &windows.Options{
 			Theme: windows.Dark,
+			OnSuspend: func() {
+				if app.roundsWatcherStop != nil {
+					app.roundsWatcherStop()
+				}
+			},
+			OnResume: func() {
+				if app.roundsWatcherStop == nil {
+					if errRoundWatcher := app.StartRoundWatcher(); errRoundWatcher != nil {
+						utils.ErrDialog(errRoundWatcher)
+					}
+				}
+			},
 		},
 		Frameless: true,
 	})

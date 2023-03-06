@@ -142,6 +142,10 @@ func watchRounds(ctx context.Context, matchReplayFolder string, chFiles chan<- s
 	}
 	log.Println("watching", matchReplayFolder, "...")
 
+	listenFileChanges(ctx, matchDirWatcher, chFiles, chErrors)
+}
+
+func listenFileChanges(ctx context.Context, matchDirWatcher *fsnotify.Watcher, chFiles chan<- string, chErrors chan<- error) {
 	for {
 		select {
 		case <-ctx.Done():

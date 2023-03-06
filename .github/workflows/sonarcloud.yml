@@ -38,3 +38,4 @@ jobs:
             -Dsonar.projectKey=stnokott_r6-dissect-influx
             -Dsonar.organization=stnokott-github
             -Dsonar.typescript.tsconfigPaths=frontend/tsconfig.json
+            -Dsonar.exclusions=frontend/wailsjs/**

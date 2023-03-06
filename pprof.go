@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
 	"os"
 	"runtime/pprof"
@@ -14,6 +15,7 @@ import (
 // CPU Profiling, currently only used for PGO (https://go.dev/doc/pgo)
 
 const ENV_FILENAME string = "PPROF_FILENAME"
+const ROOT_PATH string = "build/cpu_profiles/hosts/"
 
 func init() {
 	filename, ok := os.LookupEnv(ENV_FILENAME)
@@ -22,7 +24,10 @@ func init() {
 	}
 
 	onStartupFuncs = append(onStartupFuncs, func(_ context.Context) {
-		cpuProfile, _ := os.Create("build/cpu_profiles/hosts/" + filename + ".pprof")
+		if err := os.MkdirAll(ROOT_PATH, 0644); err != nil && !errors.Is(err, os.ErrExist) {
+			log.Fatalf("could not create directory structure %s: %v", ROOT_PATH, err)
+		}
+		cpuProfile, _ := os.Create(ROOT_PATH + filename + ".pprof")
 		pprof.StartCPUProfile(cpuProfile)
 	})
 

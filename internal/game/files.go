@@ -142,6 +142,10 @@ func watchRounds(ctx context.Context, matchReplayFolder string, chFiles chan<- s
 	}
 	log.Println("watching", matchReplayFolder, "...")
 
+	listenFileChanges(ctx, matchDirWatcher, chFiles, chErrors)
+}
+
+func listenFileChanges(ctx context.Context, matchDirWatcher *fsnotify.Watcher, chFiles chan<- string, chErrors chan<- error) {
 	for {
 		select {
 		case <-ctx.Done():
@@ -151,32 +155,35 @@ func watchRounds(ctx context.Context, matchReplayFolder string, chFiles chan<- s
 			if !ok {
 				return
 			}
-			// log.Println("event:", event)
 			if event.Has(fsnotify.Create) {
 				// new folder for game created / new game started
 				log.Println("created:", event.Name)
-				st, err := os.Lstat(event.Name)
-				if err != nil {
-					log.Println("WARNING: could not stat", event.Name)
-				} else {
-					if st.IsDir() {
-						if err = matchDirWatcher.Add(event.Name); err != nil {
-							log.Println("WARNING: could not start watching", event.Name)
-						} else {
-							log.Println("now watching", event.Name)
-						}
-					} else if isReplayFile(event.Name) {
-						chFiles <- event.Name
-					} else {
-						log.Println("WARNING: discarding file", event.Name)
-					}
-				}
+				handleNewMatch(event.Name, matchDirWatcher, chFiles)
 			}
 		case errWatcher, ok := <-matchDirWatcher.Errors:
 			if !ok {
 				return
 			}
 			chErrors <- errWatcher
+		}
+	}
+}
+
+func handleNewMatch(folder string, matchDirWatcher *fsnotify.Watcher, chFiles chan<- string) {
+	st, err := os.Lstat(folder)
+	if err != nil {
+		log.Println("WARNING: could not stat", folder)
+	} else {
+		if st.IsDir() {
+			if err = matchDirWatcher.Add(folder); err != nil {
+				log.Println("WARNING: could not start watching", folder)
+			} else {
+				log.Println("now watching", folder)
+			}
+		} else if isReplayFile(folder) {
+			chFiles <- folder
+		} else {
+			log.Println("WARNING: discarding file", folder)
 		}
 	}
 }

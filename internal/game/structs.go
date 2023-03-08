@@ -2,29 +2,30 @@ package game
 
 import (
 	"time"
+
+	"github.com/redraskal/r6-dissect/dissect"
 )
 
 type RoundInfo struct {
-	Players             []Player
-	SeasonSlug          string
-	RecordingPlayerName string
 	MatchID             string
 	Time                time.Time
+	SeasonSlug          string
+	RecordingPlayerName string
 	MatchType           string
 	GameMode            string
 	MapName             string
-	RoundWon            bool
+	Teams               [2]Team
+	Site                string
+	WonRound            bool
+	WinCondition        dissect.WinCondition
 }
 
-type Role int
-
-const (
-	ROLE_DEFENCE Role = 4
-	ROLE_ATTACK  Role = 0
-)
+type Team struct {
+	Role    dissect.TeamRole
+	Players []Player
+}
 
 type Player struct {
 	Username string
 	Operator string
-	Role     Role
 }

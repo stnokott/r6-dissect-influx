@@ -1,9 +1,7 @@
 package game
 
 import (
-	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/redraskal/r6-dissect/dissect"
 )
@@ -28,75 +26,52 @@ func parseFile(f string) (info RoundInfo, err error) {
 	}
 	if err = r.Read(); !dissect.Ok(err) {
 		return
+	} else {
+		// reset to nil since error is not deemed problematic
+		err = nil
 	}
 
-	roundWon, err := hasWonRound(r, f)
-	if err != nil {
-		err = fmt.Errorf("error determining if round was won: %w", err)
-		return
-	}
-
-	players := make([]Player, len(r.Header.Players))
-	for i, player := range r.Header.Players {
-		players[i] = Player{
-			Username: player.Username,
-			Operator: player.RoleName,
-			Role:     Role(player.Alliance),
-		}
-	}
+	winningTeamIndex := getWinningTeamIndex(r)
+	winningTeam := r.Header.Teams[winningTeamIndex]
+	observingPlayer := r.Header.RecordingPlayer()
 	info = RoundInfo{
-		SeasonSlug:          r.Header.GameVersion,
-		RecordingPlayerName: r.Header.RecordingPlayer().Username,
 		MatchID:             r.Header.MatchID,
 		Time:                r.Header.Timestamp,
+		SeasonSlug:          r.Header.GameVersion,
+		RecordingPlayerName: r.Header.RecordingPlayer().Username,
 		MatchType:           r.Header.MatchType.String(),
 		GameMode:            r.Header.GameMode.String(),
 		MapName:             r.Header.Map.String(),
-		Players:             players,
-		RoundWon:            roundWon,
+		Teams:               makeTeams(r),
+		Site:                r.Header.Site,
+		WonRound:            observingPlayer.TeamIndex == winningTeamIndex,
+		WinCondition:        winningTeam.WinCondition,
 	}
 	return
 }
 
-func hasWonRound(r *dissect.DissectReader, replayFilePath string) (bool, error) {
-	observerTeam := getObserverTeam(r)
-
-	// check if this was the first round
-	if r.Header.Teams[0].Score+r.Header.Teams[1].Score == 1 {
-		// we have won if the observing player's team has 1 point
-		return observerTeam.Score == 1, nil
+func makeTeams(r *dissect.DissectReader) [2]Team {
+	// initialize teams slice
+	var teams [2]Team
+	for i := 0; i < 2; i++ {
+		teams[i] = Team{Role: r.Header.Teams[0].Role, Players: make([]Player, 0)}
 	}
 
-	// at this point, we know that this was not the first round.
-	// we need to find out the previous round's score to determine who won this round.
-	matchDir := filepath.Dir(replayFilePath)
-	// FIXME: wait for update of github.com/redraskal/r6-dissect that includes info about round end directly in *dissect.DissectReader
-	// since reading a whole match is a lot of overhead.
-	previousRound, err := getRoundByIndex(matchDir, r.Header.RoundNumber)
-	if err != nil {
-		return false, err
+	// fill teams with players
+	for _, player := range r.Header.Players {
+		teams[player.TeamIndex].Players = append(teams[player.TeamIndex].Players, Player{
+			Username: player.Username,
+			Operator: player.RoleName,
+		})
 	}
 
-	prevObserverTeam := getObserverTeam(previousRound)
-	return observerTeam.Score > prevObserverTeam.Score, nil
+	return teams
 }
 
-func getRoundByIndex(matchDir string, roundIndex int) (*dissect.DissectReader, error) {
-	matchReader, err := dissect.NewMatchReader(matchDir)
-	if err != nil {
-		return nil, err
-	}
-	if roundIndex >= matchReader.NumRounds() {
-		return nil, fmt.Errorf("round index %d out of bounds (have %d rounds)", roundIndex, matchReader.NumRounds())
-	}
-	return matchReader.RoundAt(roundIndex), nil
-}
-
-func getObserverTeam(r *dissect.DissectReader) dissect.Team {
-	teams := r.Header.Teams
-	if teams[0].Name == "YOUR TEAM" {
-		return teams[0]
+func getWinningTeamIndex(r *dissect.DissectReader) int {
+	if r.Header.Teams[0].Won {
+		return 0
 	} else {
-		return teams[1]
+		return 1
 	}
 }

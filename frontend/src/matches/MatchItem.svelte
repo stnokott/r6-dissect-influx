@@ -9,7 +9,6 @@
 	import ProgressStepIndicator from "../components/ProgressStepIndicator.svelte";
 	import ProgressStep from "../components/ProgressStep.svelte";
 	import type { matches } from "./matches";
-	import { Settings } from "carbon-icons-svelte";
 
 	export let roundInfos: Array<matches.RoundInfo>;
 
@@ -35,7 +34,7 @@
 	<div style="z-index: 2; position: relative">
 		<ProgressStepIndicator>
 			{#each roundInfos as roundInfo, i}
-				<ProgressStep won={roundInfo.RoundWon} />
+				<ProgressStep won={roundInfo.WonRound} />
 			{/each}
 		</ProgressStepIndicator>
 

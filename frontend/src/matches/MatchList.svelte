@@ -13,6 +13,7 @@
 	import type { matches } from "./matches";
 	import type { MatchListAPI } from "./matchlist";
 
+	let errorTitle = "Error";
 	let error: string;
 
 	export const matchListAPI: MatchListAPI = {
@@ -26,6 +27,7 @@
 					await StartRoundWatcher();
 				}
 			} catch (e) {
+				errorTitle = "Round Watcher error:";
 				error = e;
 			}
 		},
@@ -53,6 +55,7 @@
 	}
 
 	function onRoundWatcherError(err: any) {
+		errorTitle = "Error parsing round:";
 		error = err;
 	}
 
@@ -98,7 +101,7 @@
 	{#if error}
 		<InlineNotification
 			kind="error"
-			title="Error"
+			title={errorTitle}
 			timeout={5000}
 			subtitle={error}
 			on:close={(e) => {

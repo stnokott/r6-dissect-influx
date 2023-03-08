@@ -4,13 +4,13 @@
 	export let won: boolean;
 </script>
 
-<li class="step {won ? 'won' : 'lost'}">
+<div class="step {won ? 'won' : 'lost'}">
 	{#if won}
-		<Checkmark size={16} />
+		<Checkmark size={24} class="icon" />
 	{:else}
-		<Close size={16} />
+		<Close size={24} class="icon" />
 	{/if}
-</li>
+</div>
 
 <style lang="scss">
 	@use "@carbon/themes/scss/themes" as *;
@@ -18,7 +18,7 @@
 		$theme: $g90
 	);
 
-	$size: 35px;
+	$size: 34px;
 
 	.step {
 		/* border: 3px solid themes.$layer-accent-03; */
@@ -31,6 +31,9 @@
 		font-size: 14px;
 		position: relative;
 		z-index: 1;
+
+		display: flex;
+		align-items: center;
 	}
 
 	.won {
@@ -39,5 +42,11 @@
 
 	.lost {
 		background-color: themes.$layer-accent-03;
+	}
+
+	// use :global because Svelte doesn't recognise Carbon icons' SVG class
+	.step > :global(.icon) {
+		display: block;
+		margin: auto;
 	}
 </style>

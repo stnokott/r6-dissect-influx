@@ -2,7 +2,11 @@
 	export let fullWidth = false;
 </script>
 
-<div id="progress" style:width={fullWidth ? "100%" : "auto"}>
+<div
+	id="progress"
+	style:width={fullWidth ? "100%" : "auto"}
+	style={$$props.style}
+>
 	<ul id="progress-bar">
 		<slot />
 	</ul>
@@ -33,7 +37,7 @@
 		top: 50%;
 		left: 0;
 		transform: translateY(-50%);
-		height: 5px;
+		height: 6px;
 		width: 100%;
 		z-index: -1;
 	}

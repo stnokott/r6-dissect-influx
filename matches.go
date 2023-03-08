@@ -36,7 +36,7 @@ func (a *App) StartRoundWatcher() error {
 					return
 				}
 				if err != nil {
-					runtime.EventsEmit(a.ctx, eventNames.RoundWatcherError, err)
+					runtime.EventsEmit(a.ctx, eventNames.RoundWatcherError, err.Error())
 				}
 			}
 		}

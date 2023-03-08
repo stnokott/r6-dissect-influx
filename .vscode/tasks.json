@@ -174,6 +174,23 @@
 			"problemMatcher": []
 		},
 		{
+			"label": "delete manifest",
+			"type": "shell",
+			"command": "rm *.syso",
+			"windows": {
+				"command": "del *.syso"
+			},
+			"presentation": {
+				"echo": false,
+				"reveal": "never",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": false
+			},
+			"problemMatcher": [],
+		},
+		{
 			"label": "Wails: Dev",
 			"type": "process",
 			"command": "wails",
@@ -182,7 +199,10 @@
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"
-			}
+			},
+			"dependsOn": [
+				"delete manifest"
+			]
 		}
 	],
 	"inputs": [

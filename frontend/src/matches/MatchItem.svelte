@@ -1,14 +1,15 @@
 <script lang="ts">
 	import {
 		ImageLoader,
-		ProgressIndicator,
-		ProgressStep,
 		SkeletonPlaceholder,
 		Tag,
 		Tile,
 	} from "carbon-components-svelte";
 	import type { TagProps } from "carbon-components-svelte/types/Tag/Tag.svelte";
+	import ProgressStepIndicator from "../components/ProgressStepIndicator.svelte";
+	import ProgressStep from "../components/ProgressStep.svelte";
 	import type { matches } from "./matches";
+	import { Settings } from "carbon-icons-svelte";
 
 	export let roundInfos: Array<matches.RoundInfo>;
 
@@ -32,15 +33,12 @@
 	{@const firstRound = roundInfos[0]}
 	{@const playTime = new Date(firstRound.Time).toLocaleString()}
 	<div style="z-index: 2; position: relative">
-		<ProgressIndicator preventChangeOnClick currentIndex={-1}>
-			{#each roundInfos as roundInfo}
-				<ProgressStep
-					complete
-					label={roundInfo.RoundWon ? "Won" : "Lost"}
-					invalid={!roundInfo.RoundWon}
-				/>
+		<ProgressStepIndicator>
+			{#each roundInfos as roundInfo, i}
+				<ProgressStep won={roundInfo.RoundWon} />
 			{/each}
-		</ProgressIndicator>
+		</ProgressStepIndicator>
+
 		<Tag>{playTime}</Tag>
 		<Tag>{firstRound.GameMode}</Tag>
 		<Tag type={matchTypeColors[firstRound.MatchType]}

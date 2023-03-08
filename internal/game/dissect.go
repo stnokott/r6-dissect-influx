@@ -72,7 +72,7 @@ func hasWonRound(r *dissect.DissectReader, replayFilePath string) (bool, error) 
 	matchDir := filepath.Dir(replayFilePath)
 	// FIXME: wait for update of github.com/redraskal/r6-dissect that includes info about round end directly in *dissect.DissectReader
 	// since reading a whole match is a lot of overhead.
-	previousRound, err := getRoundByIndex(matchDir, r.Header.RoundNumber-1)
+	previousRound, err := getRoundByIndex(matchDir, r.Header.RoundNumber)
 	if err != nil {
 		return false, err
 	}

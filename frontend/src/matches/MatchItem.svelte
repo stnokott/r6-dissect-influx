@@ -34,7 +34,7 @@
 	<div style="z-index: 2; position: relative">
 		<MatchProgressIndicator style="margin-bottom: 5px">
 			{#each roundInfos as roundInfo, i}
-				<MatchProgressStep won={roundInfo.WonRound} />
+				<MatchProgressStep {roundInfo} />
 			{/each}
 		</MatchProgressIndicator>
 

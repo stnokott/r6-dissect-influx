@@ -1,14 +1,16 @@
 <script lang="ts">
-	import { Checkmark, Close } from "carbon-icons-svelte";
+	import type { matches } from "../matches/matches";
+	import Attack from "./icons/Attack.svelte";
+	import Defense from "./icons/Defense.svelte";
 
-	export let won: boolean;
+	export let roundInfo: matches.RoundInfo;
 </script>
 
-<div class="step {won ? 'won' : 'lost'}">
-	{#if won}
-		<Checkmark size={24} class="icon" />
+<div class="step {roundInfo.Won ? 'won' : 'lost'}">
+	{#if roundInfo.Teams[roundInfo.TeamIndex].Role === "ATTACK"}
+		<Attack size={24} class="icon" />
 	{:else}
-		<Close size={24} class="icon" />
+		<Defense size={24} class="icon" />
 	{/if}
 </div>
 

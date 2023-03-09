@@ -33,39 +33,22 @@ func parseFile(f string) (info RoundInfo, err error) {
 
 	winningTeamIndex := getWinningTeamIndex(r)
 	winningTeam := r.Header.Teams[winningTeamIndex]
-	observingPlayer := r.Header.RecordingPlayer()
+	recordingPlayer := r.Header.RecordingPlayer()
 	info = RoundInfo{
-		MatchID:             r.Header.MatchID,
-		Time:                r.Header.Timestamp,
-		SeasonSlug:          r.Header.GameVersion,
-		RecordingPlayerName: r.Header.RecordingPlayer().Username,
-		MatchType:           r.Header.MatchType.String(),
-		GameMode:            r.Header.GameMode.String(),
-		MapName:             r.Header.Map.String(),
-		Teams:               makeTeams(r),
-		Site:                r.Header.Site,
-		WonRound:            observingPlayer.TeamIndex == winningTeamIndex,
-		WinCondition:        winningTeam.WinCondition,
+		MatchID:      r.Header.MatchID,
+		Time:         r.Header.Timestamp,
+		SeasonSlug:   r.Header.GameVersion,
+		MatchType:    r.Header.MatchType.String(),
+		GameMode:     r.Header.GameMode.String(),
+		MapName:      r.Header.Map.String(),
+		Teams:        makeTeams(r),
+		Site:         r.Header.Site,
+		Won:          recordingPlayer.TeamIndex == winningTeamIndex,
+		WinCondition: winningTeam.WinCondition,
+		TeamIndex:    recordingPlayer.TeamIndex,
+		PlayerName:   recordingPlayer.Username,
 	}
 	return
-}
-
-func makeTeams(r *dissect.DissectReader) [2]Team {
-	// initialize teams slice
-	var teams [2]Team
-	for i := 0; i < 2; i++ {
-		teams[i] = Team{Role: r.Header.Teams[0].Role, Players: make([]Player, 0)}
-	}
-
-	// fill teams with players
-	for _, player := range r.Header.Players {
-		teams[player.TeamIndex].Players = append(teams[player.TeamIndex].Players, Player{
-			Username: player.Username,
-			Operator: player.RoleName,
-		})
-	}
-
-	return teams
 }
 
 func getWinningTeamIndex(r *dissect.DissectReader) int {

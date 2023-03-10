@@ -38,10 +38,7 @@ func GetLatestRelease() (result *Release, err error) {
 	}
 
 	defer func() {
-		errClose := resp.Body.Close()
-		if errClose != nil && err == nil {
-			err = errClose
-		}
+		err = errors.Join(err, resp.Body.Close())
 	}()
 
 	result = new(Release)

@@ -1,6 +1,7 @@
 package game
 
 import (
+	"errors"
 	"os"
 
 	"github.com/redraskal/r6-dissect/dissect"
@@ -13,10 +14,7 @@ func parseFile(f string) (info RoundInfo, err error) {
 		return
 	}
 	defer func() {
-		errClose := file.Close()
-		if errClose != nil && err == nil {
-			err = errClose
-		}
+		err = errors.Join(err, file.Close())
 	}()
 
 	var r *dissect.DissectReader

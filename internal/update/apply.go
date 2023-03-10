@@ -2,6 +2,7 @@ package update
 
 import (
 	"archive/zip"
+	"errors"
 	"fmt"
 	"io"
 	"strings"
@@ -50,10 +51,7 @@ func (r *Release) downloadAndApplySync(chProgress chan<- updateProgress) {
 		return
 	}
 	defer func() {
-		errInner := reader.Close()
-		if errInner != nil && err == nil {
-			err = errInner
-		}
+		err = errors.Join(err, reader.Close())
 	}()
 
 	var in io.ReadCloser
@@ -61,10 +59,7 @@ func (r *Release) downloadAndApplySync(chProgress chan<- updateProgress) {
 		if strings.HasSuffix(file.Name, ".exe") {
 			in, err = file.Open()
 			defer func() {
-				errInner := in.Close()
-				if errInner != nil && err == nil {
-					err = errInner
-				}
+				err = errors.Join(err, in.Close())
 			}()
 			chProgress <- updateProgress{Task: "Applying update..."}
 			err = selfupdate.Apply(in, selfupdate.Options{})

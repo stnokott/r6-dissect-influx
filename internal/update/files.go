@@ -1,6 +1,7 @@
 package update
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"os"
@@ -26,10 +27,7 @@ func downloadAsset(a asset) (filepath string, err error) {
 		return
 	}
 	defer func() {
-		errInner := resp.Body.Close()
-		if errInner != nil && err == nil {
-			err = errInner
-		}
+		err = errors.Join(err, resp.Body.Close())
 	}()
 
 	tmpFolder := path.Join(os.TempDir(), constants.ProjectName)
@@ -44,10 +42,7 @@ func downloadAsset(a asset) (filepath string, err error) {
 		return
 	}
 	defer func() {
-		errInner := outFile.Close()
-		if errInner != nil && err == nil {
-			err = errInner
-		}
+		err = errors.Join(err, outFile.Close())
 	}()
 	_, err = io.Copy(outFile, resp.Body)
 	filepath = outFile.Name()

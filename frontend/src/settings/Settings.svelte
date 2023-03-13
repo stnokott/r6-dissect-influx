@@ -7,7 +7,6 @@
 		Tile,
 		Row,
 		Column,
-		InlineLoading,
 		TextInput,
 		PasswordInput,
 		NumberInput,
@@ -38,8 +37,8 @@
 		changed: void;
 	}>();
 
-	let errorTitle: string;
-	let errorDetail: string;
+	let errorTitle: string | null;
+	let errorDetail: string | null;
 
 	let gameDir: string = "";
 	let influxHost: string = "";
@@ -72,7 +71,7 @@
 	}
 
 	let autodetectRunning = false;
-	let autodetectError: string = null;
+	let autodetectError: string | null = null;
 
 	async function autodetectGameDir(): Promise<void> {
 		autodetectRunning = true;
@@ -90,9 +89,7 @@
 		p: Promise<void>,
 		validationErrSetter: (e: string) => void
 	): void {
-		p.then(() => validationErrSetter(null)).catch((e) =>
-			validationErrSetter(e)
-		);
+		p.then(() => validationErrSetter("")).catch((e) => validationErrSetter(e));
 	}
 
 	$: handleValidationPromise(
@@ -196,7 +193,7 @@
 		} else if (validatingConfig) {
 			loadingDesc = "Validating configuration...";
 		} else {
-			loadingDesc = null;
+			loadingDesc = "";
 		}
 	}
 </script>

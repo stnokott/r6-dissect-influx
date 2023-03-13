@@ -25,7 +25,7 @@
 
 	let buildInfo: string = "";
 
-	export let promConnectionDetails: Promise<db.ConnectionDetails> = null;
+	export let promConnectionDetails: Promise<db.ConnectionDetails> | null = null;
 
 	let updateAvailable = false;
 

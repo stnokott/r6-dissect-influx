@@ -14,9 +14,11 @@
      */
     "allowJs": true,
     "checkJs": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "strictNullChecks": true
   },
   "include": [
+    "cypress/support/*.ts",
     "src/**/*.d.ts",
     "src/**/*.ts",
     "src/**/*.js",

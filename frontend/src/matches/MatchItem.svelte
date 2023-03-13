@@ -6,8 +6,8 @@
 		Tile,
 	} from "carbon-components-svelte";
 	import type { TagProps } from "carbon-components-svelte/types/Tag/Tag.svelte";
-	import MatchProgressIndicator from "../components/MatchProgressIndicator.svelte";
-	import MatchProgressStep from "../components/MatchProgressStep.svelte";
+	import MatchProgressIndicator from "./MatchProgressIndicator.svelte";
+	import MatchProgressStep from "./MatchProgressStep.svelte";
 	import type { matches } from "./matches";
 
 	export let roundInfos: Array<matches.RoundInfo>;

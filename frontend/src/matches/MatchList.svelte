@@ -14,7 +14,7 @@
 	import type { MatchListAPI } from "./matchlist";
 
 	let errorTitle = "Error";
-	let error: string;
+	let error: string | null;
 
 	export const matchListAPI: MatchListAPI = {
 		async onConfigChanged() {
@@ -22,7 +22,7 @@
 				if (roundWatcherRunning) {
 					await StopRoundWatcher();
 				}
-				let configComplete = IsConfigComplete();
+				let configComplete = await IsConfigComplete();
 				if (configComplete) {
 					await StartRoundWatcher();
 				}
@@ -39,7 +39,7 @@
 
 	async function onNewRound(r: matches.RoundInfo) {
 		if (matchInfos.has(r.MatchID)) {
-			matchInfos.set(r.MatchID, [...matchInfos.get(r.MatchID), r]);
+			matchInfos.set(r.MatchID, [...matchInfos[r.MatchID], r]);
 		} else {
 			matchInfos.set(r.MatchID, [r]);
 		}

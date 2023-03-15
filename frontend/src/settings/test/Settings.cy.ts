@@ -1,6 +1,5 @@
 import type { db } from "../../index"
 import type { config } from "../../../wailsjs/go/models"
-import * as App from "../../../wailsjs/go/main/App"
 import Settings from "../Settings.svelte"
 
 const mockSavedConfig: config.Config = {

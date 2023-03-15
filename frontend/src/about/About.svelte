@@ -150,6 +150,7 @@
 					<Button
 						icon={CloudDownload}
 						size="small"
+						disabled={updateOverlayVisible}
 						on:click={() => startUpdate(latestReleaseInfo)}
 					>
 						Apply Update
@@ -160,6 +161,7 @@
 						icon={WatsonHealthRotate_360}
 						size="small"
 						kind="tertiary"
+						disabled={updateOverlayVisible}
 						on:click={checkForUpdate}>Check for Updates</Button
 					>
 				{:else}

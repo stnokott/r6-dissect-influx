@@ -47,20 +47,20 @@
 	let influxBucket: string = "";
 	let influxToken: string = "";
 
-	let gameDirValidationErr: string;
-	let influxHostValidationErr: string;
-	let influxPortValidationErr: string;
-	let influxOrgValidationErr: string;
-	let influxBucketValidationErr: string;
-	let influxTokenValidationErr: string;
+	let gameDirValidationErr = "";
+	let influxHostValidationErr = "";
+	let influxPortValidationErr = "";
+	let influxOrgValidationErr = "";
+	let influxBucketValidationErr = "";
+	let influxTokenValidationErr = "";
 
 	$: configInvalid =
-		gameDirValidationErr !== null ||
-		influxHostValidationErr !== null ||
-		influxPortValidationErr !== null ||
-		influxOrgValidationErr !== null ||
-		influxBucketValidationErr !== null ||
-		influxTokenValidationErr !== null;
+		gameDirValidationErr !== "" ||
+		influxHostValidationErr !== "" ||
+		influxPortValidationErr !== "" ||
+		influxOrgValidationErr !== "" ||
+		influxBucketValidationErr !== "" ||
+		influxTokenValidationErr !== "";
 
 	function openGameDirDialog(): void {
 		OpenGameDirDialog().then((d) => {
@@ -228,7 +228,7 @@
 					<Column>
 						<TextInput
 							bind:value={gameDir}
-							invalid={gameDirValidationErr !== null}
+							invalid={gameDirValidationErr !== ""}
 							invalidText={gameDirValidationErr}
 							labelText="Directory"
 							required
@@ -276,7 +276,7 @@
 						<TextInput
 							id="input-influx-host"
 							bind:value={influxHost}
-							invalid={influxHostValidationErr !== null}
+							invalid={influxHostValidationErr !== ""}
 							invalidText={influxHostValidationErr}
 							labelText="Host"
 							helperText="IP or hostname, without http(s)"
@@ -286,7 +286,7 @@
 					<Column>
 						<NumberInput
 							bind:value={influxPort}
-							invalid={influxPortValidationErr !== null}
+							invalid={influxPortValidationErr !== ""}
 							invalidText={influxPortValidationErr}
 							label="Port"
 							required
@@ -297,7 +297,7 @@
 					<Column>
 						<TextInput
 							bind:value={influxOrg}
-							invalid={influxOrgValidationErr !== null}
+							invalid={influxOrgValidationErr !== ""}
 							invalidText={influxOrgValidationErr}
 							labelText="Organization"
 							required
@@ -306,7 +306,7 @@
 					<Column>
 						<TextInput
 							bind:value={influxBucket}
-							invalid={influxBucketValidationErr !== null}
+							invalid={influxBucketValidationErr !== ""}
 							invalidText={influxBucketValidationErr}
 							labelText="Bucket"
 							required
@@ -316,7 +316,7 @@
 				<Row>
 					<PasswordInput
 						bind:value={influxToken}
-						invalid={influxTokenValidationErr !== null}
+						invalid={influxTokenValidationErr !== ""}
 						invalidText={influxTokenValidationErr}
 						labelText="Token"
 						required

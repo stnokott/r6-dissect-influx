@@ -37,3 +37,6 @@ Cypress.Commands.add('mount', mount)
 
 // Example use:
 // cy.mount(MyComponent)
+
+// apply carbon CSS
+import "carbon-components-svelte/css/g90.css";

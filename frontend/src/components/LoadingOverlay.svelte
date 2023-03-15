@@ -16,20 +16,24 @@
 	<div>
 		{#if errorTitle === null}
 			{#if !done}
-				<InlineLoading description={loadingDesc} />
+				<div data-cy="loader">
+					<InlineLoading description={loadingDesc} />
+				</div>
 			{:else}
 				<slot />
 			{/if}
 		{:else}
-			<InlineNotification
-				kind="error"
-				title={errorTitle}
-				subtitle={errorDetail ? errorDetail : ""}
-				on:close={(e) => {
-					e.preventDefault();
-					open = false;
-				}}
-			/>
+			<div data-cy="error">
+				<InlineNotification
+					kind="error"
+					title={errorTitle}
+					subtitle={errorDetail ? errorDetail : ""}
+					on:close={(e) => {
+						e.preventDefault();
+						open = false;
+					}}
+				/>
+			</div>
 		{/if}
 	</div>
 </div>

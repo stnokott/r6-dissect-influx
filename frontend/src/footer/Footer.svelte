@@ -44,7 +44,7 @@
 	});
 </script>
 
-<div id="root" class="footer">
+<div id="root">
 	<div id="left">
 		<Button
 			on:click={() => dispatch("openSettings")}

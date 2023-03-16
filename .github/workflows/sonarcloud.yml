@@ -40,3 +40,4 @@ jobs:
             -Dsonar.typescript.tsconfigPaths=frontend/tsconfig.json
             -Dsonar.exclusions=frontend/wailsjs/**,frontend/cypress/support/**,**/*.cy.ts
             -Dsonar.test.inclusions=**/*.cy.ts
+            -Dsonar.coverage.exclusions=frontend/**/*

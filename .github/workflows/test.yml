@@ -24,7 +24,7 @@ jobs:
       - name: Cypress tests
         uses: cypress-io/github-action@v5.1.0
         with:
-          project: ./frontend
+          working-directory: frontend
           build: npm run build
           component: true
           browser: edge

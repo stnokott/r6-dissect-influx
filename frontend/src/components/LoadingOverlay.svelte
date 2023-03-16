@@ -8,28 +8,32 @@
 	export let done = false;
 
 	// will show loader with loadingDesc if errorTitle is null
-	export let errorTitle: string = null;
-	export let errorDetail: string = null;
+	export let errorTitle: string | null = null;
+	export let errorDetail: string | null = null;
 </script>
 
 <div id="root" style:display={open ? "flex" : "none"}>
 	<div>
 		{#if errorTitle === null}
 			{#if !done}
-				<InlineLoading description={loadingDesc} />
+				<div data-cy="loader">
+					<InlineLoading description={loadingDesc} />
+				</div>
 			{:else}
 				<slot />
 			{/if}
 		{:else}
-			<InlineNotification
-				kind="error"
-				title={errorTitle}
-				subtitle={errorDetail ? errorDetail : ""}
-				on:close={(e) => {
-					e.preventDefault();
-					open = false;
-				}}
-			/>
+			<div data-cy="error">
+				<InlineNotification
+					kind="error"
+					title={errorTitle}
+					subtitle={errorDetail ? errorDetail : ""}
+					on:close={(e) => {
+						e.preventDefault();
+						open = false;
+					}}
+				/>
+			</div>
 		{/if}
 	</div>
 </div>

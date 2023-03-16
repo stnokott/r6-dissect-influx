@@ -7,7 +7,6 @@
 		Tile,
 		Row,
 		Column,
-		InlineLoading,
 		TextInput,
 		PasswordInput,
 		NumberInput,
@@ -38,8 +37,8 @@
 		changed: void;
 	}>();
 
-	let errorTitle: string;
-	let errorDetail: string;
+	let errorTitle: string | null;
+	let errorDetail: string | null;
 
 	let gameDir: string = "";
 	let influxHost: string = "";
@@ -48,20 +47,20 @@
 	let influxBucket: string = "";
 	let influxToken: string = "";
 
-	let gameDirValidationErr: string;
-	let influxHostValidationErr: string;
-	let influxPortValidationErr: string;
-	let influxOrgValidationErr: string;
-	let influxBucketValidationErr: string;
-	let influxTokenValidationErr: string;
+	let gameDirValidationErr = "";
+	let influxHostValidationErr = "";
+	let influxPortValidationErr = "";
+	let influxOrgValidationErr = "";
+	let influxBucketValidationErr = "";
+	let influxTokenValidationErr = "";
 
 	$: configInvalid =
-		gameDirValidationErr !== null ||
-		influxHostValidationErr !== null ||
-		influxPortValidationErr !== null ||
-		influxOrgValidationErr !== null ||
-		influxBucketValidationErr !== null ||
-		influxTokenValidationErr !== null;
+		gameDirValidationErr !== "" ||
+		influxHostValidationErr !== "" ||
+		influxPortValidationErr !== "" ||
+		influxOrgValidationErr !== "" ||
+		influxBucketValidationErr !== "" ||
+		influxTokenValidationErr !== "";
 
 	function openGameDirDialog(): void {
 		OpenGameDirDialog().then((d) => {
@@ -72,7 +71,7 @@
 	}
 
 	let autodetectRunning = false;
-	let autodetectError: string = null;
+	let autodetectError: string | null = null;
 
 	async function autodetectGameDir(): Promise<void> {
 		autodetectRunning = true;
@@ -90,9 +89,7 @@
 		p: Promise<void>,
 		validationErrSetter: (e: string) => void
 	): void {
-		p.then(() => validationErrSetter(null)).catch((e) =>
-			validationErrSetter(e)
-		);
+		p.then(() => validationErrSetter("")).catch((e) => validationErrSetter(e));
 	}
 
 	$: handleValidationPromise(
@@ -196,7 +193,7 @@
 		} else if (validatingConfig) {
 			loadingDesc = "Validating configuration...";
 		} else {
-			loadingDesc = null;
+			loadingDesc = "";
 		}
 	}
 </script>
@@ -231,7 +228,7 @@
 					<Column>
 						<TextInput
 							bind:value={gameDir}
-							invalid={gameDirValidationErr !== null}
+							invalid={gameDirValidationErr !== ""}
 							invalidText={gameDirValidationErr}
 							labelText="Directory"
 							required
@@ -279,7 +276,7 @@
 						<TextInput
 							id="input-influx-host"
 							bind:value={influxHost}
-							invalid={influxHostValidationErr !== null}
+							invalid={influxHostValidationErr !== ""}
 							invalidText={influxHostValidationErr}
 							labelText="Host"
 							helperText="IP or hostname, without http(s)"
@@ -289,7 +286,7 @@
 					<Column>
 						<NumberInput
 							bind:value={influxPort}
-							invalid={influxPortValidationErr !== null}
+							invalid={influxPortValidationErr !== ""}
 							invalidText={influxPortValidationErr}
 							label="Port"
 							required
@@ -300,7 +297,7 @@
 					<Column>
 						<TextInput
 							bind:value={influxOrg}
-							invalid={influxOrgValidationErr !== null}
+							invalid={influxOrgValidationErr !== ""}
 							invalidText={influxOrgValidationErr}
 							labelText="Organization"
 							required
@@ -309,7 +306,7 @@
 					<Column>
 						<TextInput
 							bind:value={influxBucket}
-							invalid={influxBucketValidationErr !== null}
+							invalid={influxBucketValidationErr !== ""}
 							invalidText={influxBucketValidationErr}
 							labelText="Bucket"
 							required
@@ -319,7 +316,7 @@
 				<Row>
 					<PasswordInput
 						bind:value={influxToken}
-						invalid={influxTokenValidationErr !== null}
+						invalid={influxTokenValidationErr !== ""}
 						invalidText={influxTokenValidationErr}
 						labelText="Token"
 						required

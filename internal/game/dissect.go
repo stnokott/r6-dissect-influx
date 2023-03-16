@@ -1,47 +1,58 @@
 package game
 
 import (
+	"errors"
 	"os"
 
-	"github.com/redraskal/r6-dissect/reader"
+	"github.com/redraskal/r6-dissect/dissect"
 )
 
 func parseFile(f string) (info RoundInfo, err error) {
-	var r *os.File
-	r, err = os.Open(f)
+	var file *os.File
+	file, err = os.Open(f)
 	if err != nil {
 		return
 	}
 	defer func() {
-		errClose := r.Close()
-		if errClose != nil && err == nil {
-			err = errClose
-		}
+		err = errors.Join(err, file.Close())
 	}()
 
-	var c reader.DissectReader
-	c, err = reader.NewReader(r)
+	var r *dissect.DissectReader
+	r, err = dissect.NewReader(file)
 	if err != nil {
 		return
 	}
-
-	players := make([]Player, len(c.Header.Players))
-	for i, player := range c.Header.Players {
-		players[i] = Player{
-			Username: player.Username,
-			Operator: player.RoleName,
-			Role:     Role(player.Alliance),
-		}
+	if err = r.Read(); !dissect.Ok(err) {
+		return
+	} else {
+		// reset to nil since error is not deemed problematic
+		err = nil
 	}
+
+	winningTeamIndex := getWinningTeamIndex(r)
+	winningTeam := r.Header.Teams[winningTeamIndex]
+	recordingPlayer := r.Header.RecordingPlayer()
 	info = RoundInfo{
-		SeasonSlug:          c.Header.GameVersion,
-		RecordingPlayerName: c.Header.RecordingPlayer().Username,
-		MatchID:             c.Header.MatchID,
-		Time:                c.Header.Timestamp,
-		MatchType:           c.Header.MatchType.String(),
-		GameMode:            c.Header.GameMode.String(),
-		MapName:             c.Header.Map.String(),
-		Players:             players,
+		MatchID:      r.Header.MatchID,
+		Time:         r.Header.Timestamp,
+		SeasonSlug:   r.Header.GameVersion,
+		MatchType:    r.Header.MatchType.String(),
+		GameMode:     r.Header.GameMode.String(),
+		MapName:      r.Header.Map.String(),
+		Teams:        makeTeams(r),
+		Site:         r.Header.Site,
+		Won:          recordingPlayer.TeamIndex == winningTeamIndex,
+		WinCondition: winningTeam.WinCondition,
+		TeamIndex:    recordingPlayer.TeamIndex,
+		PlayerName:   recordingPlayer.Username,
 	}
 	return
+}
+
+func getWinningTeamIndex(r *dissect.DissectReader) int {
+	if r.Header.Teams[0].Won {
+		return 0
+	} else {
+		return 1
+	}
 }

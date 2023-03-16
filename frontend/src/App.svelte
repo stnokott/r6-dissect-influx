@@ -1,7 +1,7 @@
 <script lang="ts">
   import "carbon-components-svelte/css/g90.css";
 
-  import { Button, Loading } from "carbon-components-svelte";
+  import { Button } from "carbon-components-svelte";
   import SettingsIcon from "carbon-icons-svelte/lib/Settings.svelte";
 
   import SettingsDialog from "./settings/Settings.svelte";

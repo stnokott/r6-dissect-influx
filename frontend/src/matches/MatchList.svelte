@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { InlineLoading, InlineNotification } from "carbon-components-svelte";
-	import { onMount } from "svelte";
+	import { afterUpdate, onMount } from "svelte";
 	import MatchItem from "./MatchItem.svelte";
 
 	import {
@@ -13,7 +13,8 @@
 	import type { matches } from "./matches";
 	import type { MatchListAPI } from "./matchlist";
 
-	let error: string;
+	let errorTitle = "Error";
+	let error: string | null;
 
 	export const matchListAPI: MatchListAPI = {
 		async onConfigChanged() {
@@ -21,22 +22,24 @@
 				if (roundWatcherRunning) {
 					await StopRoundWatcher();
 				}
-				let configComplete = IsConfigComplete();
+				let configComplete = await IsConfigComplete();
 				if (configComplete) {
 					await StartRoundWatcher();
 				}
 			} catch (e) {
+				errorTitle = "Round Watcher error:";
 				error = e;
 			}
 		},
 	};
 
 	let roundWatcherRunning = false;
+	let matchesContainer: HTMLElement;
 	let matchInfos: Map<string, Array<matches.RoundInfo>> = new Map();
 
 	async function onNewRound(r: matches.RoundInfo) {
 		if (matchInfos.has(r.MatchID)) {
-			matchInfos.set(r.MatchID, [...matchInfos.get(r.MatchID), r]);
+			matchInfos.set(r.MatchID, [...matchInfos[r.MatchID], r]);
 		} else {
 			matchInfos.set(r.MatchID, [r]);
 		}
@@ -52,6 +55,7 @@
 	}
 
 	function onRoundWatcherError(err: any) {
+		errorTitle = "Error parsing round:";
 		error = err;
 	}
 
@@ -63,10 +67,18 @@
 			window.runtime.EventsOn(e.RoundWatcherError, onRoundWatcherError);
 		});
 	});
+
+	afterUpdate(async () => {
+		if (matchesContainer) {
+			let lastItem =
+				matchesContainer.children[matchesContainer.children.length - 1];
+			lastItem.scrollIntoView({ behavior: "smooth" });
+		}
+	});
 </script>
 
 {#if roundWatcherRunning}
-	<div id="match-container">
+	<div id="match-container" bind:this={matchesContainer}>
 		{#each [...matchInfos] as [matchID, roundInfos] (matchID)}
 			<MatchItem {roundInfos} />
 		{:else}
@@ -89,7 +101,7 @@
 	{#if error}
 		<InlineNotification
 			kind="error"
-			title="Error"
+			title={errorTitle}
 			timeout={5000}
 			subtitle={error}
 			on:close={(e) => {

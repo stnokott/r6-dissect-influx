@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"embed"
 	"os"
 
@@ -19,6 +20,10 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+// Wails hooks, will be executed in order
+// targeted usecase is adding functions to the slices in build-tag-dependent source files
+var onStartupFuncs, onDomReadyFuncs, onShutdownFuncs []func(context.Context)
+
 func main() {
 	// necessary for r6-dissect
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
@@ -30,26 +35,55 @@ func main() {
 	}
 
 	app := NewApp(cfg)
+	onStartupFuncs = append(onStartupFuncs, app.startup)
 
-	// Create application with options
-	err = wails.Run(&options.App{
+	wailsOptions := &options.App{
 		Width:  800,
 		Height: 600,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		OnStartup: app.startup,
+		OnStartup: func(ctx context.Context) {
+			runWailsHooks(onStartupFuncs, ctx)
+		},
+		OnDomReady: func(ctx context.Context) {
+			runWailsHooks(onDomReadyFuncs, ctx)
+		},
+		OnShutdown: func(ctx context.Context) {
+			runWailsHooks(onShutdownFuncs, ctx)
+		},
 		Bind: []interface{}{
 			app,
 		},
 		Windows: &windows.Options{
 			Theme: windows.Dark,
+			OnSuspend: func() {
+				if app.roundsWatcherStop != nil {
+					app.roundsWatcherStop()
+				}
+			},
+			OnResume: func() {
+				if app.roundsWatcherStop == nil {
+					if errRoundWatcher := app.StartRoundWatcher(); errRoundWatcher != nil {
+						utils.ErrDialog(errRoundWatcher)
+					}
+				}
+			},
 		},
 		Frameless: true,
-	})
+	}
+
+	// Create application with options
+	err = wails.Run(wailsOptions)
 
 	if err != nil {
 		utils.ErrDialog(err)
 		os.Exit(-1)
+	}
+}
+
+func runWailsHooks(hooks []func(context.Context), ctx context.Context) {
+	for _, h := range hooks {
+		h(ctx)
 	}
 }

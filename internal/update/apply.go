@@ -54,6 +54,13 @@ func (r *Release) downloadAndApplySync(chProgress chan<- updateProgress) {
 		err = errors.Join(err, reader.Close())
 	}()
 
+	if err = applyUpdate(reader, asset, chProgress); err != nil {
+		return
+	}
+	err = reader.Close()
+}
+
+func applyUpdate(reader *zip.ReadCloser, asset asset, chProgress chan<- updateProgress) (err error) {
 	var in io.ReadCloser
 	for _, file := range reader.File {
 		if strings.HasSuffix(file.Name, ".exe") {
@@ -72,4 +79,5 @@ func (r *Release) downloadAndApplySync(chProgress chan<- updateProgress) {
 		}
 	}
 	err = fmt.Errorf("did not find qualifying EXE file in release asset %s", asset.Filename)
+	return
 }

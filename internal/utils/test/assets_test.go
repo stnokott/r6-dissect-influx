@@ -11,7 +11,7 @@ import (
 
 const mapImagesFolder string = "./../../../frontend/public/images/maps"
 
-func Test_mapImagesComplete(t *testing.T) {
+func TestMapImagesComplete(t *testing.T) {
 	mapNames, err := getMapNames()
 	if err != nil {
 		t.Fatalf("could not determine map names: %v", err)

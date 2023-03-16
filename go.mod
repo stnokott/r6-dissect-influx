@@ -8,7 +8,7 @@ require (
 	github.com/influxdata/influxdb-client-go/v2 v2.12.2
 	github.com/minio/selfupdate v0.6.0
 	github.com/ncruces/zenity v0.10.6
-	github.com/redraskal/r6-dissect v0.9.1-0.20230307035022-d934da6b6734
+	github.com/redraskal/r6-dissect v0.10.0
 	github.com/rs/zerolog v1.29.0
 	github.com/wailsapp/wails/v2 v2.4.0
 	golang.org/x/sys v0.6.0
@@ -26,7 +26,7 @@ require (
 	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839 // indirect
 	github.com/jchv/go-winloader v0.0.0-20210711035445-715c2860da7e // indirect
 	github.com/josephspurrier/goversioninfo v1.4.0 // indirect
-	github.com/klauspost/compress v1.16.0 // indirect
+	github.com/klauspost/compress v1.16.3 // indirect
 	github.com/labstack/echo/v4 v4.9.0 // indirect
 	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/leaanthony/go-ansi-parser v1.0.1 // indirect

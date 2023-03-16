@@ -39,3 +39,4 @@ jobs:
             -Dsonar.organization=stnokott-github
             -Dsonar.typescript.tsconfigPaths=frontend/tsconfig.json
             -Dsonar.exclusions=frontend/wailsjs/**
+            -Dsonar.tests=**/*.cy.ts

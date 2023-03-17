@@ -13,7 +13,7 @@ export function createRoundInfo(won: boolean, role: "ATTACK" | "DEFENSE"): match
 		Site: "0F Basement",
 		Won: won,
 		WinCondition: "KILLED_OPPONENTS",
-		TeamIndex: role == "ATTACK" ? 0 : 1,
+		TeamIndex: role === "ATTACK" ? 0 : 1,
 		PlayerName: "FooBar"
 	};
 	return roundInfo;
@@ -35,24 +35,26 @@ const defenderOps = new Array<string>(
 );
 
 function createTeams(observerName: string, observerTeamRole: "ATTACK" | "DEFENSE"): [matches.Team, matches.Team] {
-	let teams: [matches.Team, matches.Team] = [
+	const numberOfTeams = 2;
+	const numberOfPlayers = 5;
+	const teams: [matches.Team, matches.Team] = [
 		{
 			Role: "ATTACK",
-			Players: new Array<matches.Player>(5)
+			Players: new Array<matches.Player>(numberOfPlayers)
 		},
 		{
 			Role: "DEFENSE",
-			Players: new Array<matches.Player>(5)
+			Players: new Array<matches.Player>(numberOfPlayers)
 		}
 	]
-	for (let teamIndex = 0; teamIndex < 2; teamIndex++) {
-		for (let playerIndex = 0; playerIndex < 5; playerIndex++) {
+	for (let teamIndex = 0; teamIndex < numberOfTeams; teamIndex++) {
+		for (let playerIndex = 0; playerIndex < numberOfPlayers; playerIndex++) {
 			teams[teamIndex].Players[playerIndex] = {
 				Username: `Player ${playerIndex + teamIndex + 1}`,
-				Operator: teamIndex == 0 ? attackerOps[playerIndex] : defenderOps[playerIndex]
+				Operator: teamIndex === 0 ? attackerOps[playerIndex] : defenderOps[playerIndex]
 			};
 		}
 	}
-	teams[observerTeamRole == "ATTACK" ? 0 : 1].Players[0].Username = observerName;
+	teams[observerTeamRole === "ATTACK" ? 0 : 1].Players[0].Username = observerName;
 	return teams;
 }

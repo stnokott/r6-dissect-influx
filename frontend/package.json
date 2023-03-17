@@ -13,6 +13,7 @@
     "prepare": "cd .. && husky install frontend/.husky"
   },
   "devDependencies": {
+    "@cypress/vite-dev-server": "^5.0.4",
     "@sveltejs/vite-plugin-svelte": "^1.0.1",
     "@tsconfig/svelte": "^3.0.0",
     "@types/marked": "^4.0.8",

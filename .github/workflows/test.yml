@@ -18,12 +18,14 @@ jobs:
   cypress-run:
     name: Cypress Tests
     runs-on: ubuntu-latest
+    container: node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      # not needed because we use container with Node preinstalled
+      # - uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 18
       - run: npm install
         working-directory: frontend
       - name: Cypress tests
@@ -32,7 +34,7 @@ jobs:
           working-directory: frontend
           build: npm run build
           component: true
-          browser: edge
+          browser: chrome
         env:
           # pass GitHub token to detect new build vs re-run build
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

@@ -25,7 +25,7 @@
 
 	let buildInfo: string = "";
 
-	export let promConnectionDetails: Promise<db.ConnectionDetails> = null;
+	export let promConnectionDetails: Promise<db.ConnectionDetails> | null = null;
 
 	let updateAvailable = false;
 
@@ -44,7 +44,7 @@
 	});
 </script>
 
-<div id="root" class="footer">
+<div id="root">
 	<div id="left">
 		<Button
 			on:click={() => dispatch("openSettings")}

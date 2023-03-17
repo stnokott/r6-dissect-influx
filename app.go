@@ -85,7 +85,7 @@ func (a *App) RequestLatestReleaseInfo() {
 	if err == nil {
 		runtime.EventsEmit(a.ctx, eventNames.LatestReleaseInfo, latest)
 	} else {
-		runtime.EventsEmit(a.ctx, eventNames.LatestReleaseInfoErr, err)
+		runtime.EventsEmit(a.ctx, eventNames.LatestReleaseInfoErr, err.Error())
 	}
 }
 

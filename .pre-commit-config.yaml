@@ -1,15 +1,28 @@
 fail_fast: true
 repos:
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v2.42.0
+    rev: v2.42.1
     hooks:
       - id: commitizen
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.36.0
+    hooks:
+      - id: eslint
+        types: [file]
+        files: \.(svelte|js|ts)$
+        additional_dependencies:
+          - eslint
+          - svelte
+          - typescript
+          - eslint-plugin-svelte3
+          - "@typescript-eslint/eslint-plugin"
+          - "@typescript-eslint/parser"
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.21.0
+    rev: 0.22.0
     hooks:
       - id: check-github-workflows
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.51.1
+    rev: v1.51.2
     hooks:
       - id: golangci-lint
         args:

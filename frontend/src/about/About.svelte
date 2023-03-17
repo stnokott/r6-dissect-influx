@@ -2,7 +2,6 @@
 	import {
 		Button,
 		ExpandableTile,
-		InlineNotification,
 		Link,
 		Modal,
 		SkeletonPlaceholder,
@@ -34,9 +33,9 @@
 		return GetAppInfo();
 	}
 
-	let latestReleaseInfo: app.ReleaseInfo = null;
-	let latestReleaseInfoErr: string = null;
-	let updateCheckCooldownFunc = null;
+	let latestReleaseInfo: app.ReleaseInfo | null = null;
+	let latestReleaseInfoErr: string = "";
+	let updateCheckCooldownFunc: NodeJS.Timeout | null = null;
 	const updateCheckCooldownMs = 60 * 1000;
 
 	function checkForUpdate() {
@@ -51,15 +50,15 @@
 
 	let updateOverlayVisible = false;
 	let updateTask: string;
-	let updateErr: string = null;
+	let updateErr: string = "";
 
-	function startUpdate(release?: app.ReleaseInfo) {
+	function startUpdate(release: app.ReleaseInfo | null) {
 		if (release!.IsNewer) {
 			StartUpdate()
 				.then(() => {
 					updateOverlayVisible = true;
 					updateTask = "Preparing...";
-					updateErr = null;
+					updateErr = "";
 				})
 				.catch((e) => (updateErr = e));
 		}
@@ -70,14 +69,14 @@
 	}
 
 	function onUpdateErr(err: string) {
-		updateTask = null;
+		updateTask = "";
 		updateErr = err;
 	}
 
 	function onLatestReleaseInfo(r: app.ReleaseInfo) {
 		latestReleaseInfo = r;
-		latestReleaseInfoErr = null;
-		updateErr = null;
+		latestReleaseInfoErr = "";
+		updateErr = "";
 	}
 
 	function onLatestReleaseInfoErr(e: string) {
@@ -104,7 +103,7 @@
 	<LoadingOverlay
 		bind:open={updateOverlayVisible}
 		loadingDesc={updateTask}
-		errorTitle={updateErr === null ? null : "Update failed"}
+		errorTitle={updateErr === "" ? null : "Update failed"}
 		errorDetail={updateErr}
 	/>
 	<Tile>
@@ -130,7 +129,7 @@
 				<span id="tag-latest-version">
 					{#if latestReleaseInfo === null}
 						<Tag skeleton />
-					{:else if latestReleaseInfoErr === null}
+					{:else if latestReleaseInfoErr === ""}
 						<Tag type={latestReleaseInfo.IsNewer ? "green" : "gray"}>
 							{latestReleaseInfo.Version} - {latestReleaseInfo.Commitish}
 						</Tag>
@@ -151,6 +150,7 @@
 					<Button
 						icon={CloudDownload}
 						size="small"
+						disabled={updateOverlayVisible}
 						on:click={() => startUpdate(latestReleaseInfo)}
 					>
 						Apply Update
@@ -161,6 +161,7 @@
 						icon={WatsonHealthRotate_360}
 						size="small"
 						kind="tertiary"
+						disabled={updateOverlayVisible}
 						on:click={checkForUpdate}>Check for Updates</Button
 					>
 				{:else}

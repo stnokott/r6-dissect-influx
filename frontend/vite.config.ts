@@ -3,8 +3,9 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [svelte({
-    hot: process.env.NODE_ENV === "dev"
-  })],
+  optimizeDeps: {
+    disabled: process.env.NODE_ENV === "test"
+  },
+  plugins: [svelte()],
   publicDir: "public"
 })

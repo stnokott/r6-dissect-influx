@@ -19,7 +19,7 @@
     "carbon-components-svelte": "^0.73.3",
     "carbon-icons-svelte": "^11.4.0",
     "carbon-preprocess-svelte": "^0.9.1",
-    "cypress": "^12.7.0",
+    "cypress": "^12.8.1",
     "husky": "^8.0.3",
     "sass": "^1.59.3",
     "svelte": "^3.57.0",

@@ -8,21 +8,21 @@
 	import type { TagProps } from "carbon-components-svelte/types/Tag/Tag.svelte";
 	import MatchProgressIndicator from "./MatchProgressIndicator.svelte";
 	import MatchProgressStep from "./MatchProgressStep.svelte";
-	import type { matches } from "./matches";
+	import type { RoundInfo } from "../game";
 
-	export let roundInfos: Array<matches.RoundInfo>;
+	export let roundInfos: Array<RoundInfo>;
 
 	type TagTypes<T extends string> = {
 		[key in T]: TagProps["type"];
 	};
 
-	const matchTypeColors: TagTypes<matches.RoundInfo["MatchType"]> = {
+	const matchTypeColors: TagTypes<RoundInfo["MatchType"]> = {
 		CASUAL: "blue",
 		UNRANKED: "purple",
 		RANKED: "magenta",
 	};
 
-	const gameModeColors: TagTypes<matches.RoundInfo["GameMode"]> = {
+	const gameModeColors: TagTypes<RoundInfo["GameMode"]> = {
 		BOMB: "blue",
 		HOSTAGE: "cyan",
 	};

@@ -1,8 +1,8 @@
-import type { matches } from "../matches";
+import type { Player, RoundInfo, Team } from "../../game";
 
-export function createRoundInfo(won: boolean, role: "ATTACK" | "DEFENSE"): matches.RoundInfo {
+export function createRoundInfo(won: boolean, role: "ATTACK" | "DEFENSE"): RoundInfo {
 	const time = new Date("2023-01-01 00:00:00")
-	const roundInfo: matches.RoundInfo = {
+	const roundInfo: RoundInfo = {
 		MatchID: "123",
 		Time: time.toISOString(),
 		SeasonSlug: "Y8S1",
@@ -34,17 +34,17 @@ const defenderOps = new Array<string>(
 	"CLASH"
 );
 
-function createTeams(observerName: string, observerTeamRole: "ATTACK" | "DEFENSE"): [matches.Team, matches.Team] {
+function createTeams(observerName: string, observerTeamRole: "ATTACK" | "DEFENSE"): [Team, Team] {
 	const numberOfTeams = 2;
 	const numberOfPlayers = 5;
-	const teams: [matches.Team, matches.Team] = [
+	const teams: [Team, Team] = [
 		{
 			Role: "ATTACK",
-			Players: new Array<matches.Player>(numberOfPlayers)
+			Players: new Array<Player>(numberOfPlayers)
 		},
 		{
 			Role: "DEFENSE",
-			Players: new Array<matches.Player>(numberOfPlayers)
+			Players: new Array<Player>(numberOfPlayers)
 		}
 	]
 	for (let teamIndex = 0; teamIndex < numberOfTeams; teamIndex++) {

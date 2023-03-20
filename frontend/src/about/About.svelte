@@ -23,17 +23,17 @@
 		RequestLatestReleaseInfo,
 		StartUpdate,
 	} from "../../wailsjs/go/main/App";
-	import type { app } from "../index";
+	import type { AppInfo, EventNames, ReleaseInfo } from "../app";
 	import { onMount } from "svelte";
 
 	export let open = false;
 
 	// stupid wrapper to add typing because Wails doesn't generate typing for GetAppInfo
-	function appInfo(): Promise<app.AppInfo> {
+	function appInfo(): Promise<AppInfo> {
 		return GetAppInfo();
 	}
 
-	let latestReleaseInfo: app.ReleaseInfo | null = null;
+	let latestReleaseInfo: ReleaseInfo | null = null;
 	let latestReleaseInfoErr: string = "";
 	let updateCheckCooldownFunc: NodeJS.Timeout | null = null;
 	const updateCheckCooldownMs = 60 * 1000;
@@ -52,7 +52,7 @@
 	let updateTask: string;
 	let updateErr: string = "";
 
-	function startUpdate(release: app.ReleaseInfo | null) {
+	function startUpdate(release: ReleaseInfo | null) {
 		if (release!.IsNewer) {
 			StartUpdate()
 				.then(() => {
@@ -73,7 +73,7 @@
 		updateErr = err;
 	}
 
-	function onLatestReleaseInfo(r: app.ReleaseInfo) {
+	function onLatestReleaseInfo(r: ReleaseInfo) {
 		latestReleaseInfo = r;
 		latestReleaseInfoErr = "";
 		updateErr = "";
@@ -84,7 +84,7 @@
 	}
 
 	onMount(() => {
-		GetEventNames().then((e: app.EventNames) => {
+		GetEventNames().then((e: EventNames) => {
 			window.runtime.EventsOn(e.UpdateProgress, onUpdateProgress);
 			window.runtime.EventsOn(e.UpdateErr, onUpdateErr);
 			window.runtime.EventsOn(e.LatestReleaseInfo, onLatestReleaseInfo);

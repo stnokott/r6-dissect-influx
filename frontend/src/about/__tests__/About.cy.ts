@@ -1,13 +1,13 @@
-import type { app } from "../../index"
+import type { AppInfo, EventNames, ReleaseInfo } from "../../app"
 import About from "../About.svelte"
 
-const mockAppInfo: app.AppInfo = {
+const mockAppInfo: AppInfo = {
 	ProjectName: "Foo Bar",
 	Version: "v0.0.1",
 	Commit: "abde123",
 	GithubURL: "github.com/stnokott/r6-dissect"
 }
-const mockEventNames: app.EventNames = {
+const mockEventNames: EventNames = {
 	NewRound: "NEW_ROUND",
 	RoundWatcherStarted: "ROUND_WATCHER_STOPPED",
 	RoundWatcherError: "ROUND_WATCHER_ERROR",
@@ -55,7 +55,7 @@ describe('Settings', () => {
 		cy.get("#tag-current-version").contains(mockAppInfo.Version)
 		cy.get("#tag-current-version").contains(mockAppInfo.Commit)
 	})
-	function testReleaseInfo(releaseInfo: app.ReleaseInfo) {
+	function testReleaseInfo(releaseInfo: ReleaseInfo) {
 		cy.window().then((w) => {
 			let eventCbs: { [k: string]: (d: any) => void } = {};
 			w["runtime"]["EventsOn"].restore()
@@ -70,7 +70,7 @@ describe('Settings', () => {
 		})
 	}
 	it("should process newer release info", () => {
-		const releaseInfo: app.ReleaseInfo = {
+		const releaseInfo: ReleaseInfo = {
 			Version: "1.0.0",
 			IsNewer: true,
 			Commitish: "456def",
@@ -82,7 +82,7 @@ describe('Settings', () => {
 		cy.get("#update-buttons-container > button").contains("Apply").should("not.be.disabled")
 	})
 	it("should process older release info", () => {
-		const releaseInfo: app.ReleaseInfo = {
+		const releaseInfo: ReleaseInfo = {
 			Version: "0.0.9",
 			IsNewer: false,
 			Commitish: "456def",
@@ -101,7 +101,7 @@ describe('Settings', () => {
 		})
 	})
 	it("should initiate update", () => {
-		const releaseInfo: app.ReleaseInfo = {
+		const releaseInfo: ReleaseInfo = {
 			Version: "1.0.0",
 			IsNewer: true,
 			Commitish: "456def",

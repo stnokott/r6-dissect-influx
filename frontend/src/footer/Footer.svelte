@@ -15,7 +15,8 @@
 		GetEventNames,
 		StartReleaseWatcher,
 	} from "../../wailsjs/go/main/App.js";
-	import type { app, db } from "../index";
+	import type { ConnectionDetails } from "../db";
+	import type { AppInfo, EventNames, ReleaseInfo } from "../app";
 	import { Cloud, CloudOffline, MacShift } from "carbon-icons-svelte";
 	import About from "../about/About.svelte";
 
@@ -25,19 +26,19 @@
 
 	let buildInfo: string = "";
 
-	export let promConnectionDetails: Promise<db.ConnectionDetails> | null = null;
+	export let promConnectionDetails: Promise<ConnectionDetails> | null = null;
 
 	let updateAvailable = false;
 
-	function onLatestReleaseInfo(r: app.ReleaseInfo) {
+	function onLatestReleaseInfo(r: ReleaseInfo) {
 		updateAvailable = r.IsNewer;
 	}
 
 	onMount(() => {
-		GetAppInfo().then((bi: app.AppInfo) => {
+		GetAppInfo().then((bi: AppInfo) => {
 			buildInfo = `${bi.Version} - ${bi.Commit}`;
 		});
-		GetEventNames().then((e: app.EventNames) => {
+		GetEventNames().then((e: EventNames) => {
 			window.runtime.EventsOn(e.LatestReleaseInfo, onLatestReleaseInfo);
 			StartReleaseWatcher();
 		});

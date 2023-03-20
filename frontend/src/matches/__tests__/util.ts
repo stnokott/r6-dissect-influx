@@ -1,8 +1,8 @@
-import type { matches } from "../matches";
+import type { Player, RoundInfo, Team } from "../../game";
 
-export function createRoundInfo(won: boolean, role: "ATTACK" | "DEFENSE"): matches.RoundInfo {
+export function createRoundInfo(won: boolean, role: "ATTACK" | "DEFENSE"): RoundInfo {
 	const time = new Date("2023-01-01 00:00:00")
-	const roundInfo: matches.RoundInfo = {
+	const roundInfo: RoundInfo = {
 		MatchID: "123",
 		Time: time.toISOString(),
 		SeasonSlug: "Y8S1",
@@ -13,7 +13,7 @@ export function createRoundInfo(won: boolean, role: "ATTACK" | "DEFENSE"): match
 		Site: "0F Basement",
 		Won: won,
 		WinCondition: "KILLED_OPPONENTS",
-		TeamIndex: role == "ATTACK" ? 0 : 1,
+		TeamIndex: role === "ATTACK" ? 0 : 1,
 		PlayerName: "FooBar"
 	};
 	return roundInfo;
@@ -34,25 +34,27 @@ const defenderOps = new Array<string>(
 	"CLASH"
 );
 
-function createTeams(observerName: string, observerTeamRole: "ATTACK" | "DEFENSE"): [matches.Team, matches.Team] {
-	let teams: [matches.Team, matches.Team] = [
+function createTeams(observerName: string, observerTeamRole: "ATTACK" | "DEFENSE"): [Team, Team] {
+	const numberOfTeams = 2;
+	const numberOfPlayers = 5;
+	const teams: [Team, Team] = [
 		{
 			Role: "ATTACK",
-			Players: new Array<matches.Player>(5)
+			Players: new Array<Player>(numberOfPlayers)
 		},
 		{
 			Role: "DEFENSE",
-			Players: new Array<matches.Player>(5)
+			Players: new Array<Player>(numberOfPlayers)
 		}
 	]
-	for (let teamIndex = 0; teamIndex < 2; teamIndex++) {
-		for (let playerIndex = 0; playerIndex < 5; playerIndex++) {
+	for (let teamIndex = 0; teamIndex < numberOfTeams; teamIndex++) {
+		for (let playerIndex = 0; playerIndex < numberOfPlayers; playerIndex++) {
 			teams[teamIndex].Players[playerIndex] = {
 				Username: `Player ${playerIndex + teamIndex + 1}`,
-				Operator: teamIndex == 0 ? attackerOps[playerIndex] : defenderOps[playerIndex]
+				Operator: teamIndex === 0 ? attackerOps[playerIndex] : defenderOps[playerIndex]
 			};
 		}
 	}
-	teams[observerTeamRole == "ATTACK" ? 0 : 1].Players[0].Username = observerName;
+	teams[observerTeamRole === "ATTACK" ? 0 : 1].Players[0].Username = observerName;
 	return teams;
 }

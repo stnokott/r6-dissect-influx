@@ -1,4 +1,4 @@
-import type { db } from "../../index"
+import type { ConnectionDetails } from "../../db"
 import type { config } from "../../../wailsjs/go/models"
 import Settings from "../Settings.svelte"
 
@@ -18,7 +18,7 @@ const mockSavedConfig: config.Config = {
 const mockUserChosenGameDir = ""
 const mockAutodetectedGameDir = ""
 
-const mockConnectionDetails: db.ConnectionDetails = {
+const mockConnectionDetails: ConnectionDetails = {
 	Name: "Foo Bar DB",
 	Version: "1.2.3",
 	Commit: "aaaaa111"

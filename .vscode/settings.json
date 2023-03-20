@@ -3,5 +3,6 @@
 		"build.buildFlags": [
 			"-tags=pprof",
 		]
-	}
+	},
+	"go.lintTool": "revive"
 }

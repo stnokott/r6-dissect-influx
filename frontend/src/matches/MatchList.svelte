@@ -35,11 +35,12 @@
 
 	let roundWatcherRunning = false;
 	let matchesContainer: HTMLElement;
-	let matchInfos: Map<string, Array<matches.RoundInfo>> = new Map();
+	let matchInfos: Map<string, matches.RoundInfo[]> = new Map();
 
 	async function onNewRound(r: matches.RoundInfo) {
-		if (matchInfos.has(r.MatchID)) {
-			matchInfos.set(r.MatchID, [...matchInfos[r.MatchID], r]);
+		let matchInfo = matchInfos.get(r.MatchID);
+		if (matchInfo) {
+			matchInfos.set(r.MatchID, [...matchInfo, r]);
 		} else {
 			matchInfos.set(r.MatchID, [r]);
 		}

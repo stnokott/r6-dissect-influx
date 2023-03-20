@@ -9,8 +9,8 @@
 		StartRoundWatcher,
 		StopRoundWatcher,
 	} from "./../../wailsjs/go/main/App";
-	import type { app } from "../index";
-	import type { matches } from "./matches";
+	import type { EventNames } from "../app";
+	import type { RoundInfo } from "../game";
 	import type { MatchListAPI } from "./matchlist";
 
 	let errorTitle = "Error";
@@ -35,9 +35,9 @@
 
 	let roundWatcherRunning = false;
 	let matchesContainer: HTMLElement;
-	let matchInfos: Map<string, matches.RoundInfo[]> = new Map();
+	let matchInfos: Map<string, RoundInfo[]> = new Map();
 
-	async function onNewRound(r: matches.RoundInfo) {
+	async function onNewRound(r: RoundInfo) {
 		let matchInfo = matchInfos.get(r.MatchID);
 		if (matchInfo) {
 			matchInfos.set(r.MatchID, [...matchInfo, r]);
@@ -61,7 +61,7 @@
 	}
 
 	onMount(() => {
-		GetEventNames().then((e: app.EventNames) => {
+		GetEventNames().then((e: EventNames) => {
 			window.runtime.EventsOn(e.NewRound, onNewRound);
 			window.runtime.EventsOn(e.RoundWatcherStarted, onRoundWatcherStarted);
 			window.runtime.EventsOn(e.RoundWatcherStopped, onRoundWatcherStopped);

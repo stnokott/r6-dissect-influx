@@ -1,0 +1,19 @@
+# config for github.com/gzuidhof/tygo
+#
+# go install github.com/gzuidhof/tygo@latest
+packages:
+  - path: "github.com/stnokott/r6-dissect-influx"
+    output_path: "frontend/src/app.d.ts"
+    type_mappings:
+      time.Time: "string /* RFC3339 */"
+  - path: "github.com/stnokott/r6-dissect-influx/internal/db"
+    output_path: "frontend/src/db.d.ts"
+  - path: "github.com/stnokott/r6-dissect-influx/internal/game"
+    output_path: "frontend/src/game.d.ts"
+    type_mappings:
+      time.Time: "string /* RFC3339 */"
+    frontmatter: |
+      export type MatchType = "CASUAL" | "UNRANKED" | "RANKED"
+      export type GameMode = "BOMB" | "HOSTAGE"
+      export type WinCondition = "KilledOpponents" | "SecuredArea" | "DisabledDefuser" | "DefusedBomb" | "ExtractedHostage" | "Time"
+      export type TeamRole = "ATTACK" | "DEFENSE"

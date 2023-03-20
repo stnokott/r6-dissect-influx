@@ -14,14 +14,14 @@
     Connect,
     Disconnect,
   } from "./../wailsjs/go/main/App";
-  import type { db } from "./index";
+  import type { ConnectionDetails } from "./db";
   import { onMount } from "svelte";
   import type { MatchListAPI } from "./matches/matchlist";
 
   let settingsDialogOpen: boolean;
 
   let isConfigComplete = false;
-  let promConnectionDetails: Promise<db.ConnectionDetails>;
+  let promConnectionDetails: Promise<ConnectionDetails>;
 
   let matchListAPI: MatchListAPI;
 
@@ -47,7 +47,7 @@
     isConfigComplete = true;
   }
 
-  function onConnected(e: CustomEvent<db.ConnectionDetails>) {
+  function onConnected(e: CustomEvent<ConnectionDetails>) {
     promConnectionDetails = new Promise((r) => r(e.detail));
   }
 

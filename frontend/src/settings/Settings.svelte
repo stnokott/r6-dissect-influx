@@ -27,13 +27,13 @@
 		ValidateInfluxToken,
 	} from "../../wailsjs/go/main/App";
 	import { config } from "../../wailsjs/go/models";
-	import type { db } from "../index";
+	import type { ConnectionDetails } from "../db";
 	import LoadingOverlay from "../components/LoadingOverlay.svelte";
 
 	export let open = false;
 
 	const dispatch = createEventDispatcher<{
-		connected: db.ConnectionDetails;
+		connected: ConnectionDetails;
 		changed: void;
 	}>();
 

@@ -10,20 +10,20 @@ type RoundInfo struct {
 	MatchID    string
 	Time       time.Time
 	SeasonSlug string
-	MatchType  string
-	GameMode   string
+	MatchType  string `tstype:"MatchType"`
+	GameMode   string `tstype:"GameMode"`
 	MapName    string
 	Teams      [2]Team
 	Site       string
 	// the following attributes relate to the recording player's team
 	Won          bool
-	WinCondition dissect.WinCondition
+	WinCondition dissect.WinCondition `tstype:"WinCondition"`
 	TeamIndex    int
 	PlayerName   string
 }
 
 type Team struct {
-	Role    dissect.TeamRole
+	Role    dissect.TeamRole `tstype:"TeamRole"`
 	Players []Player
 }
 

@@ -1,13 +1,14 @@
-import type { app, db } from "../../index"
+import type { AppInfo, EventNames, ReleaseInfo } from "../../app"
+import type { ConnectionDetails } from "../../db"
 import Footer from "../Footer.svelte"
 
-const mockAppInfo: app.AppInfo = {
+const mockAppInfo: AppInfo = {
 	ProjectName: "Foo Bar",
 	Version: "v0.0.1",
 	Commit: "abde123",
 	GithubURL: "github.com/stnokott/r6-dissect"
 }
-const mockEventNames: app.EventNames = {
+const mockEventNames: EventNames = {
 	NewRound: "NEW_ROUND",
 	RoundWatcherStarted: "ROUND_WATCHER_STOPPED",
 	RoundWatcherError: "ROUND_WATCHER_ERROR",
@@ -74,7 +75,7 @@ describe('Footer', () => {
 			cy.mount(Footer)
 			cy.get("@StubEventsOn").should("be.calledWith", mockEventNames.LatestReleaseInfo).then(() => {
 				// simulate new release information
-				const releaseInfo: app.ReleaseInfo = {
+				const releaseInfo: ReleaseInfo = {
 					Version: "1.0.0",
 					IsNewer: true,
 					Commitish: "456def",
@@ -87,7 +88,7 @@ describe('Footer', () => {
 		})
 	})
 	it("should show db connection details", () => {
-		const connectionDetails: db.ConnectionDetails = {
+		const connectionDetails: ConnectionDetails = {
 			Name: "Foo Bar DB",
 			Version: "1.2.3",
 			Commit: "aaaaa111"

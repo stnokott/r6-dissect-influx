@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { matches } from "../matches/matches";
+	import type { RoundInfo } from "../game";
 	import Attack from "./icons/Attack.svelte";
 	import Defense from "./icons/Defense.svelte";
 
-	export let roundInfo: matches.RoundInfo;
+	export let roundInfo: RoundInfo;
 </script>
 
 <div class="step {roundInfo.Won ? 'won' : 'lost'}">

@@ -10,7 +10,7 @@ require (
 	github.com/ncruces/zenity v0.10.6
 	github.com/redraskal/r6-dissect v0.10.0
 	github.com/rs/zerolog v1.29.0
-	github.com/wailsapp/wails/v2 v2.4.0
+	github.com/wailsapp/wails/v2 v2.4.1
 	golang.org/x/sys v0.6.0
 	golang.org/x/tools v0.7.0
 )

@@ -16,7 +16,7 @@
     "@sveltejs/vite-plugin-svelte": "^1.0.1",
     "@tsconfig/svelte": "^3.0.0",
     "@types/marked": "^4.0.8",
-    "carbon-components-svelte": "^0.73.3",
+    "carbon-components-svelte": "^0.73.4",
     "carbon-icons-svelte": "^11.4.0",
     "carbon-preprocess-svelte": "^0.9.1",
     "cypress": "^12.8.1",

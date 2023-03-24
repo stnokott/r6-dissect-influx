@@ -20,7 +20,6 @@
     "carbon-icons-svelte": "^11.4.0",
     "carbon-preprocess-svelte": "^0.9.1",
     "cypress": "^12.9.0",
-    "husky": "^8.0.3",
     "sass": "^1.61.0",
     "svelte": "^3.58.0",
     "svelte-check": "^3.2.0",

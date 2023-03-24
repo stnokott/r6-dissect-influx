@@ -7,9 +7,14 @@ tasks:
       - npm install --force
       - npm run build
 
-  test:
+  go_test:
     cmds:
       - go test ./...
+
+  npm_test:
+    dir: "{{.USER_WORKING_DIR}}/frontend"
+    cmds:
+      - npm test
 
   run_pprof:
     deps:

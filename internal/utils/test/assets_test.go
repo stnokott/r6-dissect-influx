@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"testing"
@@ -19,12 +20,14 @@ func TestMapImagesComplete(t *testing.T) {
 
 	for _, mapName := range mapNames {
 		t.Run(mapName, func(t *testing.T) {
-			expectedPath, err := filepath.Abs(filepath.Join(mapImagesFolder, mapName+".jpg"))
+			filename := mapName + ".jpg"
+			expectedPath, err := filepath.Abs(filepath.Join(mapImagesFolder, filename))
 			if err != nil {
 				t.Errorf("could not determine image path: %v", err)
 				return
 			}
-			if _, err = os.Stat(expectedPath); err != nil && errors.Is(err, os.ErrNotExist) {
+			var info fs.FileInfo
+			if info, err = os.Stat(expectedPath); (err != nil && errors.Is(err, os.ErrNotExist)) || info.Name() != filename {
 				t.Errorf("expected image file %s for %s not found", expectedPath, mapName)
 			}
 		})

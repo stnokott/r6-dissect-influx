@@ -24,7 +24,7 @@
 
 	let aboutOpen = false;
 
-	let buildInfo: string = "";
+	let buildInfo = "";
 
 	export let promConnectionDetails: Promise<ConnectionDetails> | null = null;
 

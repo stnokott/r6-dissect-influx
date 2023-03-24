@@ -34,7 +34,7 @@ beforeEach(() => {
 		cy.spy(w["go"]["main"]["App"], "GetEventNames").as("SpyGetEventNames")
 		cy.spy(w["go"]["main"]["App"], "StartReleaseWatcher").as("SpyStartReleaseWatcher")
 		w["runtime"] = {
-			EventsOn: (_eventName: string, _cb: (data?: any) => void) => { }
+			EventsOn: () => { }
 		}
 		cy.spy(w["runtime"], "EventsOn").as("SpyEventsOn")
 	})
@@ -66,7 +66,7 @@ describe('Footer', () => {
 	})
 	it("should notify about new release", () => {
 		cy.window().then((w) => {
-			let eventCbs: { [k: string]: (d: any) => void } = {};
+			const eventCbs: { [k: string]: (d: any) => void } = {};
 			// save callbacks in dictionary
 			w["runtime"]["EventsOn"].restore()
 			cy.stub(w["runtime"], "EventsOn").as("StubEventsOn").callsFake((eventName: string, cb: (d: any) => void) => {
@@ -93,7 +93,7 @@ describe('Footer', () => {
 			Version: "1.2.3",
 			Commit: "aaaaa111"
 		}
-		let promConnectionDetails = async () => connectionDetails
+		const promConnectionDetails = async () => connectionDetails
 		cy.mount(Footer, { props: { promConnectionDetails: promConnectionDetails() } })
 		cy.get("#connection-details")
 			.contains(connectionDetails.Name)

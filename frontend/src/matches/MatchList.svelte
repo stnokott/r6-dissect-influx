@@ -55,7 +55,7 @@
 		roundWatcherRunning = false;
 	}
 
-	function onRoundWatcherError(err: any) {
+	function onRoundWatcherError(err: string | null) {
 		errorTitle = "Error parsing round:";
 		error = err;
 	}

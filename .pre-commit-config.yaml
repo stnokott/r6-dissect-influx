@@ -4,6 +4,14 @@ repos:
     rev: v2.42.1
     hooks:
       - id: commitizen
+  - repo: local
+    hooks:
+      - id: go test
+        name: Go test
+        language: system
+        files: \.go$
+        pass_filenames: false
+        entry: go test -v ./...
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v8.36.0
     hooks:

@@ -35,7 +35,7 @@ beforeEach(() => {
 		cy.spy(w["go"]["main"]["App"], "RequestLatestReleaseInfo").as("SpyRequestLatestReleaseInfo")
 		cy.spy(w["go"]["main"]["App"], "StartUpdate").as("SpyStartUpdate")
 		w["runtime"] = {
-			EventsOn: (_eventName: string, _cb: (data?: any) => void) => { }
+			EventsOn: () => { }
 		}
 		cy.spy(w["runtime"], "EventsOn").as("SpyEventsOn")
 	})
@@ -57,7 +57,7 @@ describe('Settings', () => {
 	})
 	function testReleaseInfo(releaseInfo: ReleaseInfo) {
 		cy.window().then((w) => {
-			let eventCbs: { [k: string]: (d: any) => void } = {};
+			const eventCbs: { [k: string]: (d: any) => void } = {};
 			w["runtime"]["EventsOn"].restore()
 			cy.stub(w["runtime"], "EventsOn").as("StubEventsOn").callsFake((eventName: string, cb: (d: any) => void) => {
 				eventCbs[eventName] = cb;

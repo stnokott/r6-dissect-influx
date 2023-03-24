@@ -216,6 +216,15 @@
 					"PPROF_FILENAME": "${input:pprof_filename}"
 				}
 			}
+		},
+		{
+			"label": "tygo generate",
+			"type": "shell",
+			"command": "tygo",
+			"args": [
+				"generate"
+			],
+			"problemMatcher": []
 		}
 	],
 	"inputs": [

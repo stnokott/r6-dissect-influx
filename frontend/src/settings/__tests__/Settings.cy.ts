@@ -33,12 +33,12 @@ beforeEach(() => {
 					SaveAndValidateConfig: async () => mockConnectionDetails,
 					OpenGameDirDialog: async () => mockUserChosenGameDir,
 					AutodetectGameDir: async () => mockAutodetectedGameDir,
-					ValidateGameDir: async (_s: string) => { throw "fails on purpose" },
-					ValidateInfluxHost: async (_s: string) => { throw "fails on purpose" },
-					ValidateInfluxPort: async (_s: string) => { throw "fails on purpose" },
-					ValidateInfluxOrg: async (_s: string) => { throw "fails on purpose" },
-					ValidateInfluxBucket: async (_s: string) => { throw "fails on purpose" },
-					ValidateInfluxToken: async (_s: string) => { throw "fails on purpose" },
+					ValidateGameDir: async () => { throw "fails on purpose" },
+					ValidateInfluxHost: async () => { throw "fails on purpose" },
+					ValidateInfluxPort: async () => { throw "fails on purpose" },
+					ValidateInfluxOrg: async () => { throw "fails on purpose" },
+					ValidateInfluxBucket: async () => { throw "fails on purpose" },
+					ValidateInfluxToken: async () => { throw "fails on purpose" },
 				}
 			}
 		}
@@ -94,7 +94,7 @@ describe('Settings', () => {
 		cy.window().then((w) => {
 			// set validator that marks the field as valid
 			w["go"]["main"]["App"]["ValidateGameDir"].restore()
-			cy.stub(w["go"]["main"]["App"], "ValidateGameDir").callsFake(async (_s: string) => true)
+			cy.stub(w["go"]["main"]["App"], "ValidateGameDir").callsFake(async () => true)
 			cy.mount(Settings, { props: { open: true } })
 
 			// gameDir input should be valid
@@ -114,12 +114,12 @@ describe('Settings', () => {
 			w["go"]["main"]["App"]["ValidateInfluxOrg"].restore()
 			w["go"]["main"]["App"]["ValidateInfluxBucket"].restore()
 			w["go"]["main"]["App"]["ValidateInfluxToken"].restore()
-			cy.stub(w["go"]["main"]["App"], "ValidateGameDir").callsFake(async (_s: string) => true)
-			cy.stub(w["go"]["main"]["App"], "ValidateInfluxHost").callsFake(async (_s: string) => true)
-			cy.stub(w["go"]["main"]["App"], "ValidateInfluxPort").callsFake(async (_s: string) => true)
-			cy.stub(w["go"]["main"]["App"], "ValidateInfluxOrg").callsFake(async (_s: string) => true)
-			cy.stub(w["go"]["main"]["App"], "ValidateInfluxBucket").callsFake(async (_s: string) => true)
-			cy.stub(w["go"]["main"]["App"], "ValidateInfluxToken").callsFake(async (_s: string) => true)
+			cy.stub(w["go"]["main"]["App"], "ValidateGameDir").callsFake(async () => true)
+			cy.stub(w["go"]["main"]["App"], "ValidateInfluxHost").callsFake(async () => true)
+			cy.stub(w["go"]["main"]["App"], "ValidateInfluxPort").callsFake(async () => true)
+			cy.stub(w["go"]["main"]["App"], "ValidateInfluxOrg").callsFake(async () => true)
+			cy.stub(w["go"]["main"]["App"], "ValidateInfluxBucket").callsFake(async () => true)
+			cy.stub(w["go"]["main"]["App"], "ValidateInfluxToken").callsFake(async () => true)
 			cy.mount(Settings, { props: { open: true } })
 
 			// every input should be valid

@@ -15,6 +15,7 @@ repos:
       - id: npm test
         name: npm test
         language: system
+        files: \.(svelte|js|ts)$
         pass_filenames: false
         entry: task npm_test
   - repo: https://github.com/pre-commit/mirrors-eslint

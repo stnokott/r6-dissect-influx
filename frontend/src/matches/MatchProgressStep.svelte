@@ -1,9 +1,16 @@
 <script lang="ts">
+	import {
+		CheckmarkFilled,
+		PauseOutlineFilled,
+		PendingFilled,
+		WarningFilled,
+	} from "carbon-icons-svelte";
 	import type { RoundInfo } from "../game";
 	import Attack from "./icons/Attack.svelte";
 	import Defense from "./icons/Defense.svelte";
 
 	export let roundInfo: RoundInfo;
+	export let status: "waiting" | "processing" | "done" | "error" = "error";
 </script>
 
 <div class="step {roundInfo.Won ? 'won' : 'lost'}">
@@ -12,6 +19,17 @@
 	{:else}
 		<Defense size={24} class="icon defense" />
 	{/if}
+	<div class="status">
+		{#if status == "waiting"}
+			<PauseOutlineFilled size={16} />
+		{:else if status == "processing"}
+			<PendingFilled size={16} />
+		{:else if status == "done"}
+			<CheckmarkFilled size={16} class="success" />
+		{:else}
+			<WarningFilled size={16} class="error" />
+		{/if}
+	</div>
 </div>
 
 <style lang="scss">
@@ -46,9 +64,33 @@
 		background-color: themes.$layer-accent-03;
 	}
 
-	// use :global because Svelte doesn't recognise Carbon icons' SVG class
+	// use :global because Svelte doesn't recognise Carbon icons' SVG class (.icon)
 	.step > :global(.icon) {
 		display: block;
 		margin: auto;
+	}
+
+	.status {
+		position: absolute;
+		bottom: 35%;
+		right: -15%;
+		transform: translateY(50%);
+		height: 16px;
+		width: 16px;
+	}
+
+	.status > :global(:not(.error)) {
+		fill: themes.$text-on-color;
+		stroke: themes.$text-inverse;
+	}
+
+	.status :global(.error) {
+		fill: themes.$support-error-inverse;
+		stroke: themes.$text-on-color;
+	}
+
+	.status > :global(.success) {
+		fill: themes.$text-on-color;
+		stroke: themes.$support-success;
 	}
 </style>

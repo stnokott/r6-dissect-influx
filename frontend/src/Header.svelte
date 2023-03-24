@@ -8,7 +8,7 @@
 	import { GetWindowTitle } from "../wailsjs/go/main/App.js";
 	import { onMount } from "svelte";
 
-	let title: string = "";
+	let title = "";
 	let isMaximized = false;
 
 	onMount(() => {

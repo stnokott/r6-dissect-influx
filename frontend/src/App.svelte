@@ -42,7 +42,7 @@
     settingsDialogOpen = true;
   }
 
-  function onConfigChanged(_e: CustomEvent<void>) {
+  function onConfigChanged() {
     // can assume that config is complete since only then can the config dialog be closed/confirmed
     isConfigComplete = true;
   }

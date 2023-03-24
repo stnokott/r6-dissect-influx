@@ -34,7 +34,7 @@
 	}
 
 	let latestReleaseInfo: ReleaseInfo | null = null;
-	let latestReleaseInfoErr: string = "";
+	let latestReleaseInfoErr = "";
 	let updateCheckCooldownFunc: NodeJS.Timeout | null = null;
 	const updateCheckCooldownMs = 60 * 1000;
 
@@ -50,10 +50,10 @@
 
 	let updateOverlayVisible = false;
 	let updateTask: string;
-	let updateErr: string = "";
+	let updateErr = "";
 
 	function startUpdate(release: ReleaseInfo | null) {
-		if (release!.IsNewer) {
+		if (release !== null && release.IsNewer) {
 			StartUpdate()
 				.then(() => {
 					updateOverlayVisible = true;

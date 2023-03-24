@@ -6,13 +6,18 @@ packages:
     output_path: "frontend/src/app.d.ts"
     type_mappings:
       time.Time: "string /* RFC3339 */"
+    frontmatter: |
+      /* eslint-disable */
   - path: "github.com/stnokott/r6-dissect-influx/internal/db"
     output_path: "frontend/src/db.d.ts"
+    frontmatter: |
+      /* eslint-disable */
   - path: "github.com/stnokott/r6-dissect-influx/internal/game"
     output_path: "frontend/src/game.d.ts"
     type_mappings:
       time.Time: "string /* RFC3339 */"
     frontmatter: |
+      /* eslint-disable */
       export type MatchType = "CASUAL" | "UNRANKED" | "RANKED"
       export type GameMode = "BOMB" | "HOSTAGE"
       export type WinCondition = "KilledOpponents" | "SecuredArea" | "DisabledDefuser" | "DefusedBomb" | "ExtractedHostage" | "Time"

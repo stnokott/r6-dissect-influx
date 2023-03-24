@@ -36,7 +36,7 @@ const mapTypeName string = "Map"
 func getMapNames() (mapNames []string, err error) {
 	cfg := &packages.Config{Mode: packages.NeedTypes}
 	var pkgs []*packages.Package
-	pkgs, err = packages.Load(cfg, "pattern=github.com/redraskal/r6-dissect/types")
+	pkgs, err = packages.Load(cfg, "pattern=github.com/redraskal/r6-dissect/dissect")
 	if err != nil {
 		return
 	}

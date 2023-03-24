@@ -9,8 +9,7 @@
     "preview": "vite preview",
     "check": "svelte-check",
     "test": "cypress run --component",
-    "cypress": "cypress open",
-    "prepare": "cd .. && husky install frontend/.husky"
+    "cypress": "cypress open"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.0.4",

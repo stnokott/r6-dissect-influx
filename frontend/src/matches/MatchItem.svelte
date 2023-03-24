@@ -65,7 +65,7 @@
 				>
 				<svelte:fragment slot="error"
 					><div id="map-image-placeholder">
-						<bold>MAP UNKNOWN</bold>
+						<bold>{firstRound.MapName}</bold>
 					</div></svelte:fragment
 				>
 			</ImageLoader>

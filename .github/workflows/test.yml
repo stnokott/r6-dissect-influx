@@ -26,6 +26,8 @@ jobs:
           node-version: 18
       - run: npm install
         working-directory: frontend
+      - run: npm install -D https://cdn.cypress.io/beta/npm/12.8.2/linux-x64/retry-dynamic-imports-ed984ef8e1558e8915171384987494bc17b00e27/cypress.tgz
+        working-directory: frontend
       - name: Cypress tests
         uses: cypress-io/github-action@v5.5.1
         with:

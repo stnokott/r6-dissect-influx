@@ -24,14 +24,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: npm install
-        working-directory: frontend
-      - run: npm install -D https://cdn.cypress.io/beta/npm/12.8.2/linux-x64/retry-dynamic-imports-ed984ef8e1558e8915171384987494bc17b00e27/cypress.tgz
+      - run: npm install --force
         working-directory: frontend
       - name: Cypress tests
         uses: cypress-io/github-action@v5.6.0
         with:
           working-directory: frontend
+          install: false
           build: npm run build
           component: true
           browser: edge

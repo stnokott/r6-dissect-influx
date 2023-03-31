@@ -4,7 +4,7 @@ tasks:
   frontend:
     dir: "{{.USER_WORKING_DIR}}/frontend"
     cmds:
-      - npm install
+      - npm install --force
       - npm run build
 
   test:

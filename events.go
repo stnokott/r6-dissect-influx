@@ -1,5 +1,6 @@
 package main
 
+// EventNames contains the names for events emitted by the application during runtime.
 type EventNames struct {
 	NewRound             string
 	RoundWatcherStarted  string
@@ -22,6 +23,7 @@ var eventNames = EventNames{
 	UpdateErr:            "R6_UPDATE_ERROR",
 }
 
+// GetEventNames returns the event names emitted by the application during runtime.
 func (*App) GetEventNames() EventNames {
 	return eventNames
 }

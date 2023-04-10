@@ -9,12 +9,18 @@
  */
 export interface App {
 }
+/**
+ * AppInfo contains information about the app itself.
+ */
 export interface AppInfo {
   ProjectName: string;
   Version: string;
   Commit: string;
   GithubURL: string;
 }
+/**
+ * ReleaseInfo contains information about a release (of this binary).
+ */
 export interface ReleaseInfo {
   IsNewer: boolean;
   Version: string;

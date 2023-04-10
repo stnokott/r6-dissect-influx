@@ -16,7 +16,7 @@
 	import Folder from "carbon-icons-svelte/lib/Folder.svelte";
 	import {
 		GetConfig,
-		SaveAndValidateConfig,
+		InfluxClientFromConfig,
 		OpenGameDirDialog,
 		AutodetectGameDir,
 		ValidateGameDir,
@@ -145,7 +145,7 @@
 				token: influxToken,
 			},
 		});
-		let connDetails = await SaveAndValidateConfig(cfg);
+		let connDetails = await InfluxClientFromConfig(cfg);
 
 		dispatch("connected", connDetails);
 		dispatch("changed");

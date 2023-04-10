@@ -4,10 +4,6 @@ import {main} from '../models';
 
 export function AutodetectGameDir():Promise<string>;
 
-export function Connect():Promise<any>;
-
-export function Disconnect():Promise<void>;
-
 export function GetAppInfo():Promise<any>;
 
 export function GetConfig():Promise<any>;
@@ -16,13 +12,15 @@ export function GetEventNames():Promise<main.EventNames>;
 
 export function GetWindowTitle():Promise<string>;
 
+export function InfluxClientFromConfig(arg1:any):Promise<any>;
+
+export function InfluxClientFromSettings():Promise<any>;
+
 export function IsConfigComplete():Promise<boolean>;
 
 export function OpenGameDirDialog():Promise<string>;
 
 export function RequestLatestReleaseInfo():Promise<void>;
-
-export function SaveAndValidateConfig(arg1:any):Promise<any>;
 
 export function StartReleaseWatcher():Promise<void>;
 

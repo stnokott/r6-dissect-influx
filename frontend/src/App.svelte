@@ -11,8 +11,7 @@
 
   import {
     IsConfigComplete,
-    Connect,
-    Disconnect,
+    InfluxClientFromSettings,
   } from "./../wailsjs/go/main/App";
   import type { ConnectionDetails } from "./db";
   import { onMount } from "svelte";
@@ -33,9 +32,7 @@
   }
 
   $: if (isConfigComplete) {
-    Disconnect().then(() => {
-      promConnectionDetails = Connect();
-    });
+    promConnectionDetails = InfluxClientFromSettings();
   }
 
   function openSettings(): void {

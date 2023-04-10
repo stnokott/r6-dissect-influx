@@ -16,8 +16,21 @@ describe('MatchProgressIndicator', () => {
 
   it('should render defense icon correctly', () => {
     const roundInfo = createRoundInfo(true, "DEFENSE");
-    console.log(roundInfo);
     cy.mount(MatchProgressStep, { props: { roundInfo: roundInfo } });
     cy.get(".step").find(".icon.defense").should("exist");
+  })
+
+  it('should have default state indicator', () => {
+    const roundInfo = createRoundInfo(true, "DEFENSE");
+    cy.mount(MatchProgressStep, { props: { roundInfo: roundInfo } });
+    cy.get(".status").should("exist");
+    cy.get(".status > svg").should("exist");
+  })
+
+  it('should have defined state indicator', () => {
+    const roundInfo = createRoundInfo(true, "DEFENSE");
+    cy.mount(MatchProgressStep, { props: { roundInfo: roundInfo, status: "done" } });
+    cy.get(".status").should("exist");
+    cy.get(".status > svg").should("exist");
   })
 })

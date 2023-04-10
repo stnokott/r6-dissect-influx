@@ -10,7 +10,7 @@
 	import Defense from "./icons/Defense.svelte";
 
 	export let roundInfo: RoundInfo;
-	export let status: "waiting" | "processing" | "done" | "error" = "error";
+	export let status: "waiting" | "processing" | "done" | "error" = "waiting";
 </script>
 
 <div class="step {roundInfo.Won ? 'won' : 'lost'}">

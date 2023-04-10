@@ -21,6 +21,7 @@ type App struct {
 	config            *config.Config
 	influxClient      *db.InfluxClient
 	influxClientMutex sync.Mutex
+
 	roundsWatcherStop context.CancelFunc
 }
 
@@ -219,10 +220,21 @@ func (a *App) InfluxClientFromConfig(cfg *config.Config) (details *db.Connection
 		a.influxClient.Close()
 	}
 	a.influxClient = newClient
+	go a.handleInfluxEvents(a.influxClient.LoopAsync())
 	return
 }
 
 // InfluxClientFromSettings uses the persisted settings to create a new InfluxDB client (see InfluxClientFromConfig).
 func (a *App) InfluxClientFromSettings() (details *db.ConnectionDetails, err error) {
 	return a.InfluxClientFromConfig(a.config)
+}
+
+func (a *App) handleInfluxEvents(eventChan <-chan db.InfluxEvent) {
+	for {
+		event, ok := <-eventChan
+		if !ok {
+			return
+		}
+		runtime.EventsEmit(a.ctx, eventNames.RoundPush, event)
+	}
 }

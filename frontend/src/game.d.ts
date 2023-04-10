@@ -16,6 +16,7 @@ export interface RoundsWatcher {
 
 export interface RoundInfo {
   MatchID: string;
+  RoundIndex: number /* int */;
   Time: string /* RFC3339 */;
   SeasonSlug: string;
   MatchType: MatchType;

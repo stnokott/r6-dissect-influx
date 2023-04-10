@@ -12,6 +12,7 @@ const mockEventNames: EventNames = {
 	RoundWatcherStarted: "ROUND_WATCHER_STOPPED",
 	RoundWatcherError: "ROUND_WATCHER_ERROR",
 	RoundWatcherStopped: "ROUND_WATCHER_STOPPED",
+	RoundPush: "ROUND_PUSH",
 	LatestReleaseInfo: "LATEST_RELEASE_INFO",
 	LatestReleaseInfoErr: "LATEST_RELEASE_INFO_ERR",
 	UpdateProgress: "UPDATE_PROGRESS",

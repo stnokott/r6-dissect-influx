@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 
+	"github.com/stnokott/r6-dissect-influx/internal/db"
 	"github.com/stnokott/r6-dissect-influx/internal/game"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -33,6 +34,7 @@ func (a *App) StartRoundWatcher() error {
 				}
 				log.Println("got match info for ID:", roundInfo.MatchID)
 				runtime.EventsEmit(a.ctx, eventNames.NewRound, roundInfo)
+				db.AddRound(roundInfo)
 			case err, ok := <-chErrors:
 				if !ok {
 					return

@@ -4,6 +4,7 @@ export function createRoundInfo(won: boolean, role: "ATTACK" | "DEFENSE"): Round
 	const time = new Date("2023-01-01 00:00:00")
 	const roundInfo: RoundInfo = {
 		MatchID: "123",
+		RoundIndex: 0,
 		Time: time.toISOString(),
 		SeasonSlug: "Y8S1",
 		MatchType: "RANKED",
@@ -12,7 +13,7 @@ export function createRoundInfo(won: boolean, role: "ATTACK" | "DEFENSE"): Round
 		Teams: createTeams("FooBar", role),
 		Site: "0F Basement",
 		Won: won,
-		WinCondition: "KILLED_OPPONENTS",
+		WinCondition: "KilledOpponents",
 		TeamIndex: role === "ATTACK" ? 0 : 1,
 		PlayerName: "FooBar"
 	};

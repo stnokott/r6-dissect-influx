@@ -32,11 +32,15 @@ export interface ReleaseInfo {
 //////////
 // source: events.go
 
+/**
+ * EventNames contains the names for events emitted by the application during runtime.
+ */
 export interface EventNames {
   NewRound: string;
   RoundWatcherStarted: string;
   RoundWatcherError: string;
   RoundWatcherStopped: string;
+  RoundPush: string;
   LatestReleaseInfo: string;
   LatestReleaseInfoErr: string;
   UpdateProgress: string;

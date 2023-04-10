@@ -3,18 +3,39 @@
 
 //////////
 // source: conn.go
+/*
+Package db contains functions for communication with an InfluxDB host.
+*/
 
+/**
+ * InfluxClient is used to send R6 round data to an InfluxDB host.
+ */
 export interface InfluxClient {
   URL: string;
 }
+/**
+ * ConnectOpts allows defining options for a new client.
+ */
 export interface ConnectOpts {
   URL: string;
   Token: string;
   Org: string;
   Bucket: string;
 }
+/**
+ * ConnectionDetails contains details about the connection to an InfluxDB host.
+ */
 export interface ConnectionDetails {
   Name: string;
   Version: string;
   Commit: string;
+}
+/**
+ * InfluxEvent contains data sent from the asynchronous loop started by LoopAsync.
+ * It contains the MatchID and RoundIndex for the related event and an Err field indicating success if nil.
+ */
+export interface InfluxEvent {
+  Err: error;
+  MatchID: string;
+  RoundIndex: number /* int */;
 }

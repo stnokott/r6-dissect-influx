@@ -1,7 +1,11 @@
+<script lang="ts" context="module">
+	const roundStatusList = ["waiting", "done", "error"] as const;
+	export type RoundStatus = (typeof roundStatusList)[number];
+</script>
+
 <script lang="ts">
 	import {
 		CheckmarkFilled,
-		PauseOutlineFilled,
 		PendingFilled,
 		WarningFilled,
 	} from "carbon-icons-svelte";
@@ -10,7 +14,7 @@
 	import Defense from "./icons/Defense.svelte";
 
 	export let roundInfo: RoundInfo;
-	export let status: "waiting" | "processing" | "done" | "error" = "waiting";
+	export let status: RoundStatus = "waiting";
 </script>
 
 <div class="step {roundInfo.Won ? 'won' : 'lost'}">
@@ -20,11 +24,9 @@
 		<Defense size={24} class="icon defense" />
 	{/if}
 	<div class="status">
-		{#if status == "waiting"}
-			<PauseOutlineFilled size={16} />
-		{:else if status == "processing"}
+		{#if status === "waiting"}
 			<PendingFilled size={16} />
-		{:else if status == "done"}
+		{:else if status === "done"}
 			<CheckmarkFilled size={16} class="success" />
 		{:else}
 			<WarningFilled size={16} class="error" />

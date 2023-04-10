@@ -6,6 +6,7 @@ type EventNames struct {
 	RoundWatcherStarted  string
 	RoundWatcherError    string
 	RoundWatcherStopped  string
+	RoundPush            string
 	LatestReleaseInfo    string
 	LatestReleaseInfoErr string
 	UpdateProgress       string
@@ -17,6 +18,7 @@ var eventNames = EventNames{
 	RoundWatcherStarted:  "R6_ROUNDS_WATCHER_STARTED",
 	RoundWatcherError:    "R6_ROUND_WATCHER_ERROR",
 	RoundWatcherStopped:  "R6_ROUND_WATCHER_STOPPED",
+	RoundPush:            "R6_ROUND_PUSH",
 	LatestReleaseInfo:    "R6_RELEASE_INFO",
 	LatestReleaseInfoErr: "R6_RELEASE_INFO_ERR",
 	UpdateProgress:       "R6_UPDATE_PROGRESS",

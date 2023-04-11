@@ -32,7 +32,7 @@ func makeTeams(r *dissect.DissectReader) [2]Team {
 	// initialize teams slice
 	var teams [2]Team
 	for i := 0; i < 2; i++ {
-		teams[i] = Team{Role: r.Header.Teams[0].Role, Players: make([]Player, 0)}
+		teams[i] = Team{Role: r.Header.Teams[i].Role, Players: make([]Player, 0)}
 	}
 
 	// fill teams with players

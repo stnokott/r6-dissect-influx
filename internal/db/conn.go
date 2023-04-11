@@ -169,9 +169,14 @@ func (c *InfluxClient) LoopAsync() <-chan InfluxEvent {
 				return
 			case <-ticker.C:
 				roundBufferMutex.Lock()
-				if len(roundBuffer) > 0 {
+				for len(roundBuffer) > 0 {
 					var r game.RoundInfo
 					r, roundBuffer = roundBuffer[0], roundBuffer[1:]
+					// Yes, this flushed each round individually, ideally, we would flush all in one batch.
+					// In this case though, I decided that it makes more sense to flush each one individually to not make all points
+					// dependant on one single transaction. Instead, if a temporary error occurs, only a few points will fail to push instead of all.
+					// Additionally, this way, we are able to tie a potential error to a specific point, allowing the UI to display the error
+					// at the specific point in the UI.
 					eventChan <- InfluxEvent{
 						MatchID:    r.MatchID,
 						RoundIndex: r.RoundIndex,

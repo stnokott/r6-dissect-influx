@@ -12,9 +12,9 @@ describe('MatchProgressIndicator', () => {
     cy.get("#progress").should("have.css", "margin-bottom", "0px")
   })
   it('should render the correct amount of rounds', () => {
-    const round1 = createRoundInfo(false, "ATTACK");
-    const round2 = createRoundInfo(true, "ATTACK");
-    const round3 = createRoundInfo(true, "DEFENSE");
+    const round1 = createRoundInfo(false, "Attack");
+    const round2 = createRoundInfo(true, "Attack");
+    const round3 = createRoundInfo(true, "Defense");
     cy.mount(MatchProgressIndicatorWrapper, { props: { Component: MatchProgressIndicator, roundInfos: [round1, round2, round3] } })
     cy.get("#progress-bar .step").should("have.length", 3)
   })

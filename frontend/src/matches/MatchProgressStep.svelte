@@ -18,7 +18,7 @@
 </script>
 
 <div class="step {roundInfo.Won ? 'won' : 'lost'}">
-	{#if roundInfo.Teams[roundInfo.TeamIndex].Role === "ATTACK"}
+	{#if roundInfo.Teams[roundInfo.TeamIndex].Role === "Attack"}
 		<Attack size={24} class="icon attack" />
 	{:else}
 		<Defense size={24} class="icon defense" />

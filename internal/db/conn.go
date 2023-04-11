@@ -204,7 +204,6 @@ func (c *InfluxClient) writeRound(r game.RoundInfo) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	// TODO: check point already exists
 	err = c.api.WritePoint(ctx, write.NewPoint(
 		measurement,
 		map[string]string{

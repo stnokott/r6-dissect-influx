@@ -44,7 +44,6 @@
 		</MatchProgressIndicator>
 
 		<Tag>{playTime}</Tag>
-		<Tag>{firstRoundData.GameMode}</Tag>
 		<Tag type={matchTypeColors[firstRoundData.MatchType]}
 			>{firstRoundData.MatchType}</Tag
 		>

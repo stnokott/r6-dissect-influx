@@ -1,5 +1,6 @@
 //go:build windows
 
+// Sets up and runs the Wails application.
 package main
 
 import (
@@ -44,13 +45,13 @@ func main() {
 			Assets: assets,
 		},
 		OnStartup: func(ctx context.Context) {
-			runWailsHooks(onStartupFuncs, ctx)
+			runWailsHooks(ctx, onStartupFuncs)
 		},
 		OnDomReady: func(ctx context.Context) {
-			runWailsHooks(onDomReadyFuncs, ctx)
+			runWailsHooks(ctx, onDomReadyFuncs)
 		},
 		OnShutdown: func(ctx context.Context) {
-			runWailsHooks(onShutdownFuncs, ctx)
+			runWailsHooks(ctx, onShutdownFuncs)
 		},
 		Bind: []interface{}{
 			app,
@@ -82,7 +83,7 @@ func main() {
 	}
 }
 
-func runWailsHooks(hooks []func(context.Context), ctx context.Context) {
+func runWailsHooks(ctx context.Context, hooks []func(context.Context)) {
 	for _, h := range hooks {
 		h(ctx)
 	}

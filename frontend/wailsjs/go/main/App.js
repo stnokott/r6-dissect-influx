@@ -6,14 +6,6 @@ export function AutodetectGameDir() {
   return window['go']['main']['App']['AutodetectGameDir']();
 }
 
-export function Connect() {
-  return window['go']['main']['App']['Connect']();
-}
-
-export function Disconnect() {
-  return window['go']['main']['App']['Disconnect']();
-}
-
 export function GetAppInfo() {
   return window['go']['main']['App']['GetAppInfo']();
 }
@@ -30,6 +22,14 @@ export function GetWindowTitle() {
   return window['go']['main']['App']['GetWindowTitle']();
 }
 
+export function InfluxClientFromConfig(arg1) {
+  return window['go']['main']['App']['InfluxClientFromConfig'](arg1);
+}
+
+export function InfluxClientFromSettings() {
+  return window['go']['main']['App']['InfluxClientFromSettings']();
+}
+
 export function IsConfigComplete() {
   return window['go']['main']['App']['IsConfigComplete']();
 }
@@ -40,10 +40,6 @@ export function OpenGameDirDialog() {
 
 export function RequestLatestReleaseInfo() {
   return window['go']['main']['App']['RequestLatestReleaseInfo']();
-}
-
-export function SaveAndValidateConfig(arg1) {
-  return window['go']['main']['App']['SaveAndValidateConfig'](arg1);
 }
 
 export function StartReleaseWatcher() {

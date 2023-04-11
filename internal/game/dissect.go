@@ -34,6 +34,7 @@ func parseFile(f string) (info RoundInfo, err error) {
 	recordingPlayer := r.Header.RecordingPlayer()
 	info = RoundInfo{
 		MatchID:      r.Header.MatchID,
+		RoundIndex:   r.Header.RoundNumber,
 		Time:         r.Header.Timestamp,
 		SeasonSlug:   r.Header.GameVersion,
 		MatchType:    r.Header.MatchType.String(),

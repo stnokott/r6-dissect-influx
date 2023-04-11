@@ -16,7 +16,7 @@
 	import Folder from "carbon-icons-svelte/lib/Folder.svelte";
 	import {
 		GetConfig,
-		SaveAndValidateConfig,
+		InfluxClientFromConfig,
 		OpenGameDirDialog,
 		AutodetectGameDir,
 		ValidateGameDir,
@@ -40,12 +40,12 @@
 	let errorTitle: string | null;
 	let errorDetail: string | null;
 
-	let gameDir: string = "";
-	let influxHost: string = "";
-	let influxPort: number = 8086;
-	let influxOrg: string = "";
-	let influxBucket: string = "";
-	let influxToken: string = "";
+	let gameDir = "";
+	let influxHost = "";
+	let influxPort = 8086;
+	let influxOrg = "";
+	let influxBucket = "";
+	let influxToken = "";
 
 	let gameDirValidationErr = "";
 	let influxHostValidationErr = "";
@@ -145,7 +145,7 @@
 				token: influxToken,
 			},
 		});
-		let connDetails = await SaveAndValidateConfig(cfg);
+		let connDetails = await InfluxClientFromConfig(cfg);
 
 		dispatch("connected", connDetails);
 		dispatch("changed");

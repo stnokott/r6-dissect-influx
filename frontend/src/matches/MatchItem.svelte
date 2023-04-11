@@ -6,11 +6,12 @@
 		Tile,
 	} from "carbon-components-svelte";
 	import type { TagProps } from "carbon-components-svelte/types/Tag/Tag.svelte";
+	import type { RoundInfo } from "../game";
+	import { Round } from "./matchitem";
 	import MatchProgressIndicator from "./MatchProgressIndicator.svelte";
 	import MatchProgressStep from "./MatchProgressStep.svelte";
-	import type { RoundInfo } from "../game";
 
-	export let roundInfos: Array<RoundInfo>;
+	export let roundInfos: Array<Round>;
 
 	type TagTypes<T extends string> = {
 		[key in T]: TagProps["type"];
@@ -30,32 +31,38 @@
 
 <Tile style="position: relative; min-height: 120px;">
 	{@const firstRound = roundInfos[0]}
-	{@const playTime = new Date(firstRound.Time).toLocaleString()}
+	{@const firstRoundData = firstRound.data}
+	{@const playTime = new Date(firstRoundData.Time).toLocaleString()}
 	<div style="z-index: 2; position: relative">
 		<MatchProgressIndicator style="margin-bottom: 5px">
 			{#each roundInfos as roundInfo, i}
-				<MatchProgressStep {roundInfo} />
+				<MatchProgressStep
+					roundInfo={firstRoundData}
+					status={roundInfo.status}
+				/>
 			{/each}
 		</MatchProgressIndicator>
 
 		<Tag>{playTime}</Tag>
-		<Tag>{firstRound.GameMode}</Tag>
-		<Tag type={matchTypeColors[firstRound.MatchType]}
-			>{firstRound.MatchType}</Tag
+		<Tag>{firstRoundData.GameMode}</Tag>
+		<Tag type={matchTypeColors[firstRoundData.MatchType]}
+			>{firstRoundData.MatchType}</Tag
 		>
-		<Tag type={gameModeColors[firstRound.GameMode]}>{firstRound.GameMode}</Tag>
-		<Tag>{firstRound.SeasonSlug}</Tag>
+		<Tag type={gameModeColors[firstRoundData.GameMode]}
+			>{firstRoundData.GameMode}</Tag
+		>
+		<Tag>{firstRoundData.SeasonSlug}</Tag>
 	</div>
 
 	<div style="z-index: 2;" id="map-name-container">
-		<Tag type="outline">{firstRound.MapName}</Tag>
+		<Tag type="outline">{firstRoundData.MapName}</Tag>
 	</div>
 
 	<div id="map-image-container">
 		<div id="map-image">
 			<ImageLoader
-				src="/images/maps/{firstRound.MapName}.jpg"
-				alt={firstRound.MapName}
+				src="/images/maps/{firstRoundData.MapName}.jpg"
+				alt={firstRoundData.MapName}
 				style="transform: translateY(-33.333%);"
 			>
 				<svelte:fragment slot="loading"
@@ -65,7 +72,7 @@
 				>
 				<svelte:fragment slot="error"
 					><div id="map-image-placeholder">
-						<bold>MAP UNKNOWN</bold>
+						<bold>{firstRoundData.MapName}</bold>
 					</div></svelte:fragment
 				>
 			</ImageLoader>

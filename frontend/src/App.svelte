@@ -11,8 +11,7 @@
 
   import {
     IsConfigComplete,
-    Connect,
-    Disconnect,
+    InfluxClientFromSettings,
   } from "./../wailsjs/go/main/App";
   import type { ConnectionDetails } from "./db";
   import { onMount } from "svelte";
@@ -33,16 +32,14 @@
   }
 
   $: if (isConfigComplete) {
-    Disconnect().then(() => {
-      promConnectionDetails = Connect();
-    });
+    promConnectionDetails = InfluxClientFromSettings();
   }
 
   function openSettings(): void {
     settingsDialogOpen = true;
   }
 
-  function onConfigChanged(_e: CustomEvent<void>) {
+  function onConfigChanged() {
     // can assume that config is complete since only then can the config dialog be closed/confirmed
     isConfigComplete = true;
   }

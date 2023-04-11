@@ -8,6 +8,7 @@ import (
 
 type RoundInfo struct {
 	MatchID    string
+	RoundIndex int
 	Time       time.Time
 	SeasonSlug string
 	MatchType  string `tstype:"MatchType"`

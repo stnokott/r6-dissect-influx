@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { InlineLoading, InlineNotification } from "carbon-components-svelte";
 	import { afterUpdate, onMount } from "svelte";
-	import MatchItem from "./MatchItem.svelte";
 
 	import {
 		GetEventNames,
@@ -11,7 +10,10 @@
 	} from "./../../wailsjs/go/main/App";
 	import type { EventNames } from "../app";
 	import type { RoundInfo } from "../game";
+	import type { InfluxEvent } from "../db";
 	import type { MatchListAPI } from "./matchlist";
+	import MatchItem from "./MatchItem.svelte";
+	import { Round } from "./matchitem";
 
 	let errorTitle = "Error";
 	let error: string | null;
@@ -35,14 +37,14 @@
 
 	let roundWatcherRunning = false;
 	let matchesContainer: HTMLElement;
-	let matchInfos: Map<string, RoundInfo[]> = new Map();
+	let matchInfos: Map<string, Round[]> = new Map();
 
 	async function onNewRound(r: RoundInfo) {
 		let matchInfo = matchInfos.get(r.MatchID);
 		if (matchInfo) {
-			matchInfos.set(r.MatchID, [...matchInfo, r]);
+			matchInfos.set(r.MatchID, [...matchInfo, new Round(r)]);
 		} else {
-			matchInfos.set(r.MatchID, [r]);
+			matchInfos.set(r.MatchID, [new Round(r)]);
 		}
 		matchInfos = matchInfos;
 	}
@@ -55,9 +57,24 @@
 		roundWatcherRunning = false;
 	}
 
-	function onRoundWatcherError(err: any) {
+	function onRoundWatcherError(err: string | null) {
 		errorTitle = "Error parsing round:";
 		error = err;
+	}
+
+	function onRoundPush(e: InfluxEvent) {
+		// find entry for match by ID
+		let matchInfo = matchInfos.get(e.MatchID);
+		if (matchInfo) {
+			if (e.Err) {
+				matchInfo[e.RoundIndex].status = "error";
+			} else {
+				matchInfo[e.RoundIndex].status = "done";
+			}
+
+			matchInfos.set(e.MatchID, matchInfo);
+			matchInfos = matchInfos;
+		}
 	}
 
 	onMount(() => {
@@ -66,6 +83,7 @@
 			window.runtime.EventsOn(e.RoundWatcherStarted, onRoundWatcherStarted);
 			window.runtime.EventsOn(e.RoundWatcherStopped, onRoundWatcherStopped);
 			window.runtime.EventsOn(e.RoundWatcherError, onRoundWatcherError);
+			window.runtime.EventsOn(e.RoundPush, onRoundPush);
 		});
 	});
 

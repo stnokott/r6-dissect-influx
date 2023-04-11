@@ -18,7 +18,7 @@ packages:
       time.Time: "string /* RFC3339 */"
     frontmatter: |
       /* eslint-disable */
-      export type MatchType = "CASUAL" | "UNRANKED" | "RANKED"
-      export type GameMode = "BOMB" | "HOSTAGE"
+      export type MatchType = "QuickMatch" | "Unranked" | "Ranked"
+      export type GameMode = "Bomb" | "Hostage" | "SecureArea"
       export type WinCondition = "KilledOpponents" | "SecuredArea" | "DisabledDefuser" | "DefusedBomb" | "ExtractedHostage" | "Time"
-      export type TeamRole = "ATTACK" | "DEFENSE"
+      export type TeamRole = "Attack" | "Defense"

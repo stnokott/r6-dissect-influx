@@ -18,14 +18,14 @@
 	};
 
 	const matchTypeColors: TagTypes<RoundInfo["MatchType"]> = {
-		CASUAL: "blue",
-		UNRANKED: "purple",
-		RANKED: "magenta",
+		QuickMatch: "blue",
+		Unranked: "purple",
+		Ranked: "magenta",
 	};
 
 	const gameModeColors: TagTypes<RoundInfo["GameMode"]> = {
-		BOMB: "blue",
-		HOSTAGE: "cyan",
+		Bomb: "blue",
+		Hostage: "cyan",
 	};
 </script>
 

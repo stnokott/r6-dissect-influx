@@ -9,24 +9,23 @@
 		PendingFilled,
 		WarningFilled,
 	} from "carbon-icons-svelte";
-	import type { RoundInfo } from "../game";
+	import type { Round } from "./matchitem";
 	import Attack from "./icons/Attack.svelte";
 	import Defense from "./icons/Defense.svelte";
 
-	export let roundInfo: RoundInfo;
-	export let status: RoundStatus = "waiting";
+	export let round: Round;
 </script>
 
-<div class="step {roundInfo.Won ? 'won' : 'lost'}">
-	{#if roundInfo.Teams[roundInfo.TeamIndex].Role === "Attack"}
+<div class="step {round.data.Won ? 'won' : 'lost'}">
+	{#if round.data.Teams[round.data.TeamIndex].Role === "Attack"}
 		<Attack size={24} class="icon attack" />
 	{:else}
 		<Defense size={24} class="icon defense" />
 	{/if}
 	<div class="status">
-		{#if status === "waiting"}
+		{#if round.status === "waiting"}
 			<PendingFilled size={16} />
-		{:else if status === "done"}
+		{:else if round.status === "done"}
 			<CheckmarkFilled size={16} class="success" />
 		{:else}
 			<WarningFilled size={16} class="error" />

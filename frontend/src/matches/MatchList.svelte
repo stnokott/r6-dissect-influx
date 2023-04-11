@@ -99,7 +99,7 @@
 {#if roundWatcherRunning}
 	<div id="match-container" bind:this={matchesContainer}>
 		{#each [...matchInfos] as [matchID, roundInfos] (matchID)}
-			<MatchItem {roundInfos} />
+			<MatchItem rounds={roundInfos} />
 		{:else}
 			<div class="placeholder-center">
 				<div class="placeholder-center-content">

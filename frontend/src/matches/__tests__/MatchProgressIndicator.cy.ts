@@ -1,6 +1,6 @@
 import MatchProgressIndicator from "../MatchProgressIndicator.svelte";
 import MatchProgressIndicatorWrapper from "./MatchProgressIndicatorWrapper.svelte";
-import { createRoundInfo } from "./util";
+import { createRound } from "./util";
 
 describe('MatchProgressIndicator', () => {
   it('should be empty by default', () => {
@@ -12,10 +12,10 @@ describe('MatchProgressIndicator', () => {
     cy.get("#progress").should("have.css", "margin-bottom", "0px")
   })
   it('should render the correct amount of rounds', () => {
-    const round1 = createRoundInfo(false, "Attack");
-    const round2 = createRoundInfo(true, "Attack");
-    const round3 = createRoundInfo(true, "Defense");
-    cy.mount(MatchProgressIndicatorWrapper, { props: { Component: MatchProgressIndicator, roundInfos: [round1, round2, round3] } })
+    const round1 = createRound(false, "Attack");
+    const round2 = createRound(true, "Attack");
+    const round3 = createRound(true, "Defense");
+    cy.mount(MatchProgressIndicatorWrapper, { props: { Component: MatchProgressIndicator, rounds: [round1, round2, round3] } })
     cy.get("#progress-bar .step").should("have.length", 3)
   })
 })

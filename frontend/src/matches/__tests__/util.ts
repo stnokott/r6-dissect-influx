@@ -1,6 +1,7 @@
+import { Round } from "../matchitem";
 import type { Player, RoundInfo, Team } from "../../game";
 
-export function createRoundInfo(won: boolean, role: "Attack" | "Defense"): RoundInfo {
+export function createRound(won: boolean, role: "Attack" | "Defense"): Round {
 	const time = new Date("2023-01-01 00:00:00")
 	const roundInfo: RoundInfo = {
 		MatchID: "123",
@@ -17,7 +18,7 @@ export function createRoundInfo(won: boolean, role: "Attack" | "Defense"): Round
 		TeamIndex: role === "Attack" ? 0 : 1,
 		PlayerName: "FooBar"
 	};
-	return roundInfo;
+	return new Round(roundInfo);
 }
 
 const attackerOps = new Array<string>(

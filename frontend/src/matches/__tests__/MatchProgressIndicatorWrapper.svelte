@@ -2,11 +2,11 @@
 	import MatchProgressStep from "../MatchProgressStep.svelte";
 
 	export let Component;
-	export let roundInfos;
+	export let rounds;
 </script>
 
 <svelte:component this={Component}>
-	{#each roundInfos as roundInfo}
-		<MatchProgressStep {roundInfo} />
+	{#each rounds as round}
+		<MatchProgressStep {round} />
 	{/each}
 </svelte:component>

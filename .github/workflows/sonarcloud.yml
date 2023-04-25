@@ -21,10 +21,11 @@ jobs:
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
       # fetch latest tag for SonarCloud
-      - uses: actions-ecosystem/action-get-latest-tag@v1
+      - uses: "WyriHaximus/github-action-get-previous-tag@v1.3.0"
         id: get-latest-tag
         with:
-          semver_only: true
+          fallback: 0.0.1
+          prefix: v
       - uses: actions/setup-node@v3
         with:
           node-version: 18

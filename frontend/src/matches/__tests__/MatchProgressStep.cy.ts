@@ -1,3 +1,4 @@
+import { error } from "cypress/types/jquery";
 import MatchProgressStep from "../MatchProgressStep.svelte";
 import { createRound } from "./util";
 
@@ -29,9 +30,22 @@ describe('MatchProgressIndicator', () => {
 
   it('should have defined state indicator', () => {
     const round = createRound(true, "Defense");
-    round.status = "done";
+    round.pushStatus = "done";
     cy.mount(MatchProgressStep, { props: { round: round } });
     cy.get(".status").should("exist");
     cy.get(".status > svg").should("exist");
+  })
+
+  it('should display tooltip when erroneous', () => {
+    const round = createRound(true, "Defense");
+    const errorMessage = "my custom error message";
+    round.setPushError(errorMessage);
+    cy.mount(MatchProgressStep, { props: { round: round } });
+    cy.get(".status").should("exist");
+    cy.get(".status").contains(errorMessage).should("not.exist");
+    cy.get(".status .error").click();
+    cy.get(".status").contains(errorMessage).should("be.visible");
+    cy.get(".status .error").click();
+    cy.get(".status").contains(errorMessage).should("not.exist");
   })
 })

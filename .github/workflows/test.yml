@@ -27,7 +27,7 @@ jobs:
       - run: npm install
         working-directory: frontend
       - name: Cypress tests
-        uses: cypress-io/github-action@v5.6.2
+        uses: cypress-io/github-action@v5.8.0
         with:
           working-directory: frontend
           install: false

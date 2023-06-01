@@ -12,7 +12,7 @@ require (
 	github.com/rs/zerolog v1.29.1
 	github.com/wailsapp/wails/v2 v2.4.1
 	golang.org/x/sys v0.8.0
-	golang.org/x/tools v0.8.0
+	golang.org/x/tools v0.9.2
 )
 
 require (
@@ -53,6 +53,6 @@ require (
 	golang.org/x/exp v0.0.0-20221208152030-732eee02a75a // indirect
 	golang.org/x/image v0.7.0 // indirect
 	golang.org/x/mod v0.10.0 // indirect
-	golang.org/x/net v0.9.0 // indirect
+	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 )

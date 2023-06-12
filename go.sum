@@ -91,8 +91,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/randall77/makefat v0.0.0-20210315173500-7ddd0e42c844 h1:GranzK4hv1/pqTIhMTXt2X8MmMOuH3hMeUR0o9SP5yc=
 github.com/randall77/makefat v0.0.0-20210315173500-7ddd0e42c844/go.mod h1:T1TLSfyWVBRXVGzWd0o9BI4kfoO9InEgfQe4NV3mLz8=
-github.com/redraskal/r6-dissect v0.10.0 h1:NuTXdQu0PB7ilSWiubzD3/xsiozLAycbXYRaiLm3Meg=
-github.com/redraskal/r6-dissect v0.10.0/go.mod h1:sk8Xoz6S3XmY+YT00DMgtXWIL3wD9t0hCRETb3F/GtU=
+github.com/redraskal/r6-dissect v0.11.1 h1:W2hdXqwU7i5K3Z4FE2aa/SwMh49WOUgh9S4fmZqIiMU=
+github.com/redraskal/r6-dissect v0.11.1/go.mod h1:SJM4A6LRn5ktapK+X2RcNj+B9lObot81KEtASNhDsig=
 github.com/richardlehane/mscfb v1.0.4 h1:WULscsljNPConisD5hR0+OyZjwK46Pfyr6mPu5ZawpM=
 github.com/richardlehane/mscfb v1.0.4/go.mod h1:YzVpcZg9czvAuhk9T+a3avCpcFPMUWm7gK3DypaEsUk=
 github.com/richardlehane/msoleps v1.0.1/go.mod h1:BWev5JBpU9Ko2WAgmZEuiz4/u3ZYTKbjLycmwiWUfWg=

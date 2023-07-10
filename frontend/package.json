@@ -29,7 +29,7 @@
     "vite-plugin-warmup": "^0.1.0"
   },
   "dependencies": {
-    "@carbon/layout": "^11.13.0",
+    "@carbon/layout": "^11.16.1",
     "@carbon/themes": "^11.18.0",
     "marked": "^5.0.0"
   }

@@ -25,7 +25,7 @@
     "svelte-preprocess": "^5.0.3",
     "tslib": "^2.4.0",
     "typescript": "^5.0.4",
-    "vite": "^4.3.4",
+    "vite": "^4.4.6",
     "vite-plugin-warmup": "^0.1.0"
   },
   "dependencies": {

@@ -11,8 +11,8 @@ require (
 	github.com/redraskal/r6-dissect v0.10.0
 	github.com/rs/zerolog v1.29.1
 	github.com/wailsapp/wails/v2 v2.4.1
-	golang.org/x/sys v0.8.0
-	golang.org/x/tools v0.8.0
+	golang.org/x/sys v0.10.0
+	golang.org/x/tools v0.11.1
 )
 
 require (
@@ -49,10 +49,10 @@ require (
 	github.com/xuri/efp v0.0.0-20220603152613-6918739fd470 // indirect
 	github.com/xuri/excelize/v2 v2.7.0 // indirect
 	github.com/xuri/nfp v0.0.0-20220409054826-5e722a1d9e22 // indirect
-	golang.org/x/crypto v0.7.0 // indirect
+	golang.org/x/crypto v0.11.0 // indirect
 	golang.org/x/exp v0.0.0-20221208152030-732eee02a75a // indirect
 	golang.org/x/image v0.7.0 // indirect
-	golang.org/x/mod v0.10.0 // indirect
-	golang.org/x/net v0.9.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/mod v0.12.0 // indirect
+	golang.org/x/net v0.12.0 // indirect
+	golang.org/x/text v0.11.0 // indirect
 )

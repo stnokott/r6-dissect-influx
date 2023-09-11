@@ -17,17 +17,17 @@ func parseFile(f string) (info RoundInfo, err error) {
 		err = errors.Join(err, file.Close())
 	}()
 
-	var r *dissect.DissectReader
+	var r *dissect.Reader
 	r, err = dissect.NewReader(file)
 	if err != nil {
 		return
 	}
 	if err = r.Read(); !dissect.Ok(err) {
 		return
-	} else {
-		// reset to nil since error is not deemed problematic
-		err = nil
 	}
+
+	// reset to nil since error is not deemed problematic
+	err = nil
 
 	winningTeamIndex := getWinningTeamIndex(r)
 	winningTeam := r.Header.Teams[winningTeamIndex]
@@ -50,7 +50,7 @@ func parseFile(f string) (info RoundInfo, err error) {
 	return
 }
 
-func getWinningTeamIndex(r *dissect.DissectReader) int {
+func getWinningTeamIndex(r *dissect.Reader) int {
 	if r.Header.Teams[0].Won {
 		return 0
 	} else {

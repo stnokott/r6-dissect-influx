@@ -67,9 +67,9 @@
 		let matchInfo = matchInfos.get(e.MatchID);
 		if (matchInfo) {
 			if (e.Err) {
-				matchInfo[e.RoundIndex].status = "error";
+				matchInfo[e.RoundIndex].setPushError(e.Err);
 			} else {
-				matchInfo[e.RoundIndex].status = "done";
+				matchInfo[e.RoundIndex].pushStatus = "done";
 			}
 
 			matchInfos.set(e.MatchID, matchInfo);

@@ -9,7 +9,7 @@ repos:
       - id: go test
         name: Go test
         language: system
-        files: \.go$
+        files: \.(go)|(.mod)$
         pass_filenames: false
         entry: go test -v ./...
       - id: npm test

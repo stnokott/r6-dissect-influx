@@ -28,7 +28,7 @@ type Team struct {
 	Players []Player
 }
 
-func makeTeams(r *dissect.DissectReader) [2]Team {
+func makeTeams(r *dissect.Reader) [2]Team {
 	// initialize teams slice
 	var teams [2]Team
 	for i := 0; i < 2; i++ {

@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	const roundStatusList = ["waiting", "done", "error"] as const;
-	export type RoundStatus = (typeof roundStatusList)[number];
+	export type RoundPushStatus = (typeof roundStatusList)[number];
 </script>
 
 <script lang="ts">
@@ -12,6 +12,7 @@
 	import type { Round } from "./matchitem";
 	import Attack from "./icons/Attack.svelte";
 	import Defense from "./icons/Defense.svelte";
+	import { Tooltip } from "carbon-components-svelte";
 
 	export let round: Round;
 </script>
@@ -23,12 +24,15 @@
 		<Defense size={24} class="icon defense" />
 	{/if}
 	<div class="status">
-		{#if round.status === "waiting"}
+		{#if round.pushStatus === "waiting"}
 			<PendingFilled size={16} />
-		{:else if round.status === "done"}
+		{:else if round.pushStatus === "done"}
 			<CheckmarkFilled size={16} class="success" />
 		{:else}
-			<WarningFilled size={16} class="error" />
+			<Tooltip>
+				<WarningFilled slot="icon" size={16} class="error" />
+				<p>{round.pushError}</p>
+			</Tooltip>
 		{/if}
 	</div>
 </div>
@@ -93,5 +97,9 @@
 	.status > :global(.success) {
 		fill: themes.$text-on-color;
 		stroke: themes.$support-success;
+	}
+
+	.status :global(.bx--tooltip__trigger) {
+		margin: 0;
 	}
 </style>

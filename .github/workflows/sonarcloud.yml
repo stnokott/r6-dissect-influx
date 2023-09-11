@@ -17,13 +17,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3.5.0
+      - uses: actions/checkout@v3.5.2
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      # fetch latest tag for SonarCloud
+      - uses: "WyriHaximus/github-action-get-previous-tag@v1.3.0"
+        id: get-latest-tag
+        with:
+          fallback: 0.0.1
+          prefix: v
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: npm install --force
+      - run: npm install
         working-directory: frontend
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
@@ -37,6 +43,7 @@ jobs:
             # mandatory
             -Dsonar.projectKey=stnokott_r6-dissect-influx
             -Dsonar.organization=stnokott-github
+            -Dsonar.projectVersion=${{ steps.get-latest-tag.outputs.tag }}
             -Dsonar.typescript.tsconfigPaths=frontend/tsconfig.json
             -Dsonar.exclusions=frontend/public/**/*,frontend/wailsjs/**,frontend/cypress/support/**,**/*.cy.ts
             -Dsonar.test.inclusions=**/*.cy.ts

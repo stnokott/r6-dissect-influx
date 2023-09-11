@@ -12,7 +12,7 @@
     "cypress": "cypress open"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^2.1.1",
+    "@sveltejs/vite-plugin-svelte": "^2.4.5",
     "@tsconfig/svelte": "^4.0.1",
     "@types/marked": "^4.0.8",
     "carbon-components-svelte": "^0.73.5",

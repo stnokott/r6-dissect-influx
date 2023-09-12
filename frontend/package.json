@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@carbon/layout": "^11.19.0",
-    "@carbon/themes": "^11.18.0",
+    "@carbon/themes": "^11.24.0",
     "marked": "^5.0.0"
   }
 }

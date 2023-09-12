@@ -12,7 +12,7 @@ jobs:
   goreleaser:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v4.0.0
         with:
           fetch-depth: 0
       - run: git fetch --force --tags
@@ -23,7 +23,7 @@ jobs:
           cache-dependency-path: 'frontend/package-lock.json'
       - run: npm install
         working-directory: frontend
-      - uses: actions/setup-go@v4.0.0
+      - uses: actions/setup-go@v4.1.0
         with:
           go-version-file: "go.mod"
       - name: Install UPX
@@ -34,7 +34,7 @@ jobs:
           [System.IO.Compression.ZipFile]::ExtractToDirectory("$PWD/upx-4.0.2-win64.zip", "$PWD");
           echo "$PWD/upx-4.0.2-win64" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - if: inputs.snapshot == false
-        uses: goreleaser/goreleaser-action@v4.2.0
+        uses: goreleaser/goreleaser-action@v5.0.0
         with:
           distribution: goreleaser
           version: latest
@@ -42,7 +42,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - if: inputs.snapshot == true
-        uses: goreleaser/goreleaser-action@v4.2.0
+        uses: goreleaser/goreleaser-action@v5.0.0
         with:
           distribution: goreleaser
           version: latest

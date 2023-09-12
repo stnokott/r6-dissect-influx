@@ -16,7 +16,7 @@
     "@tsconfig/svelte": "^4.0.1",
     "@types/marked": "^4.0.8",
     "carbon-components-svelte": "^0.80.0",
-    "carbon-icons-svelte": "^11.4.0",
+    "carbon-icons-svelte": "^12.3.0",
     "carbon-preprocess-svelte": "^0.10.0",
     "cypress": "^12.17.4",
     "sass": "^1.62.1",

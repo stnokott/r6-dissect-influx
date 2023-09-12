@@ -1,4 +1,3 @@
-import { error } from "cypress/types/jquery";
 import MatchProgressStep from "../MatchProgressStep.svelte";
 import { createRound } from "./util";
 

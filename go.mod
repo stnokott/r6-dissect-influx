@@ -11,7 +11,7 @@ require (
 	github.com/redraskal/r6-dissect v0.14.0
 	github.com/rs/zerolog v1.30.0
 	github.com/wailsapp/wails/v2 v2.6.0
-	golang.org/x/sys v0.12.0
+	golang.org/x/sys v0.13.0
 	golang.org/x/tools v0.13.0
 )
 

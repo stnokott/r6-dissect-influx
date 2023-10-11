@@ -14,7 +14,7 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.5",
     "@tsconfig/svelte": "^5.0.2",
-    "@types/marked": "^4.0.8",
+    "@types/marked": "^6.0.0",
     "carbon-components-svelte": "^0.80.0",
     "carbon-icons-svelte": "^12.3.0",
     "carbon-preprocess-svelte": "^0.10.0",

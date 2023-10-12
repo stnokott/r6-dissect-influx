@@ -19,7 +19,7 @@
     "carbon-icons-svelte": "^12.3.0",
     "carbon-preprocess-svelte": "^0.10.0",
     "cypress": "^13.3.0",
-    "sass": "^1.69.2",
+    "sass": "^1.69.3",
     "svelte": "^3.59.2",
     "svelte-check": "^3.5.2",
     "svelte-preprocess": "^5.0.4",

@@ -3,7 +3,7 @@ module github.com/stnokott/r6-dissect-influx
 go 1.21.0
 
 require (
-	github.com/fsnotify/fsnotify v1.6.0
+	github.com/fsnotify/fsnotify v1.7.0
 	github.com/hashicorp/go-version v1.6.0
 	github.com/influxdata/influxdb-client-go/v2 v2.12.3
 	github.com/minio/selfupdate v0.6.0

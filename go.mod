@@ -8,7 +8,7 @@ require (
 	github.com/influxdata/influxdb-client-go/v2 v2.12.3
 	github.com/minio/selfupdate v0.6.0
 	github.com/ncruces/zenity v0.10.10
-	github.com/redraskal/r6-dissect v0.14.0
+	github.com/redraskal/r6-dissect v0.15.0
 	github.com/rs/zerolog v1.31.0
 	github.com/wailsapp/wails/v2 v2.6.0
 	golang.org/x/sys v0.13.0
